@@ -1,0 +1,116 @@
+﻿node.exe : ΓÜá Warning: 
+Next.js inferred your 
+workspace root, but it 
+may not be correct.
+At line:1 char:1
++ & "C:\Program 
+Files\nodejs/node.exe" 
+"C:\Program 
+Files\nodejs/node_mo ...
++ ~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo      
+        : NotSpecified  
+  : (ΓÜá Warning: Ne.   
+ ..not be correct.:S    
+tring) [], RemoteEx    
+ception
+    + FullyQualifiedErr 
+   orId : NativeComman  
+  dError
+ 
+ We detected multiple 
+lockfiles and selected 
+the directory of C:\User
+s\YAMUNA\package-lock.js
+on as the root 
+directory.
+ To silence this 
+warning, set 
+`turbopack.root` in 
+your Next.js config, or 
+consider removing one 
+of the lockfiles if 
+it's not needed.
+   See https://nextjs.or
+g/docs/app/api-reference
+/config/next-config-js/t
+urbopack#root-directory 
+for more information.
+ Detected additional 
+lockfiles: 
+   * C:\Users\YAMUNA\Lin
+kVault\linkvault\package
+-lock.json
+
+Γû▓ Next.js 16.2.2 (Turbopack)
+- Environments: .env.local
+
+ΓÜá The "middleware" 
+file convention is 
+deprecated. Please use 
+"proxy" instead. Learn 
+more: https://nextjs.org
+/docs/messages/middlewar
+e-to-proxy
+  Creating an optimized production build ...
+Γ£ô Compiled successfully in 5.4s
+  Running TypeScript ...
+Failed to type check.
+
+./src/components/save-li
+nk-dialog.tsx:285:44
+Type error: Type 'Dispat
+ch<SetStateAction<string
+>>' is not assignable 
+to type '(value: string 
+| null, eventDetails: Se
+lectRootChangeEventDetai
+ls) => void'.
+  Types of parameters 
+'value' and 'value' are 
+incompatible.
+    Type 'string | 
+null' is not assignable 
+to type 'SetStateAction<
+string>'.
+      Type 'null' is 
+not assignable to type '
+SetStateAction<string>'.
+
+  [90m283 |[0m        
+     <div className=[32
+m"space-y-2"[0m>
+  [90m284 |[0m        
+       <[33mLabel[0m c
+lassName=[32m"text-sm"
+[0m>[33mAdd[0m to 
+[33mCollection[0m (opt
+ional)</[33mLabel[0m>
+[31m[1m>[0m [90m285 
+|[0m               
+<[33mSelect[0m 
+value={collectionId} onV
+alueChange={setCollectio
+nId}>
+  [90m    |[0m        
+                        
+            
+[31m[1m^[0m
+  [90m286 |[0m        
+         
+<[33mSelectTrigger[0m 
+className=[32m"bg-backg
+round/50"[0m>
+  [90m287 |[0m        
+           
+<[33mSelectValue[0m pl
+aceholder=[32m"Select 
+a collection"[0m />
+  [90m288 |[0m        
+         </[33mSelectTr
+igger[0m>
+Next.js build worker 
+exited with code: 1 and 
+signal: null

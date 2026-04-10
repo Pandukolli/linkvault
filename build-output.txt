@@ -1,0 +1,631 @@
+﻿node.exe : ΓÜá Warning: 
+Next.js inferred your 
+workspace root, but it 
+may not be correct.
+At line:1 char:1
++ & "C:\Program 
+Files\nodejs/node.exe" 
+"C:\Program 
+Files\nodejs/node_mo ...
++ ~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo      
+        : NotSpecified  
+  : (ΓÜá Warning: Ne.   
+ ..not be correct.:S    
+tring) [], RemoteEx    
+ception
+    + FullyQualifiedErr 
+   orId : NativeComman  
+  dError
+ 
+ We detected multiple 
+lockfiles and selected 
+the directory of C:\User
+s\YAMUNA\package-lock.js
+on as the root 
+directory.
+ To silence this 
+warning, set 
+`turbopack.root` in 
+your Next.js config, or 
+consider removing one 
+of the lockfiles if 
+it's not needed.
+   See https://nextjs.or
+g/docs/app/api-reference
+/config/next-config-js/t
+urbopack#root-directory 
+for more information.
+ Detected additional 
+lockfiles: 
+   * C:\Users\YAMUNA\Lin
+kVault\linkvault\package
+-lock.json
+
+Γû▓ Next.js 16.2.2 (Turbopack)
+- Environments: .env.local
+
+ΓÜá The "middleware" 
+file convention is 
+deprecated. Please use 
+"proxy" instead. Learn 
+more: https://nextjs.org
+/docs/messages/middlewar
+e-to-proxy
+  Creating an optimized production build ...
+
+> Build error occurred
+Error: Turbopack build 
+failed with 6 errors:
+./LinkVault/linkvault/sr
+c/components/onboarding-
+wizard.tsx:10:1
+Export THEMES doesn't 
+exist in target module
+  [90m 8 |[0m 
+[36mimport[0m { 
+[33mInput[0m } 
+[36mfrom[0m [32m"@/co
+mponents/ui/input"[0m;
+  [90m 9 |[0m 
+[36mimport[0m { 
+[33mLabel[0m } 
+[36mfrom[0m [32m"@/co
+mponents/ui/label"[0m;
+[31m[1m>[0m [90m10 
+|[0m [36mimport[0m { 
+[33mTHEMES[0m, 
+accentCSSMap, bgColors, 
+applyThemeVariables } 
+[36mfrom[0m 
+[32m"@/lib/themes"[0m;
+  [90m   |[0m [31m[1
+m^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^[0m
+  [90m11 |[0m 
+[36mimport[0m { 
+usePreferences } 
+[36mfrom[0m [32m"@/ho
+oks/use-preferences"[0m
+;
+  [90m12 |[0m 
+[36mimport[0m { 
+createClient } 
+[36mfrom[0m [32m"@/li
+b/supabase/client"[0m;
+  [90m13 |[0m 
+[36mimport[0m { toast 
+} [36mfrom[0m 
+[32m"sonner"[0m;
+
+The export THEMES was 
+not found in module [pro
+ject]/LinkVault/linkvaul
+t/src/lib/themes.ts 
+[app-client] 
+(ecmascript).
+Did you mean to import 
+getSystemTheme?
+All exports of the 
+module are statically 
+known (It doesn't have 
+dynamic exports). So 
+it's known statically 
+that the requested 
+export doesn't exist.
+
+Import traces:
+  Client Component 
+Browser:
+    ./LinkVault/linkvaul
+t/src/components/onboard
+ing-wizard.tsx [Client 
+Component Browser]
+    ./LinkVault/linkvaul
+t/src/app/dashboard/layo
+ut.tsx [Client 
+Component Browser]
+    ./LinkVault/linkvaul
+t/src/app/dashboard/layo
+ut.tsx [Server 
+Component]
+
+  Client Component SSR:
+    ./LinkVault/linkvaul
+t/src/components/onboard
+ing-wizard.tsx [Client 
+Component SSR]
+    ./LinkVault/linkvaul
+t/src/app/dashboard/layo
+ut.tsx [Client 
+Component SSR]
+    ./LinkVault/linkvaul
+t/src/app/dashboard/layo
+ut.tsx [Server 
+Component]
+
+
+./LinkVault/linkvault/sr
+c/components/onboarding-
+wizard.tsx:10:1
+Export THEMES doesn't 
+exist in target module
+  [90m 8 |[0m 
+[36mimport[0m { 
+[33mInput[0m } 
+[36mfrom[0m [32m"@/co
+mponents/ui/input"[0m;
+  [90m 9 |[0m 
+[36mimport[0m { 
+[33mLabel[0m } 
+[36mfrom[0m [32m"@/co
+mponents/ui/label"[0m;
+[31m[1m>[0m [90m10 
+|[0m [36mimport[0m { 
+[33mTHEMES[0m, 
+accentCSSMap, bgColors, 
+applyThemeVariables } 
+[36mfrom[0m 
+[32m"@/lib/themes"[0m;
+  [90m   |[0m [31m[1
+m^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^[0m
+  [90m11 |[0m 
+[36mimport[0m { 
+usePreferences } 
+[36mfrom[0m [32m"@/ho
+oks/use-preferences"[0m
+;
+  [90m12 |[0m 
+[36mimport[0m { 
+createClient } 
+[36mfrom[0m [32m"@/li
+b/supabase/client"[0m;
+  [90m13 |[0m 
+[36mimport[0m { toast 
+} [36mfrom[0m 
+[32m"sonner"[0m;
+
+The export THEMES was 
+not found in module [pro
+ject]/LinkVault/linkvaul
+t/src/lib/themes.ts 
+[app-ssr] (ecmascript).
+Did you mean to import 
+getSystemTheme?
+All exports of the 
+module are statically 
+known (It doesn't have 
+dynamic exports). So 
+it's known statically 
+that the requested 
+export doesn't exist.
+
+Import traces:
+  Client Component 
+Browser:
+    ./LinkVault/linkvaul
+t/src/components/onboard
+ing-wizard.tsx [Client 
+Component Browser]
+    ./LinkVault/linkvaul
+t/src/app/dashboard/layo
+ut.tsx [Client 
+Component Browser]
+    ./LinkVault/linkvaul
+t/src/app/dashboard/layo
+ut.tsx [Server 
+Component]
+
+  Client Component SSR:
+    ./LinkVault/linkvaul
+t/src/components/onboard
+ing-wizard.tsx [Client 
+Component SSR]
+    ./LinkVault/linkvaul
+t/src/app/dashboard/layo
+ut.tsx [Client 
+Component SSR]
+    ./LinkVault/linkvaul
+t/src/app/dashboard/layo
+ut.tsx [Server 
+Component]
+
+
+./LinkVault/linkvault/sr
+c/components/onboarding-
+wizard.tsx:10:1
+Export accentCSSMap 
+doesn't exist in target 
+module
+  [90m 8 |[0m 
+[36mimport[0m { 
+[33mInput[0m } 
+[36mfrom[0m [32m"@/co
+mponents/ui/input"[0m;
+  [90m 9 |[0m 
+[36mimport[0m { 
+[33mLabel[0m } 
+[36mfrom[0m [32m"@/co
+mponents/ui/label"[0m;
+[31m[1m>[0m [90m10 
+|[0m [36mimport[0m { 
+[33mTHEMES[0m, 
+accentCSSMap, bgColors, 
+applyThemeVariables } 
+[36mfrom[0m 
+[32m"@/lib/themes"[0m;
+  [90m   |[0m [31m[1
+m^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^[0m
+  [90m11 |[0m 
+[36mimport[0m { 
+usePreferences } 
+[36mfrom[0m [32m"@/ho
+oks/use-preferences"[0m
+;
+  [90m12 |[0m 
+[36mimport[0m { 
+createClient } 
+[36mfrom[0m [32m"@/li
+b/supabase/client"[0m;
+  [90m13 |[0m 
+[36mimport[0m { toast 
+} [36mfrom[0m 
+[32m"sonner"[0m;
+
+The export accentCSSMap 
+was not found in module 
+[project]/LinkVault/link
+vault/src/lib/themes.ts 
+[app-client] 
+(ecmascript).
+Did you mean to import 
+getSystemTheme?
+All exports of the 
+module are statically 
+known (It doesn't have 
+dynamic exports). So 
+it's known statically 
+that the requested 
+export doesn't exist.
+
+Import traces:
+  Client Component 
+Browser:
+    ./LinkVault/linkvaul
+t/src/components/onboard
+ing-wizard.tsx [Client 
+Component Browser]
+    ./LinkVault/linkvaul
+t/src/app/dashboard/layo
+ut.tsx [Client 
+Component Browser]
+    ./LinkVault/linkvaul
+t/src/app/dashboard/layo
+ut.tsx [Server 
+Component]
+
+  Client Component SSR:
+    ./LinkVault/linkvaul
+t/src/components/onboard
+ing-wizard.tsx [Client 
+Component SSR]
+    ./LinkVault/linkvaul
+t/src/app/dashboard/layo
+ut.tsx [Client 
+Component SSR]
+    ./LinkVault/linkvaul
+t/src/app/dashboard/layo
+ut.tsx [Server 
+Component]
+
+
+./LinkVault/linkvault/sr
+c/components/onboarding-
+wizard.tsx:10:1
+Export accentCSSMap 
+doesn't exist in target 
+module
+  [90m 8 |[0m 
+[36mimport[0m { 
+[33mInput[0m } 
+[36mfrom[0m [32m"@/co
+mponents/ui/input"[0m;
+  [90m 9 |[0m 
+[36mimport[0m { 
+[33mLabel[0m } 
+[36mfrom[0m [32m"@/co
+mponents/ui/label"[0m;
+[31m[1m>[0m [90m10 
+|[0m [36mimport[0m { 
+[33mTHEMES[0m, 
+accentCSSMap, bgColors, 
+applyThemeVariables } 
+[36mfrom[0m 
+[32m"@/lib/themes"[0m;
+  [90m   |[0m [31m[1
+m^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^[0m
+  [90m11 |[0m 
+[36mimport[0m { 
+usePreferences } 
+[36mfrom[0m [32m"@/ho
+oks/use-preferences"[0m
+;
+  [90m12 |[0m 
+[36mimport[0m { 
+createClient } 
+[36mfrom[0m [32m"@/li
+b/supabase/client"[0m;
+  [90m13 |[0m 
+[36mimport[0m { toast 
+} [36mfrom[0m 
+[32m"sonner"[0m;
+
+The export accentCSSMap 
+was not found in module 
+[project]/LinkVault/link
+vault/src/lib/themes.ts 
+[app-ssr] (ecmascript).
+Did you mean to import 
+getSystemTheme?
+All exports of the 
+module are statically 
+known (It doesn't have 
+dynamic exports). So 
+it's known statically 
+that the requested 
+export doesn't exist.
+
+Import traces:
+  Client Component 
+Browser:
+    ./LinkVault/linkvaul
+t/src/components/onboard
+ing-wizard.tsx [Client 
+Component Browser]
+    ./LinkVault/linkvaul
+t/src/app/dashboard/layo
+ut.tsx [Client 
+Component Browser]
+    ./LinkVault/linkvaul
+t/src/app/dashboard/layo
+ut.tsx [Server 
+Component]
+
+  Client Component SSR:
+    ./LinkVault/linkvaul
+t/src/components/onboard
+ing-wizard.tsx [Client 
+Component SSR]
+    ./LinkVault/linkvaul
+t/src/app/dashboard/layo
+ut.tsx [Client 
+Component SSR]
+    ./LinkVault/linkvaul
+t/src/app/dashboard/layo
+ut.tsx [Server 
+Component]
+
+
+./LinkVault/linkvault/sr
+c/components/tiptap-edit
+or.tsx:13:1
+Export default doesn't 
+exist in target module
+  [90m11 |[0m 
+[36mimport[0m 
+[33mTiptapLink[0m 
+[36mfrom[0m [32m"@tip
+tap/extension-link"[0m;
+  [90m12 |[0m 
+[36mimport[0m 
+[33mTiptapImage[0m 
+[36mfrom[0m [32m"@tip
+tap/extension-image"[0m
+;
+[31m[1m>[0m [90m13 
+|[0m [36mimport[0m 
+[33mTable[0m 
+[36mfrom[0m [32m"@tip
+tap/extension-table"[0m
+;
+  [90m   |[0m [31m[1
+m^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^[0
+m
+  [90m14 |[0m 
+[36mimport[0m 
+[33mTableRow[0m 
+[36mfrom[0m [32m"@tip
+tap/extension-table-row"
+[0m;
+  [90m15 |[0m 
+[36mimport[0m 
+[33mTableCell[0m 
+[36mfrom[0m [32m"@tip
+tap/extension-table-cell
+"[0m;
+  [90m16 |[0m 
+[36mimport[0m 
+[33mTableHeader[0m 
+[36mfrom[0m [32m"@tip
+tap/extension-table-head
+er"[0m;
+
+The export default was 
+not found in module [pro
+ject]/LinkVault/linkvaul
+t/node_modules/@tiptap/e
+xtension-table/dist/inde
+x.js [app-client] 
+(ecmascript).
+Did you mean to import 
+updateColumns?
+All exports of the 
+module are statically 
+known (It doesn't have 
+dynamic exports). So 
+it's known statically 
+that the requested 
+export doesn't exist.
+
+Import traces:
+  Client Component 
+Browser:
+    ./LinkVault/linkvaul
+t/src/components/tiptap-
+editor.tsx [Client 
+Component Browser]
+    ./LinkVault/linkvaul
+t/src/app/dashboard/note
+s/page.tsx [Client 
+Component Browser]
+    ./LinkVault/linkvaul
+t/src/app/dashboard/note
+s/page.tsx [Server 
+Component]
+
+  Client Component SSR:
+    ./LinkVault/linkvaul
+t/src/components/tiptap-
+editor.tsx [Client 
+Component SSR]
+    ./LinkVault/linkvaul
+t/src/app/dashboard/note
+s/page.tsx [Client 
+Component SSR]
+    ./LinkVault/linkvaul
+t/src/app/dashboard/note
+s/page.tsx [Server 
+Component]
+
+
+./LinkVault/linkvault/sr
+c/components/tiptap-edit
+or.tsx:13:1
+Export default doesn't 
+exist in target module
+  [90m11 |[0m 
+[36mimport[0m 
+[33mTiptapLink[0m 
+[36mfrom[0m [32m"@tip
+tap/extension-link"[0m;
+  [90m12 |[0m 
+[36mimport[0m 
+[33mTiptapImage[0m 
+[36mfrom[0m [32m"@tip
+tap/extension-image"[0m
+;
+[31m[1m>[0m [90m13 
+|[0m [36mimport[0m 
+[33mTable[0m 
+[36mfrom[0m [32m"@tip
+tap/extension-table"[0m
+;
+  [90m   |[0m [31m[1
+m^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^[0
+m
+  [90m14 |[0m 
+[36mimport[0m 
+[33mTableRow[0m 
+[36mfrom[0m [32m"@tip
+tap/extension-table-row"
+[0m;
+  [90m15 |[0m 
+[36mimport[0m 
+[33mTableCell[0m 
+[36mfrom[0m [32m"@tip
+tap/extension-table-cell
+"[0m;
+  [90m16 |[0m 
+[36mimport[0m 
+[33mTableHeader[0m 
+[36mfrom[0m [32m"@tip
+tap/extension-table-head
+er"[0m;
+
+The export default was 
+not found in module [pro
+ject]/LinkVault/linkvaul
+t/node_modules/@tiptap/e
+xtension-table/dist/inde
+x.js [app-ssr] 
+(ecmascript).
+Did you mean to import 
+updateColumns?
+All exports of the 
+module are statically 
+known (It doesn't have 
+dynamic exports). So 
+it's known statically 
+that the requested 
+export doesn't exist.
+
+Import traces:
+  Client Component 
+Browser:
+    ./LinkVault/linkvaul
+t/src/components/tiptap-
+editor.tsx [Client 
+Component Browser]
+    ./LinkVault/linkvaul
+t/src/app/dashboard/note
+s/page.tsx [Client 
+Component Browser]
+    ./LinkVault/linkvaul
+t/src/app/dashboard/note
+s/page.tsx [Server 
+Component]
+
+  Client Component SSR:
+    ./LinkVault/linkvaul
+t/src/components/tiptap-
+editor.tsx [Client 
+Component SSR]
+    ./LinkVault/linkvaul
+t/src/app/dashboard/note
+s/page.tsx [Client 
+Component SSR]
+    ./LinkVault/linkvaul
+t/src/app/dashboard/note
+s/page.tsx [Server 
+Component]
+
+
+    at <unknown> (./Link
+Vault/linkvault/src/comp
+onents/onboarding-wizard
+.tsx:10:1)
+    at <unknown> (./Link
+Vault/linkvault/src/comp
+onents/onboarding-wizard
+.tsx:10:1)
+    at <unknown> (./Link
+Vault/linkvault/src/comp
+onents/onboarding-wizard
+.tsx:10:1)
+    at <unknown> (./Link
+Vault/linkvault/src/comp
+onents/onboarding-wizard
+.tsx:10:1)
+    at <unknown> (./Link
+Vault/linkvault/src/comp
+onents/tiptap-editor.tsx
+:13:1)
+    at <unknown> (./Link
+Vault/linkvault/src/comp
+onents/tiptap-editor.tsx
+:13:1)

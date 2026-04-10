@@ -1,0 +1,162 @@
+﻿node.exe : ΓÜá 
+Warning: Next.js 
+inferred your 
+workspace root, but 
+it may not be 
+correct.
+At line:1 char:1
++ & "C:\Program Files
+\nodejs/node.exe" 
+"C:\Program 
+Files\nodejs/node_mo 
+...
++ ~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~
+    + CategoryInfo   
+           : 
+NotSpecified    : 
+(ΓÜá Warning: Ne.    
+..not be correct.:S  
+  tring) [], 
+RemoteEx    ception
+    + 
+FullyQualifiedErr    
+orId : NativeComman  
+  dError
+ 
+ We detected 
+multiple lockfiles 
+and selected the 
+directory of C:\Users
+\YAMUNA\package-lock.
+json as the root 
+directory.
+ To silence this 
+warning, set 
+`turbopack.root` in 
+your Next.js config, 
+or consider removing 
+one of the lockfiles 
+if it's not needed.
+   See https://nextjs
+.org/docs/app/api-ref
+erence/config/next-co
+nfig-js/turbopack#roo
+t-directory for more 
+information.
+ Detected additional 
+lockfiles: 
+   * C:\Users\YAMUNA\
+LinkVault\linkvault\p
+ackage-lock.json
+
+Γû▓ Next.js 16.2.2 (Turbopack)
+- Environments: .env.local
+
+ΓÜá The "middleware" 
+file convention is 
+deprecated. Please 
+use "proxy" instead. 
+Learn more: https://n
+extjs.org/docs/messag
+es/middleware-to-prox
+y
+  Creating an optimized production build ...
+Γ£ô Compiled successfully in 5.4s
+  Running TypeScript ...
+  Finished TypeScript in 6.7s ...
+  Collecting page data using 11 workers ...
+  Generating static pages using 11 workers (0/22) ...
+  Generating static pages using 11 workers (5/22) 
+Γ¿» 
+useSearchParams() 
+should be wrapped in 
+a suspense boundary 
+at page 
+"/dashboard/links". 
+Read more: https://ne
+xtjs.org/docs/message
+s/missing-suspense-wi
+th-csr-bailout
+    at S (C:\Users\YA
+MUNA\LinkVault\linkva
+ult\.next\server\chun
+ks\ssr\13g6_next_0e~a
+hq2._.js:2:2692)
+    at r (C:\Users\YA
+MUNA\LinkVault\linkva
+ult\.next\server\chun
+ks\ssr\13g6_next_0e~a
+hq2._.js:4:6760)
+    at C:\Users\YAMUN
+A\LinkVault\linkvault
+\.next\server\chunks\
+ssr\LinkVault_linkvau
+lt_0v6kqs7._.js:1:113
+46
+    at an (C:\Users\Y
+AMUNA\LinkVault\linkv
+ault\node_modules\nex
+t\dist\compiled\next-
+server\app-page-turbo
+.runtime.prod.js:2:84
+267)
+    at ai (C:\Users\Y
+AMUNA\LinkVault\linkv
+ault\node_modules\nex
+t\dist\compiled\next-
+server\app-page-turbo
+.runtime.prod.js:2:86
+086)
+    at al (C:\Users\Y
+AMUNA\LinkVault\linkv
+ault\node_modules\nex
+t\dist\compiled\next-
+server\app-page-turbo
+.runtime.prod.js:2:10
+7860)
+    at ao (C:\Users\Y
+AMUNA\LinkVault\linkv
+ault\node_modules\nex
+t\dist\compiled\next-
+server\app-page-turbo
+.runtime.prod.js:2:10
+5275)
+    at aa (C:\Users\Y
+AMUNA\LinkVault\linkv
+ault\node_modules\nex
+t\dist\compiled\next-
+server\app-page-turbo
+.runtime.prod.js:2:84
+619)
+    at ai (C:\Users\Y
+AMUNA\LinkVault\linkv
+ault\node_modules\nex
+t\dist\compiled\next-
+server\app-page-turbo
+.runtime.prod.js:2:86
+135)
+    at ai (C:\Users\Y
+AMUNA\LinkVault\linkv
+ault\node_modules\nex
+t\dist\compiled\next-
+server\app-page-turbo
+.runtime.prod.js:2:10
+4615)
+Error occurred 
+prerendering page 
+"/dashboard/links". 
+Read more: https://ne
+xtjs.org/docs/message
+s/prerender-error
+Export encountered 
+an error on /dashboar
+d/links/page: 
+/dashboard/links, 
+exiting the build.
+Γ¿» Next.js build 
+worker exited with 
+code: 1 and signal: 
+null

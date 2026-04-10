@@ -1,0 +1,138 @@
+﻿
+> linkvault@0.1.0 build
+> next build
+
+node.exe : ΓÜá Warning: 
+Next.js inferred your 
+workspace root, but it 
+may not be correct.
+At line:1 char:1
++ & "C:\Program 
+Files\nodejs/node.exe" 
+"C:\Program 
+Files\nodejs/node_mo ...
++ ~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo      
+        : NotSpecified  
+  : (ΓÜá Warning: Ne.   
+ ..not be correct.:S    
+tring) [], RemoteEx    
+ception
+    + FullyQualifiedErr 
+   orId : NativeComman  
+  dError
+ 
+ We detected multiple 
+lockfiles and selected 
+the directory of C:\User
+s\YAMUNA\package-lock.js
+on as the root 
+directory.
+ To silence this 
+warning, set 
+`turbopack.root` in 
+your Next.js config, or 
+consider removing one 
+of the lockfiles if 
+it's not needed.
+   See https://nextjs.or
+g/docs/app/api-reference
+/config/next-config-js/t
+urbopack#root-directory 
+for more information.
+ Detected additional 
+lockfiles: 
+   * C:\Users\YAMUNA\Lin
+kVault\linkvault\package
+-lock.json
+
+Γû▓ Next.js 16.2.2 (Turbopack)
+- Environments: .env.local
+
+ΓÜá The "middleware" 
+file convention is 
+deprecated. Please use 
+"proxy" instead. Learn 
+more: https://nextjs.org
+/docs/messages/middlewar
+e-to-proxy
+  Creating an optimized production build ...
+
+> Build error occurred
+Error: Turbopack build 
+failed with 1 errors:
+./LinkVault/linkvault/sr
+c/app/dashboard/layout.t
+sx:8:1
+Module not found: Can't 
+resolve '@radix-ui/react
+-visually-hidden'
+  [90m 6 |[0m 
+[36mimport[0m { 
+[33mTopBar[0m } 
+[36mfrom[0m [32m"@/co
+mponents/top-bar"[0m;
+  [90m 7 |[0m 
+[36mimport[0m { 
+[33mSheet[0m, 
+[33mSheetContent[0m, 
+[33mSheetTitle[0m } 
+[36mfrom[0m [32m"@/co
+mponents/ui/sheet"[0m;
+[31m[1m>[0m [90m 8 
+|[0m [36mimport[0m { 
+[33mVisuallyHidden[0m 
+} [36mfrom[0m [32m"@r
+adix-ui/react-visually-h
+idden"[0m;
+  [90m   |[0m [31m[1
+m^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^[0m
+  [90m 9 |[0m
+  [90m10 |[0m 
+[36mexport[0m 
+[36mdefault[0m 
+[36mfunction[0m [33mD
+ashboardLayout[0m({
+  [90m11 |[0m   
+children,
+
+
+
+Import traces:
+  Client Component 
+Browser:
+    ./LinkVault/linkvaul
+t/src/app/dashboard/layo
+ut.tsx [Client 
+Component Browser]
+    ./LinkVault/linkvaul
+t/src/app/dashboard/layo
+ut.tsx [Server 
+Component]
+
+  Client Component SSR:
+    ./LinkVault/linkvaul
+t/src/app/dashboard/layo
+ut.tsx [Client 
+Component SSR]
+    ./LinkVault/linkvaul
+t/src/app/dashboard/layo
+ut.tsx [Server 
+Component]
+
+https://nextjs.org/docs/
+messages/module-not-foun
+d
+
+
+    at <unknown> (./Link
+Vault/linkvault/src/app/
+dashboard/layout.tsx:8:1
+)
+    at <unknown> (https:
+//nextjs.org/docs/messag
+es/module-not-found)
