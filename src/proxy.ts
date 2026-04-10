@@ -5,8 +5,8 @@ import { type NextRequest } from "next/server";
  * Next.js Middleware — runs on every matched request.
  * Refreshes Supabase auth session and protects routes.
  */
-export default async function proxy(request: NextRequest) {
-  return await updateSession(request);
+export function proxy(request: NextRequest) {
+  return updateSession(request);
 }
 
 export const config = {
