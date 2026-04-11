@@ -5,7 +5,7 @@ import { type NextRequest } from "next/server";
  * Next.js Middleware — runs on every matched request.
  * Refreshes Supabase auth session and protects routes.
  */
-export function proxy(request: NextRequest) {
+export function middleware(request: NextRequest) {
   return updateSession(request);
 }
 
