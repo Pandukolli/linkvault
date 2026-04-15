@@ -4,32 +4,32 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { createClient } from "@/lib/supabase/client";
+import { motion, useScroll, useTransform } from "framer-motion";
 import {
-  Link2,
-  Sparkles,
   Shield,
   FolderOpen,
   StickyNote,
   PenLine,
   Image as ImageIcon,
-  FileText,
-  Briefcase,
-  ListMusic,
   ArrowRight,
   Zap,
-  ChevronRight,
-  Moon,
-  Sun,
+  Play,
+  ExternalLink,
 } from "lucide-react";
-import { useTheme } from "next-themes";
+import { Logo } from "@/components/logo";
+import { useLinks } from "@/hooks/use-links";
 
 export default function LandingPage() {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
-  const { theme, setTheme } = useTheme();
-  const [mounted, setMounted] = useState(false);
+  const { links } = useLinks();
+  const recentLinks = links?.slice(0, 3) || [];
+  
+  const { scrollY } = useScroll();
+  const y1 = useTransform(scrollY, [0, 500], [0, 200]);
+  const y2 = useTransform(scrollY, [0, 500], [0, -150]);
+  const rotate = useTransform(scrollY, [0, 500], [0, 10]);
 
   useEffect(() => {
-    setMounted(true);
     const supabase = createClient();
     supabase.auth.getSession().then(({ data: { session } }) => {
       setIsAuthenticated(!!session);
@@ -39,215 +39,203 @@ export default function LandingPage() {
   const features = [
     {
       icon: Zap,
-      title: "Instant Link Saving",
-      description: "Paste any URL and we auto-fetch title, description, and favicon. Save in seconds.",
+      title: "Instant Saving",
+      description: "Paste any URL and we auto-fetch metadata instantly. Save in milliseconds.",
     },
     {
       icon: StickyNote,
       title: "Digital Notebooks",
-      description: "Beautiful note-taking with rich text editing. Create multiple notebooks, daily notes, and more.",
+      description: "Premium rich text editing with daily notes and multi-vault support.",
     },
     {
       icon: PenLine,
-      title: "Blog Publishing",
-      description: "Write and publish beautiful blogs with SEO optimization. Draft, preview, and share with the world.",
+      title: "Blog Engine",
+      description: "Write and publish beautiful artifacts with built-in SEO and social previewing.",
     },
     {
       icon: ImageIcon,
-      title: "Image Gallery",
-      description: "Upload and organize thousands of images. Drag-and-drop reordering with folders and captions.",
-    },
-    {
-      icon: FileText,
-      title: "Document Vault",
-      description: "Store PDFs, documents and files securely. One-click download in original format.",
-    },
-    {
-      icon: Briefcase,
-      title: "Resume Builder",
-      description: "Build professional resumes with beautiful templates. One-click export as PDF.",
+      title: "Visual Gallery",
+      description: "Organize thousands of images with cinematic grids and smart sorting.",
     },
     {
       icon: FolderOpen,
       title: "Smart Collections",
-      description: "Group any items into collections. Organize links, notes, images — everything in one place.",
-    },
-    {
-      icon: Sparkles,
-      title: "AI Auto-Tagging",
-      description: "Optional AI-powered categorization. Organize your entire digital life effortlessly.",
+      description: "Group any items into categorized collections for professional organization.",
     },
     {
       icon: Shield,
-      title: "Bank-Level Security",
-      description: "Row Level Security, encrypted storage, and strict access policies. Your data, your privacy.",
+      title: "Vault Security",
+      description: "Bank-level encryption and private storage. Your legacy, protected forever.",
     },
   ];
 
   return (
-    <div className="min-h-screen bg-white selection:bg-primary selection:text-white">
+    <div className="min-h-screen bg-[#0A0B0F] text-slate-100 selection:bg-[#A3FF3D]/20 selection:text-[#A3FF3D] overflow-x-hidden pt-20">
       {/* Navigation */}
-      <nav className="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-xl border-b border-slate-100">
-        <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-2.5">
-            <div className="w-9 h-9 rounded-xl bg-primary flex items-center justify-center shadow-lg shadow-primary/20">
-              <Link2 className="w-5 h-5 text-white stroke-[2.5]" />
-            </div>
-            <span className="text-xl font-black tracking-tighter text-black uppercase">LinkVault</span>
+      <nav className="fixed top-0 left-0 right-0 z-50 border-b border-white/5 bg-[#0A0B0F]/90 backdrop-blur-3xl">
+        <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+          <Link href="/" className="flex items-center gap-2.5 group">
+            <Logo size={32} />
           </Link>
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-8">
+            <div className="hidden md:flex items-center gap-6">
+              <Link href="/dashboard/project" className="text-[10px] font-bold uppercase tracking-[0.3em] text-slate-500 hover:text-slate-100 transition-colors">PROJECT</Link>
+              <Link href="/dashboard/gallery" className="text-[10px] font-bold uppercase tracking-[0.3em] text-slate-500 hover:text-slate-100 transition-colors">GALLERY</Link>
+            </div>
             {isAuthenticated === null ? (
-              <div className="w-24 h-9 animate-pulse bg-slate-50 rounded-lg" />
+              <div className="w-24 h-9 animate-pulse bg-white/5 rounded-full" />
             ) : isAuthenticated ? (
               <Link href="/dashboard">
-                <Button size="sm" className="gap-1.5 h-10 px-5 rounded-xl bg-primary hover:bg-primary/90 text-white font-bold">
-                  Dashboard
-                  <ArrowRight className="w-4 h-4" />
+                <Button className="h-10 px-6 rounded-full bg-white text-black hover:bg-white/90 font-bold transition-all hover:scale-105">
+                  Vault
                 </Button>
               </Link>
             ) : (
-              <>
+              <div className="flex items-center gap-3">
                 <Link href="/login">
-                  <Button variant="ghost" size="sm" className="h-10 rounded-xl text-black font-bold hover:bg-slate-100">
-                    Sign In
+                  <Button variant="ghost" className="h-10 px-6 rounded-full text-white/50 hover:text-white hover:bg-white/5 font-bold transition-all">
+                    Login
                   </Button>
                 </Link>
                 <Link href="/signup">
-                  <Button size="sm" className="gap-1.5 h-10 px-5 rounded-xl bg-primary hover:bg-primary/90 text-white font-bold">
-                    Get Started
-                    <ArrowRight className="w-4 h-4" />
+                  <Button className="h-10 px-6 rounded-full bg-white text-black hover:bg-white/90 font-bold transition-all hover:scale-105">
+                    Sign Up
                   </Button>
                 </Link>
-              </>
+              </div>
             )}
           </div>
         </div>
       </nav>
 
       {/* Hero Section */}
-      <section className="pt-40 pb-24 px-6 relative">
-        <div className="max-w-5xl mx-auto text-center relative z-10">
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-slate-100 bg-slate-50 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-10 animate-fade-in-up">
-            <span className="w-1.5 h-1.5 rounded-full bg-primary animate-subtle-pulse" />
-            Premium Personal Life OS
-          </div>
+      <section className="pt-15 pb-20 px-6 lg:px-12 relative min-h-[90vh] flex items-center">
+        <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
 
-          <h1
-            className="text-6xl md:text-8xl lg:text-[7rem] font-black tracking-tight leading-[0.9] mb-8 animate-fade-in-up text-black uppercase"
-            style={{ animationDelay: "0.1s" }}
-          >
-            Digital chaos,
-            <br />
-            <span className="text-primary italic">mastered.</span>
-          </h1>
+          {/* Left Column: Matter & CTA */}
+          <div className="relative z-10 text-left">
+            <motion.div
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-white/5 bg-[#14151B] text-[9px] font-bold text-slate-400 uppercase tracking-[0.4em] mb-8"
+            >
+              <span className="w-1.5 h-1.5 rounded-full bg-[#A3FF3D] animate-pulse" />
+              Machine-Assisted Knowledge
+            </motion.div>
 
-          <p
-            className="text-lg md:text-xl text-slate-500 max-w-2xl mx-auto mb-12 leading-relaxed font-bold tracking-tight animate-fade-in-up"
-            style={{ animationDelay: "0.2s" }}
-          >
-            A high-end, absolute luxury hub for your links, notes, images, and documents. Built for clients who demand the best in organization and security.
-          </p>
+            <motion.h1
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.1 }}
+              className="text-6xl md:text-8xl lg:text-9xl font-black tracking-tighter leading-[0.85] mb-10 uppercase text-slate-100"
+            >
+              Next-Gen
+              <br />
+              <span className="text-[#A3FF3D]">Vaulting.</span>
+            </motion.h1>
 
-          <div
-            className="flex items-center justify-center gap-4 flex-wrap animate-fade-in-up"
-            style={{ animationDelay: "0.3s" }}
-          >
-            {isAuthenticated === null ? (
-              <div className="w-48 h-12 bg-slate-50 animate-pulse rounded-xl" />
-            ) : isAuthenticated ? (
-              <Link href="/dashboard">
-                <Button size="lg" className="h-14 px-10 text-base font-black uppercase tracking-widest gap-2 rounded-2xl bg-primary hover:bg-primary/90 text-white shadow-xl shadow-primary/20 transition-all hover:-translate-y-1">
-                  Open Dashboard
-                  <ArrowRight className="w-5 h-5" />
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2 }}
+              className="text-lg md:text-xl text-slate-400 max-w-lg mb-12 leading-relaxed font-medium tracking-tight"
+            >
+              A high-end, absolute luxury hub for digital artifacts. Architected for peak performance and immersive organization.
+            </motion.p>
+
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.3 }}
+              className="flex items-center gap-6"
+            >
+              <Link href={isAuthenticated ? "/dashboard/links" : "/signup"}>
+                <Button size="lg" className="h-16 px-12 text-xs font-bold uppercase tracking-[0.3em] gap-3 rounded-full bg-[#FF4DFF] text-white hover:bg-[#FF4DFF]/90 transition-all hover:scale-105 active:scale-95 shadow-2xl shadow-[#FF4DFF]/20">
+                  {isAuthenticated ? "Enter Vault" : "Start Consult"}
+                  <ArrowRight className="w-4 h-4" />
                 </Button>
               </Link>
-            ) : (
-              <>
-                <Link href="/signup">
-                  <Button size="lg" className="h-14 px-10 text-base font-black uppercase tracking-widest gap-2 rounded-2xl bg-primary hover:bg-primary/90 text-white shadow-xl shadow-primary/20 transition-all hover:-translate-y-1">
-                    Create Your Vault
-                    <ArrowRight className="w-5 h-5" />
-                  </Button>
-                </Link>
-                <Link href="/login">
-                  <Button
-                    size="lg"
-                    variant="outline"
-                    className="h-14 px-10 text-base font-black uppercase tracking-widest rounded-2xl border-2 border-black text-black hover:bg-black hover:text-white transition-all hover:-translate-y-1"
-                  >
-                    Sign In
-                  </Button>
-                </Link>
-              </>
-            )}
-          </div>
-        </div>
-      </section>
+            </motion.div>
 
-      {/* Dashboard Preview */}
-      <section className="px-6 pb-32">
-        <div className="max-w-6xl mx-auto">
-          <div className="rounded-[2.5rem] border border-slate-100 bg-white p-2 shadow-2xl shadow-primary/5">
-            <div className="rounded-[2rem] border border-slate-100 bg-slate-50/50 overflow-hidden">
-              <div className="flex items-center gap-2 px-6 py-4 border-b border-slate-100 bg-white">
-                <div className="flex gap-2">
-                  <div className="w-3 h-3 rounded-full bg-slate-200" />
-                  <div className="w-3 h-3 rounded-full bg-slate-200" />
-                  <div className="w-3 h-3 rounded-full bg-slate-200" />
+            <div className="mt-24 flex items-center gap-16 border-t border-white/5 pt-12">
+              <div>
+                <p className="text-3xl font-bold tracking-tighter mb-1">5.0</p>
+                <div className="flex gap-1 mb-2">
+                  {[...Array(5)].map((_, i) => <div key={i} className="w-3 h-3 bg-yellow-400 rounded-sm" />)}
                 </div>
-                <div className="flex-1 flex justify-center">
-                  <div className="px-6 py-1.5 rounded-full bg-slate-50 text-[10px] text-slate-400 font-black uppercase tracking-widest">
-                    linkvault.app/dashboard
-                  </div>
-                </div>
+                <p className="text-[9px] text-white/30 uppercase font-bold tracking-widest">Global Standard</p>
               </div>
-              <div className="p-10 md:p-16 grid grid-cols-2 md:grid-cols-4 gap-6">
-                {[
-                  { label: "Links Saved", value: "2,847", icon: Link2 },
-                  { label: "Notes Written", value: "482", icon: StickyNote },
-                  { label: "Blogs Published", value: "23", icon: PenLine },
-                  { label: "Images Stored", value: "1,294", icon: ImageIcon },
-                ].map((stat) => (
-                  <div
-                    key={stat.label}
-                    className="group relative overflow-hidden rounded-3xl border border-primary/10 bg-primary/5 p-6 text-center shadow-lg shadow-primary/5 hover:bg-primary/10 transition-all duration-300"
-                  >
-                    <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-primary transform -translate-x-full group-hover:translate-x-0 transition-transform duration-300" />
-                    <stat.icon className="w-6 h-6 mx-auto mb-4 text-primary relative z-10" />
-                    <div className="text-3xl font-black tracking-tighter text-black relative z-10">{stat.value}</div>
-                    <div className="text-[10px] text-slate-400 font-bold uppercase tracking-widest mt-2 relative z-10">{stat.label}</div>
-                  </div>
-                ))}
+              <div className="max-w-[240px]">
+                <p className="text-[12px] leading-relaxed text-white/40 font-medium italic">
+                  "Advanced indexing ensures your knowledge is accessible within milliseconds."
+                </p>
               </div>
             </div>
+          </div>
+
+          {/* Right Column: Parallax Composition (Visible on Large Screens) */}
+          <div className="relative h-[650px] hidden lg:block">
+            <motion.div
+              style={{ y: y1, rotate }}
+              className="absolute top-0 right-0 w-full h-[550px] rounded-[4rem] bg-stone-900 border-3 border-white/100 overflow-hidden shadow-2xl"
+            >
+              <div className="absolute inset-0 bg-blue-500 mix-blend-overlay" />
+              <div className="p-16 h-full">
+                <div className="w-full h-full border-3 border-white/20 rounded-3xl flex items-center justify-center relative bg-black">
+                  <div className="absolute top-8 left-8 flex items-center gap-2">
+                    <div className="w-2 h-2 rounded-full bg-red-500" />
+                    <div className="w-2 h-2 rounded-full bg-yellow-500" />
+                    <div className="w-2 h-2 rounded-full bg-green-500" />
+                  </div>
+                  <span className="text-[12px] uppercase tracking-[1.5em] text-white/50 font-bold">Secure Diagnosis</span>
+                  <div className="absolute inset-x-16 bottom-16 h-[1px] bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+                </div>
+              </div>
+            </motion.div>
+
+            {/* Floating Status Card */}
+            <motion.div
+              style={{ y: y2 }}
+              className="absolute -bottom-12 -left-12 w-72 p-8 rounded-[2.5rem] bg-white text-black shadow-2xl z-20"
+            >
+              <div className="flex items-center justify-between mb-6">
+                <span className="text-[10px] font-bold uppercase tracking-widest opacity-90 text-black">Precision</span>
+                <div className="w-8 h-8 rounded-xl bg-black/5 flex items-center justify-center">
+                  <Zap className="w-4 h-4 text-black" />
+                </div>
+              </div>
+              <p className="text-4xl font-bold mb-6 tracking-tighter">99.9%</p>
+              <div className="flex gap-1.5 items-end h-16">
+                {[30, 60, 40, 80, 50, 90, 45, 75, 55, 85].map((h, i) => (
+                  <div key={i} style={{ height: `${h}%` }} className="flex-1 bg-black rounded-[2px] opacity-30" />
+                ))}
+              </div>
+            </motion.div>
+
+            {/* Floating Accents */}
+            <motion.div
+              animate={{ y: [0, 20, 0], opacity: [0.2, 0.4, 0.2] }}
+              transition={{ duration: 4, repeat: Infinity }}
+              className="absolute top-1/4 left-0 w-12 h-12 rounded-full bg-blue-500 blur-2xl"
+            />
           </div>
         </div>
       </section>
 
       {/* Features Grid */}
-      <section className="py-32 px-6 border-y border-slate-50">
-        <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-20">
-            <h2 className="text-4xl md:text-5xl font-black tracking-tight mb-6 text-black uppercase">
-              The Absolute Standard.
-            </h2>
-            <p className="text-slate-500 max-w-xl mx-auto text-lg font-bold tracking-tight">
-              One app to unify your digital existence. Engineered for performance and luxury.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 stagger-children">
+      <section className="py-48 px-6 lg:px-12 border-t border-white/2 bg-[#0A0B0F]">
+        <div className="max-w-7xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {features.map((feature, i) => (
               <div
                 key={i}
-                className="group relative overflow-hidden rounded-3xl bg-primary/5 border border-primary/10 p-8 hover:bg-primary/10 transition-all duration-500 hover:shadow-xl hover:shadow-primary/10"
+                className="group relative overflow-hidden rounded-[3rem] bg-[#14151B] border border-white/5 p-12 transition-all duration-700 hover:border-[#A3FF3D]/20 hover:scale-[1.02]"
               >
-                <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-primary transform -translate-x-full group-hover:translate-x-0 transition-transform duration-500" />
-                <div className="w-12 h-12 rounded-2xl bg-white text-primary flex items-center justify-center mb-6 group-hover:bg-primary group-hover:text-white transition-all duration-500 shadow-sm border border-primary/10 relative z-10">
-                  <feature.icon className="w-6 h-6" />
+                <div className="w-16 h-16 rounded-[1.5rem] bg-[#1F2129] text-[#A3FF3D] flex items-center justify-center mb-10 border border-white/5 transition-transform shadow-xl group-hover:bg-[#A3FF3D] group-hover:text-[#0A0B0F]">
+                  <feature.icon className="w-7 h-7" />
                 </div>
-                <h3 className="text-xl font-black mb-3 tracking-tight text-black uppercase relative z-10">{feature.title}</h3>
-                <p className="text-sm text-slate-600 leading-relaxed font-medium relative z-10">
+                <h3 className="text-2xl font-black mb-5 tracking-tighter text-slate-100 uppercase">{feature.title}</h3>
+                <p className="text-[15px] text-slate-400 leading-relaxed font-medium">
                   {feature.description}
                 </p>
               </div>
@@ -256,41 +244,98 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* CTA */}
-      <section className="py-32 px-6">
-        <div className="max-w-4xl mx-auto text-center">
-          <div className="rounded-[3rem] border border-slate-100 bg-white p-16 md:p-24 shadow-2xl shadow-primary/5 relative overflow-hidden">
-            <div className="absolute top-0 right-0 w-64 h-64 bg-primary/5 rounded-full -translate-y-1/2 translate-x-1/2 blur-3xl" />
-            <h2 className="text-4xl md:text-6xl font-black tracking-tight mb-8 text-black uppercase relative z-10">
-              Your legacy,
-              <br />
-              <span className="text-primary italic">secured.</span>
-            </h2>
-            <p className="text-slate-500 mb-12 max-w-lg mx-auto text-lg font-bold tracking-tight relative z-10">
-              Join the elite circle of users who treat their digital life as a premium asset.
+      {/* Premium Footer */}
+      <footer className="relative pt-32 pb-16 px-6 bg-[#0A0B0F] overflow-hidden">
+        {/* Aesthetic Separator */}
+        <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-[#A3FF3D]/30 to-transparent opacity-50" />
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[300px] h-[200px] bg-[#A3FF3D]/5 blur-[120px] pointer-events-none" />
+        
+        <div className="max-w-7xl mx-auto flex flex-col lg:flex-row justify-between gap-20 relative z-10">
+          
+          {/* Brand Identity */}
+          <div className="flex flex-col gap-8 w-full lg:w-1/3">
+            <Logo size={48} showText={true} />
+            <p className="text-[11px] leading-relaxed font-medium text-slate-400 capitalize-first-letter max-w-sm">
+              The elegant Personal Knowledge OS where notes feel like books, images tell stories, and blogs come alive.
             </p>
-            <Link href={isAuthenticated ? "/dashboard" : "/signup"}>
-              <Button size="lg" className="h-14 px-12 text-base font-black uppercase tracking-widest gap-2 rounded-2xl bg-primary hover:bg-primary/90 text-white shadow-xl shadow-primary/20 transition-all hover:-translate-y-1 relative z-10">
-                {isAuthenticated ? "Open Dashboard" : "Initiate Setup"}
-                <ArrowRight className="w-5 h-5" />
-              </Button>
-            </Link>
+          </div>
+
+          {/* Dynamic Recent Links module if authenticated */}
+          {isAuthenticated && (
+            <div className="w-full lg:w-1/3 flex flex-col gap-6">
+               <div className="flex items-center gap-2">
+                 <div className="w-1.5 h-1.5 rounded-full bg-[#00F5FF] animate-pulse" />
+                 <span className="text-[10px] font-black uppercase tracking-[0.2em] text-[#00F5FF]">Neural Stream (Recent)</span>
+               </div>
+               
+               {recentLinks.length > 0 ? (
+                 <div className="flex flex-col gap-4">
+                   {recentLinks.map((link, i) => (
+                      <Link 
+                        key={link.id} 
+                        href={link.url} 
+                        target="_blank" 
+                        rel="noreferrer"
+                        className="group flex items-center justify-between p-4 rounded-2xl bg-[#14151B] border border-white/5 hover:border-[#00F5FF]/30 transition-all duration-500 hover:translate-x-2"
+                      >
+                         <div className="flex flex-col gap-1 overflow-hidden pr-4">
+                            <span className="text-[12px] font-bold text-white truncate">{link.title || link.url}</span>
+                            <span className="text-[9px] text-white/30 uppercase tracking-widest truncate">{new URL(link.url).hostname}</span>
+                         </div>
+                         <div className="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center group-hover:bg-[#00F5FF]/10 transition-colors shrink-0">
+                           <ExternalLink className="w-3 h-3 text-white/40 group-hover:text-[#00F5FF]" />
+                         </div>
+                      </Link>
+                   ))}
+                 </div>
+               ) : (
+                  <div className="p-4 rounded-xl border border-white/5 bg-white/5 border-dashed">
+                     <span className="text-[11px] font-medium text-white/30">Your vault is empty. Initialize your knowledge base today.</span>
+                  </div>
+               )}
+            </div>
+          )}
+
+          {/* Navigation Matrix */}
+          <div className="w-full lg:w-1/4 flex flex-col gap-8 lg:text-right">
+             <div className="space-y-4">
+               <span className="text-[10px] font-bold text-white/20 uppercase tracking-[0.3em] block">Sectors</span>
+               <div className="flex flex-col gap-3 lg:items-end">
+                  <Link href="/dashboard/project" className="text-[12px] font-bold text-slate-400 hover:text-[#5E7BFF] transition-colors relative group w-max">
+                     <span className="relative z-10">Project</span>
+                     <span className="absolute -bottom-1 left-0 right-0 h-[1px] bg-[#5E7BFF] scale-x-0 group-hover:scale-x-100 transition-transform origin-right" />
+                  </Link>
+                  <Link href="/dashboard/gallery" className="text-[12px] font-bold text-slate-400 hover:text-[#FF4DFF] transition-colors relative group w-max">
+                     <span className="relative z-10">Gallery</span>
+                     <span className="absolute -bottom-1 left-0 right-0 h-[1px] bg-[#FF4DFF] scale-x-0 group-hover:scale-x-100 transition-transform origin-right" />
+                  </Link>
+                  <Link href="/dashboard/notes" className="text-[12px] font-bold text-slate-400 hover:text-[#A3FF3D] transition-colors relative group w-max">
+                     <span className="relative z-10">Notes</span>
+                     <span className="absolute -bottom-1 left-0 right-0 h-[1px] bg-[#A3FF3D] scale-x-0 group-hover:scale-x-100 transition-transform origin-right" />
+                  </Link>
+               </div>
+             </div>
+
+             <div className="space-y-4 pt-8 border-t border-white/5">
+                <span className="text-[10px] font-bold text-white/20 uppercase tracking-[0.3em] block">Directory</span>
+                <div className="flex flex-row flex-wrap lg:justify-end gap-x-6 gap-y-2">
+                   <Link href="#" className="text-[10px] font-medium uppercase tracking-widest text-slate-500 hover:text-white transition-colors">Privacy</Link>
+                   <Link href="#" className="text-[10px] font-medium uppercase tracking-widest text-slate-500 hover:text-white transition-colors">Terms</Link>
+                   <Link href="#" className="text-[10px] font-medium uppercase tracking-widest text-slate-500 hover:text-white transition-colors">Manifesto</Link>
+                </div>
+             </div>
           </div>
         </div>
-      </section>
 
-      {/* Footer */}
-      <footer className="border-t border-slate-100 py-12 px-6 bg-slate-50/30">
-        <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-8">
-          <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-xl bg-primary flex items-center justify-center">
-              <Link2 className="w-4 h-4 text-white stroke-[3]" />
-            </div>
-            <span className="text-base font-black uppercase tracking-tighter">LinkVault</span>
-          </div>
-          <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">
-            © {new Date().getFullYear()} LINKVAULT — PERSONAL LIFE OPERATING SYSTEM.
-          </p>
+        {/* Absolute Bottom Signature */}
+        <div className="mt-20 flex flex-col sm:flex-row items-center justify-between gap-4 max-w-7xl mx-auto text-center sm:text-left">
+           <p className="text-[9px] font-bold text-[#A3FF3D]/40 uppercase tracking-[0.2em] flex items-center gap-3">
+             <span className="w-1.5 h-1.5 rounded-full bg-[#A3FF3D]" />
+             System Online — All systems nominal
+           </p>
+           <p className="text-[9px] font-bold text-white/10 uppercase tracking-[0.2em]">
+             © {new Date().getFullYear()} VaultOS. Architected for the Extraordinary.
+           </p>
         </div>
       </footer>
     </div>

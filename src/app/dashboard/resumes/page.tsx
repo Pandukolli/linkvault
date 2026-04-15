@@ -155,29 +155,27 @@ export default function ResumesPage() {
 
   if (selectedResume && activeResume) {
     return (
-      <div className="max-w-7xl mx-auto px-6 md:px-12 py-12 pb-24">
-        <div className="flex flex-col md:flex-row md:items-center gap-6 mb-12 pb-8 border-b border-slate-50">
+      <div className="max-w-[1500px] mx-auto px-6 md:px-12 py-12 pb-24">
+        <div className="flex flex-col md:flex-row md:items-center gap-8 mb-16 pb-10 border-b border-white/5">
           <Button
             variant="ghost"
-            className="h-10 px-4 gap-2 rounded-xl text-slate-400 hover:text-black hover:bg-slate-50 transition-all font-black uppercase text-[10px] tracking-widest self-start md:self-auto"
+            className="h-12 px-6 gap-3 rounded-2xl text-white/30 hover:text-white hover:bg-white/5 transition-all font-black uppercase text-[10px] tracking-widest self-start md:self-auto border border-white/5"
             onClick={() => setSelectedResume(null)}
           >
-            <ChevronLeft className="w-3.5 h-3.5 stroke-[3]" />
+            <ChevronLeft className="w-4 h-4 stroke-[3]" />
             Return to Career Hub
           </Button>
           <div className="flex-1" />
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-4">
             <Button
-              className="h-10 px-6 gap-2 rounded-xl bg-primary text-white font-black uppercase tracking-widest text-[10px] transition-all shadow-lg shadow-primary/20 hover:shadow-primary/40 hover:-translate-y-0.5"
+              className="h-12 px-8 gap-3 rounded-2xl bg-white text-black font-black uppercase tracking-widest text-[10px] transition-all shadow-2xl shadow-white/10 hover:-translate-y-1"
               onClick={handleExportPDF}
             >
-              <Download className="w-3.5 h-3.5" />
+              <Download className="w-4 h-4" />
               Manifest PDF
             </Button>
-            <Button
-              variant="ghost"
-              size="icon"
-              className="w-10 h-10 rounded-xl text-slate-300 hover:bg-red-500 hover:text-white transition-all transform hover:scale-110"
+            <button
+              className="w-12 h-12 rounded-2xl flex items-center justify-center text-white/10 hover:text-red-500 hover:bg-white/5 transition-all border border-white/5"
               onClick={() => {
                 if (confirm("Permanently erase archival resume?")) {
                   deleteResume.mutate(activeResume.id);
@@ -185,8 +183,8 @@ export default function ResumesPage() {
                 }
               }}
             >
-              <Trash2 className="w-4 h-4" />
-            </Button>
+              <Trash2 className="w-5 h-5" />
+            </button>
           </div>
         </div>
 
@@ -195,82 +193,75 @@ export default function ResumesPage() {
           type="text"
           value={activeResume.title || ""}
           onChange={(e) => updateResume.mutate({ id: activeResume.id, title: e.target.value })}
-          className="w-full text-5xl font-black tracking-tight bg-transparent border-none outline-none mb-16 placeholder:text-slate-100 text-black uppercase"
+          className="w-full text-7xl font-black tracking-tighter bg-transparent border-none outline-none mb-16 placeholder:text-white/5 text-white uppercase drop-shadow-2xl"
           placeholder="Credential Nomenclature..."
         />
 
         <div className="space-y-12">
           {/* Personal Info */}
-          <section className="bg-white rounded-[3rem] p-10 space-y-10 border border-slate-100 shadow-2xl shadow-primary/[0.02] relative overflow-hidden group">
-            <div className="absolute top-0 right-0 w-32 h-32 bg-primary/[0.03] blur-3xl rounded-full -mr-16 -mt-16 group-hover:scale-150 transition-transform duration-700" />
-            <h3 className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] flex items-center gap-3 ml-1 relative z-10">
-              <div className="w-7 h-7 rounded-lg bg-primary/5 flex items-center justify-center">
-                <User className="w-4 h-4 text-primary" />
-              </div>
+          <section className="bg-[#050505] rounded-[3rem] p-12 space-y-12 border border-white/5 shadow-2xl relative overflow-hidden group">
+            <h3 className="text-[10px] font-black uppercase tracking-[0.4em] flex items-center gap-4 relative z-10" style={{ color: "#5E7BFF" }}>
+              <User className="w-4 h-4" />
               Personal Identity
             </h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 relative z-10">
-              <div className="space-y-2">
-                <Label className="text-[9px] font-black uppercase tracking-widest text-slate-400 ml-1">Full Designation</Label>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-10 relative z-10">
+              <div className="space-y-3">
+                <Label className="text-[10px] font-black uppercase tracking-[0.3em] text-white/20 ml-1">Full Designation</Label>
                 <Input
                   placeholder="Official Name..."
                   value={content.name}
                   onChange={(e) => updateContent({ name: e.target.value })}
-                  className="h-14 text-sm rounded-2xl border-slate-50 font-bold focus:border-primary/20 transition-all shadow-none"
+                  className="h-14 text-sm rounded-2xl border-white/5 bg-white/5 font-bold text-white focus:border-white/20 transition-all shadow-none"
                 />
               </div>
-              <div className="space-y-2">
-                <Label className="text-[9px] font-black uppercase tracking-widest text-slate-400 ml-1">Archive Email</Label>
+              <div className="space-y-3">
+                <Label className="text-[10px] font-black uppercase tracking-[0.3em] text-white/20 ml-1">Archive Email</Label>
                 <Input
                   placeholder="Primary Communication..."
                   value={content.email}
                   onChange={(e) => updateContent({ email: e.target.value })}
-                  className="h-14 text-sm rounded-2xl border-slate-50 font-bold focus:border-primary/20 transition-all shadow-none"
+                  className="h-14 text-sm rounded-2xl border-white/5 bg-white/5 font-bold text-white focus:border-white/20 transition-all shadow-none"
                 />
               </div>
-              <div className="space-y-2">
-                <Label className="text-[9px] font-black uppercase tracking-widest text-slate-400 ml-1">Contact Protocol</Label>
+              <div className="space-y-3">
+                <Label className="text-[10px] font-black uppercase tracking-[0.3em] text-white/20 ml-1">Contact Protocol</Label>
                 <Input
                   placeholder="Phone Line..."
                   value={content.phone}
                   onChange={(e) => updateContent({ phone: e.target.value })}
-                  className="h-14 text-sm rounded-2xl border-slate-50 font-bold focus:border-primary/20 transition-all shadow-none"
+                  className="h-14 text-sm rounded-2xl border-white/5 bg-white/5 font-bold text-white focus:border-white/20 transition-all shadow-none"
                 />
               </div>
-              <div className="space-y-2">
-                <Label className="text-[9px] font-black uppercase tracking-widest text-slate-400 ml-1">Geographic Location</Label>
+              <div className="space-y-3">
+                <Label className="text-[10px] font-black uppercase tracking-[0.3em] text-white/20 ml-1">Geographic Location</Label>
                 <Input
                   placeholder="Archive Node..."
                   value={content.location}
                   onChange={(e) => updateContent({ location: e.target.value })}
-                  className="h-14 text-sm rounded-2xl border-slate-50 font-bold focus:border-primary/20 transition-all shadow-none"
+                  className="h-14 text-sm rounded-2xl border-white/5 bg-white/5 font-bold text-white focus:border-white/20 transition-all shadow-none"
                 />
               </div>
             </div>
-            <div className="space-y-2 relative z-10">
-              <Label className="text-[9px] font-black uppercase tracking-widest text-slate-400 ml-1">Mission briefing</Label>
+            <div className="space-y-3 relative z-10">
+              <Label className="text-[10px] font-black uppercase tracking-[0.3em] text-white/20 ml-1">Mission briefing</Label>
               <textarea
                 placeholder="Professional summary of your career trajectory..."
                 value={content.summary}
                 onChange={(e) => updateContent({ summary: e.target.value })}
-                className="w-full min-h-[140px] text-sm bg-white border border-slate-50 rounded-[2rem] p-6 resize-none outline-none focus:border-primary/20 transition-all font-bold leading-relaxed shadow-none"
+                className="w-full min-h-[160px] text-sm bg-white/5 border border-white/5 rounded-[2.5rem] p-8 resize-none outline-none text-white focus:border-white/20 transition-all font-medium leading-relaxed shadow-none"
               />
             </div>
           </section>
 
           {/* Experience */}
-          <section className="bg-white rounded-[3rem] p-10 space-y-10 border border-slate-100 shadow-2xl shadow-primary/[0.02]">
+          <section className="bg-[#050505] rounded-[3rem] p-12 space-y-12 border border-white/5 shadow-2xl">
             <div className="flex items-center justify-between">
-              <h3 className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] flex items-center gap-3 ml-1">
-                <div className="w-7 h-7 rounded-lg bg-primary/5 flex items-center justify-center">
-                  <Briefcase className="w-4 h-4 text-primary" />
-                </div>
+              <h3 className="text-[10px] font-black uppercase tracking-[0.4em] flex items-center gap-4" style={{ color: "#5E7BFF" }}>
+                <Briefcase className="w-4 h-4" />
                 Professional History
               </h3>
-              <Button
-                variant="ghost"
-                size="sm"
-                className="h-10 px-4 text-[10px] font-black uppercase tracking-widest gap-2 rounded-xl text-primary hover:bg-primary/5 transition-all"
+              <button
+                className="h-10 px-6 text-[10px] font-black uppercase tracking-widest gap-2 rounded-xl text-white/40 hover:text-white hover:bg-white/5 transition-all border border-white/10"
                 onClick={() =>
                   updateContent({
                     experience: [
@@ -280,9 +271,9 @@ export default function ResumesPage() {
                   })
                 }
               >
-                <Plus className="w-4 h-4 stroke-[3]" />
+                <Plus className="w-4 h-4" />
                 Add Record
-              </Button>
+              </button>
             </div>
             {content.experience.map((exp, i) => (
               <div key={i} className="relative p-8 rounded-[2.5rem] bg-slate-50 border border-slate-100 space-y-6 group/item hover:border-primary/10 transition-all">
@@ -354,19 +345,15 @@ export default function ResumesPage() {
             ))}
           </section>
 
-          {/* Education */}
-          <section className="bg-white rounded-[3rem] p-10 space-y-10 border border-slate-100 shadow-2xl shadow-primary/[0.02]">
+          {/* Academic */}
+          <section className="bg-[#050505] rounded-[3rem] p-12 space-y-12 border border-white/5 shadow-2xl">
             <div className="flex items-center justify-between">
-              <h3 className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] flex items-center gap-3 ml-1">
-                <div className="w-7 h-7 rounded-lg bg-primary/5 flex items-center justify-center">
-                  <GraduationCap className="w-4 h-4 text-primary" />
-                </div>
+              <h3 className="text-[10px] font-black uppercase tracking-[0.4em] flex items-center gap-4" style={{ color: "#5E7BFF" }}>
+                <GraduationCap className="w-4 h-4" />
                 Academic Archives
               </h3>
-              <Button
-                variant="ghost"
-                size="sm"
-                className="h-10 px-4 text-[10px] font-black uppercase tracking-widest gap-2 rounded-xl text-primary hover:bg-primary/5 transition-all"
+              <button
+                className="h-10 px-6 text-[10px] font-black uppercase tracking-widest gap-2 rounded-xl text-white/40 hover:text-white hover:bg-white/5 transition-all border border-white/10"
                 onClick={() =>
                   updateContent({
                     education: [
@@ -376,9 +363,9 @@ export default function ResumesPage() {
                   })
                 }
               >
-                <Plus className="w-4 h-4 stroke-[3]" />
+                <Plus className="w-4 h-4" />
                 Add Credential
-              </Button>
+              </button>
             </div>
             {content.education.map((edu, i) => (
               <div key={i} className="relative p-8 rounded-[2.5rem] bg-slate-50 border border-slate-100 space-y-6 group/item hover:border-primary/10 transition-all">
@@ -438,12 +425,10 @@ export default function ResumesPage() {
           </section>
 
           {/* Skills */}
-          <section className="bg-white rounded-[3rem] p-10 space-y-10 border border-slate-100 shadow-2xl shadow-primary/[0.02]">
-            <h3 className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] flex items-center gap-3 ml-1">
-              <div className="w-7 h-7 rounded-lg bg-primary/5 flex items-center justify-center">
-                <Wrench className="w-4 h-4 text-primary" />
-              </div>
-              Core proficiencies
+          <section className="bg-[#050505] rounded-[3rem] p-12 space-y-12 border border-white/5 shadow-2xl">
+            <h3 className="text-[10px] font-black uppercase tracking-[0.4em] flex items-center gap-4" style={{ color: "#5E7BFF" }}>
+              <Wrench className="w-4 h-4" />
+              Core Proficiencies
             </h3>
             <div className="space-y-6">
               <div className="space-y-2">
@@ -482,21 +467,18 @@ export default function ResumesPage() {
   }
 
   return (
-    <div className="max-w-7xl mx-auto px-6 md:px-12 py-12 pb-24">
-      <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-16">
-        <div>
-          <h1 className="text-4xl font-black text-black tracking-tight uppercase flex items-center gap-5">
-            <div className="w-12 h-12 rounded-[1.5rem] bg-primary/5 flex items-center justify-center">
-              <Briefcase className="w-7 h-7 text-primary" />
-            </div>
+    <div className="max-w-[1500px] mx-auto px-6 md:px-12 py-12 pb-24 h-full relative">
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-20">
+        <div className="space-y-4">
+          <h1 className="text-7xl font-black text-white tracking-tighter uppercase">
             Credentials
           </h1>
-          <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mt-3 opacity-40">
+          <p className="text-[10px] font-black uppercase tracking-[0.4em]" style={{ color: "#5E7BFF" }}>
             Strategic professional archives and credential management
           </p>
         </div>
         <Button
-          className="h-12 px-8 gap-3 bg-primary hover:bg-primary/90 text-white rounded-2xl font-black transition-all shadow-2xl shadow-primary/30 hover:shadow-primary/50 hover:-translate-y-1 uppercase tracking-tighter"
+          className="h-14 px-10 gap-3 bg-white text-black hover:bg-white/90 rounded-2xl font-black transition-all shadow-2xl shadow-white/10 hover:-translate-y-1 uppercase tracking-tighter"
           onClick={() =>
             createResume.mutate("Official Resume", {
               onSuccess: (data) => setSelectedResume(data.id),
@@ -509,22 +491,22 @@ export default function ResumesPage() {
       </div>
 
       {isLoading ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {Array.from({ length: 3 }).map((_, i) => (
-            <Skeleton key={i} className="h-48 rounded-[2.5rem] bg-slate-50" />
+            <Skeleton key={i} className="h-64 rounded-[2.5rem] bg-white/5 animate-pulse" />
           ))}
         </div>
       ) : resumes.length === 0 ? (
-        <div className="text-center py-32 rounded-[3.5rem] bg-white border border-slate-100 shadow-2xl shadow-primary/5">
-          <div className="w-24 h-24 mx-auto bg-slate-50 rounded-[2rem] flex items-center justify-center mb-8 border border-slate-100 shadow-inner group transition-all duration-500 hover:scale-110">
-            <Briefcase className="w-10 h-10 text-primary opacity-40 group-hover:opacity-100 transition-opacity" />
+        <div className="text-center py-40 rounded-[3.5rem] bg-[#050505] border border-white/5 shadow-2xl">
+          <div className="w-24 h-24 mx-auto bg-white/5 rounded-[2.5rem] flex items-center justify-center mb-10 border border-white/5 transition-all duration-700">
+            <Briefcase className="w-10 h-10 text-white/10" />
           </div>
-          <h3 className="text-3xl font-black text-black mb-3 tracking-tighter uppercase">Archives empty</h3>
-          <p className="text-sm text-slate-400 font-bold max-w-sm mx-auto mb-10 uppercase tracking-[0.2em] leading-relaxed">
+          <h3 className="text-4xl font-black text-white/50 mb-4 tracking-tighter uppercase">Archives empty</h3>
+          <p className="text-[11px] text-white/10 font-black max-w-sm mx-auto mb-10 uppercase tracking-[0.3em] leading-relaxed">
             Initialize your first professional record to begin archival credential management.
           </p>
           <Button
-            className="h-14 px-10 gap-3 bg-primary hover:bg-primary/90 text-white rounded-2xl font-black shadow-2xl shadow-primary/30 hover:shadow-primary/50 transition-all hover:-translate-y-1 uppercase tracking-tighter"
+            className="h-16 px-12 gap-4 bg-white text-black hover:bg-white/90 rounded-3xl font-black shadow-2xl shadow-white/10 transition-all hover:-translate-y-1 uppercase tracking-tighter"
             onClick={() => createResume.mutate("Official Resume")}
           >
             <Plus className="w-6 h-6 stroke-[3]" />
@@ -532,38 +514,35 @@ export default function ResumesPage() {
           </Button>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {resumes.map((resume) => {
             const resumeContent = resume.content as ResumeContent | null;
             return (
               <motion.div
                 key={resume.id}
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
-                whileHover={{ scale: 1.02 }}
-                className="group bg-white border border-slate-100 rounded-[3rem] p-10 cursor-pointer shadow-2xl shadow-primary/[0.02] hover:shadow-primary/[0.08] transition-all duration-500 relative overflow-hidden"
+                initial={{ opacity: 0, scale: 0.98 }} animate={{ opacity: 1, scale: 1 }}
+                className="group bg-[#050505] border border-white/5 rounded-[3rem] p-12 cursor-pointer transition-all duration-700 hover:border-white/10 relative overflow-hidden flex flex-col min-h-[400px]"
                 onClick={() => setSelectedResume(resume.id)}
               >
-                <div className="absolute top-0 right-0 w-24 h-24 bg-primary/[0.02] blur-2xl rounded-full -mr-12 -mt-12 group-hover:scale-150 transition-transform duration-700" />
-                <div className="flex items-start justify-between mb-6 relative z-10">
-                  <div className="w-14 h-14 rounded-2xl bg-primary/5 flex items-center justify-center group-hover:scale-110 transition-transform">
-                    <Briefcase className="w-7 h-7 text-primary" />
+                <div className="flex items-start justify-between mb-10">
+                  <div className="w-16 h-16 rounded-[1.5rem] bg-white/5 flex items-center justify-center group-hover:scale-110 transition-transform">
+                    <Briefcase className="w-8 h-8 text-white/30" />
                   </div>
-                  <span className="text-[10px] font-black text-slate-300 bg-slate-50 px-3 py-1.5 rounded-xl tabular-nums uppercase tracking-widest">
-                    v1.0
+                  <span className="text-[10px] font-black text-white/20 bg-white/5 px-4 py-2 rounded-xl uppercase tracking-widest border border-white/5">
+                    Archival v1
                   </span>
                 </div>
-                <h3 className="text-xl font-black text-black uppercase tracking-tight mb-3 relative z-10 group-hover:text-primary transition-colors">
+                <h3 className="text-2xl font-black text-white uppercase tracking-tighter mb-4 group-hover:text-white transition-colors">
                   {resume.title}
                 </h3>
-                <div className="text-[9px] font-black text-slate-300 uppercase tracking-[0.3em] flex items-center gap-2 relative z-10 mb-6">
-                  <Clock className="w-3.5 h-3.5" />
-                  Archived {new Date(resume.updated_at).toLocaleDateString()}
+                <div className="text-[9px] font-black text-white/20 uppercase tracking-[0.3em] flex items-center gap-3 mb-10">
+                  <Clock className="w-4 h-4" />
+                  Modified {new Date(resume.updated_at).toLocaleDateString()}
                 </div>
                 {resumeContent?.name && (
-                  <div className="pt-6 border-t border-slate-50 space-y-2 relative z-10">
-                    <div className="text-[10px] font-black text-black uppercase tracking-widest truncate">{resumeContent.name}</div>
-                    <div className="text-[9px] font-black text-slate-400 uppercase tracking-[0.2em] truncate">{resumeContent.email}</div>
+                  <div className="mt-auto pt-8 border-t border-white/5 space-y-3">
+                    <div className="text-[11px] font-black text-white uppercase tracking-widest truncate">{resumeContent.name}</div>
+                    <div className="text-[10px] font-black text-white/20 uppercase tracking-[0.2em] truncate">{resumeContent.email}</div>
                   </div>
                 )}
               </motion.div>

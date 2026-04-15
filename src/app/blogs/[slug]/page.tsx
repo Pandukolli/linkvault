@@ -120,7 +120,7 @@ export default function PublicBlogPage({ params }: { params: Promise<{ slug: str
             <div className="w-8 h-8 rounded-[10px] bg-primary flex items-center justify-center transition-transform group-hover:scale-105 shadow-sm shadow-primary/20">
               <Link2 className="w-4 h-4 text-white stroke-[2.5]" />
             </div>
-            <span className="text-sm font-black tracking-tighter text-black uppercase">LinkVault</span>
+            <span className="text-sm font-black tracking-tighter text-black uppercase">vaultOS</span>
           </Link>
           <div className="flex gap-2">
             <button 
@@ -164,7 +164,7 @@ export default function PublicBlogPage({ params }: { params: Promise<{ slug: str
                 )}
                 <div>
                   <div className="text-xs font-black text-black uppercase tracking-widest">
-                    {meta.authorName || "LinkVault Author"}
+                    {meta.authorName || "vaultOS Author"}
                   </div>
                   <div className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-0.5">
                     {meta.category || "Architectural Documentation"}
@@ -229,7 +229,7 @@ export default function PublicBlogPage({ params }: { params: Promise<{ slug: str
               )}
               <div className="flex-1">
                 <div className="text-[10px] font-black text-primary uppercase tracking-[0.2em] mb-2">About the Creator</div>
-                <h3 className="text-2xl font-black text-black uppercase tracking-tighter mb-4">{meta.authorName || "LinkVault Author"}</h3>
+                <h3 className="text-2xl font-black text-black uppercase tracking-tighter mb-4">{meta.authorName || "vaultOS Author"}</h3>
                 {meta.authorBio && (
                    <p className="text-sm font-medium text-slate-500 leading-relaxed italic border-l-2 border-primary/20 pl-4">{meta.authorBio}</p>
                 )}

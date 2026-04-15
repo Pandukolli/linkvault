@@ -154,34 +154,31 @@ export default function GalleryPage() {
   return (
     <div className="max-w-[1600px] mx-auto px-6 md:px-12 py-12 pb-24 h-full relative">
       {/* Hero Header */}
-      <div className="flex flex-col xl:flex-row xl:items-end justify-between gap-8 mb-12 animate-fade-in-up">
-        <div>
-          <h1 className="text-4xl md:text-5xl font-black text-black tracking-tighter uppercase flex items-center gap-5">
-            <div className="w-16 h-16 rounded-[1.5rem] bg-gradient-to-br from-primary to-primary/60 text-white flex items-center justify-center shadow-lg shadow-primary/20">
-              <Camera className="w-8 h-8" />
-            </div>
+      <div className="flex flex-col xl:flex-row xl:items-end justify-between gap-8 mb-20">
+        <div className="space-y-4">
+          <h1 className="text-7xl font-black text-slate-100 tracking-tighter uppercase">
             Visual Hub
           </h1>
-          <p className="text-xs font-black text-slate-400 uppercase tracking-[0.25em] mt-4 opacity-70">
-            {images.length} assets • {projects.length} projects • {images.filter(i=>i.is_story).length} stories
+          <p className="text-slate-400 text-[10px] font-black uppercase tracking-[0.4em]">
+            <span className="text-[#A3FF3D]">{images.length} assets</span> • <span className="text-[#5E7BFF]">{projects.length} projects</span> • <span className="text-[#FF4DFF]">{images.filter(i=>i.is_story).length} stories</span>
           </p>
         </div>
         
         <div className="flex items-center gap-4">
           {/* Search */}
           <div className="relative group hidden md:block">
-            <Search className="w-4 h-4 absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-primary transition-colors" />
+            <Search className="w-4 h-4 absolute left-4 top-1/2 -translate-y-1/2 text-white/20 group-focus-within:text-white transition-colors" />
             <input 
               type="text" 
-              placeholder="Search visuals..." 
+              placeholder="Query visuals..." 
               value={searchQuery}
               onChange={e => setSearchQuery(e.target.value)}
-              className="pl-12 pr-4 h-14 rounded-2xl bg-white border border-slate-100 font-bold text-sm focus:border-primary/30 focus:outline-none transition-all w-64 shadow-sm"
+              className="pl-12 pr-4 h-14 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-xl font-bold text-sm text-white focus:border-white/30 focus:outline-none transition-all w-64 shadow-2xl"
             />
           </div>
 
           <Button
-            className="h-14 px-8 gap-3 bg-black hover:bg-primary text-white rounded-2xl font-black transition-all duration-300 shadow-2xl shadow-black/10 hover:shadow-primary/30 hover:-translate-y-1 uppercase tracking-tighter"
+            className="h-14 px-8 gap-3 bg-white text-black hover:bg-white/90 rounded-2xl font-black transition-all duration-300 shadow-2xl shadow-white/10 hover:-translate-y-1 uppercase tracking-tighter"
             onClick={() => fileInputRef.current?.click()}
           >
             <Upload className="w-5 h-5 stroke-[3]" />
@@ -199,13 +196,13 @@ export default function GalleryPage() {
       </div>
 
       {/* Main Controls row */}
-      <div className="flex flex-col md:flex-row justify-between items-center gap-6 mb-10 pb-6 border-b border-slate-100 animate-fade-in-up" style={{ animationDuration: '0.8s' }}>
+      <div className="flex flex-col md:flex-row justify-between items-center gap-6 mb-12 pb-8 border-b border-white/5">
         {/* Mode Tabs */}
-        <div className="flex gap-2 p-1.5 bg-slate-50/80 backdrop-blur-xl rounded-[1.5rem] border border-slate-100/50">
+        <div className="flex gap-2 p-1.5 bg-[#14151B] rounded-2xl border border-white/5 shadow-2xl">
           {[
-            { id: "upload", label: "Quick Upload", icon: Layers },
-            { id: "projects", label: "Projects", icon: FolderOpen },
-            { id: "stories", label: "Stories", icon: Film }
+            { id: "upload", label: "Quick Upload", icon: Layers, color: "#A3FF3D" },
+            { id: "projects", label: "Projects", icon: FolderOpen, color: "#5E7BFF" },
+            { id: "stories", label: "Stories", icon: Film, color: "#FF4DFF" }
           ].map((m) => (
             <button
               key={m.id}
@@ -214,33 +211,33 @@ export default function GalleryPage() {
                 setSelectedProject(null);
                 setSelectedIds(new Set());
               }}
-              className={`flex items-center gap-2 px-6 py-3 text-[10px] font-black rounded-xl transition-all duration-300 uppercase tracking-widest ${
+              className={`flex items-center gap-3 px-8 py-3 text-[10px] font-black rounded-xl transition-all duration-700 uppercase tracking-widest ${
                 mode === m.id
-                  ? "bg-white text-black shadow-xl shadow-black/5"
-                  : "text-slate-400 hover:text-black hover:bg-white/40"
+                  ? "bg-slate-100 text-[#0A0B0F] shadow-2xl shadow-white/5"
+                  : "text-slate-400 hover:text-slate-100"
               }`}
             >
-              <m.icon className="w-4 h-4" />
+              <m.icon className="w-4 h-4" style={{ color: mode === m.id ? 'inherit' : m.color }} />
               {m.label}
             </button>
           ))}
         </div>
 
         {/* Action / View controls */}
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-6">
           {selectedIds.size > 0 && (
-            <div className="flex items-center gap-2 pr-4 border-r border-slate-200">
-              <span className="text-xs font-black text-primary uppercase tracking-widest">{selectedIds.size} Selected</span>
-              <Button variant="ghost" size="sm" className="h-10 text-red-500 hover:bg-red-50" onClick={handleBulkDelete}>
-                <Trash2 className="w-4 h-4 mr-2" /> Delete
-              </Button>
-              <Button variant="ghost" size="sm" className="h-10 text-slate-500 hover:bg-slate-100" onClick={() => setSelectedIds(new Set())}>
+            <div className="flex items-center gap-4 pr-6 border-r border-white/10">
+              <span className="text-[10px] font-black text-white uppercase tracking-[0.2em]">{selectedIds.size} Encrypted</span>
+              <button className="text-[10px] font-black uppercase tracking-widest text-red-400 hover:text-red-500" onClick={handleBulkDelete}>
+                Delete
+              </button>
+              <button className="text-[10px] font-black uppercase tracking-widest text-white/30 hover:text-white" onClick={() => setSelectedIds(new Set())}>
                 Cancel
-              </Button>
+              </button>
             </div>
           )}
 
-          <div className="flex gap-1 p-1 bg-slate-50 rounded-xl hidden sm:flex">
+          <div className="flex gap-1 p-1.5 bg-[#14151B] rounded-xl hidden sm:flex border border-white/5">
             {[ 
               { id: "masonry", icon: LayoutGrid },
               { id: "grid", icon: Grid3X3 },
@@ -249,9 +246,9 @@ export default function GalleryPage() {
               <button
                 key={v.id}
                 onClick={() => setViewMode(v.id as ViewMode)}
-                className={`p-2.5 rounded-lg transition-colors ${viewMode === v.id ? "bg-white text-black shadow-sm" : "text-slate-400 hover:text-black"}`}
+                className={`p-2.5 rounded-lg transition-all duration-500 ${viewMode === v.id ? "bg-slate-100 text-[#0A0B0F]" : "text-slate-500 hover:text-slate-100"}`}
               >
-                <v.icon className="w-4 h-4" />
+                <v.icon className="w-5 h-5" />
               </button>
             ))}
           </div>
@@ -349,11 +346,11 @@ export default function GalleryPage() {
                 )}
 
                 {filteredImages.length === 0 ? (
-                  <div className="text-center py-32 rounded-[3.5rem] bg-white border border-slate-100 shadow-2xl shadow-primary/5 cursor-pointer group transition-all duration-700 hover:border-primary/20" onClick={() => fileInputRef.current?.click()}>
-                    <div className="w-24 h-24 mx-auto bg-slate-50 rounded-[2rem] flex items-center justify-center mb-8 border border-slate-100 shadow-inner group-hover:scale-110 transition-all duration-500">
-                      <Upload className="w-10 h-10 text-primary opacity-40 group-hover:opacity-100 transition-opacity" />
+                  <div className="text-center py-32 rounded-[3.5rem] bg-[#14151B] border border-white/5 shadow-2xl cursor-pointer group transition-all duration-700 hover:border-[#A3FF3D]/20" onClick={() => fileInputRef.current?.click()}>
+                    <div className="w-24 h-24 mx-auto bg-[#1F2129] rounded-[2rem] flex items-center justify-center mb-8 border border-white/5 shadow-inner transition-all duration-500">
+                      <Upload className="w-10 h-10 text-[#A3FF3D] opacity-40 group-hover:opacity-100 transition-opacity" />
                     </div>
-                    <h3 className="text-3xl font-black text-black mb-3 tracking-tighter uppercase">Drop Visuals Here</h3>
+                    <h3 className="text-3xl font-black text-slate-100 mb-3 tracking-tighter uppercase">Drop Visuals Here</h3>
                     <p className="text-sm text-slate-400 font-bold max-w-sm mx-auto mb-10 uppercase tracking-[0.2em] leading-relaxed">
                       Transform your raw assets into a beautifully organized gallery.
                     </p>
@@ -363,9 +360,9 @@ export default function GalleryPage() {
                     {filteredImages.map((img, index) => (
                       <div
                         key={img.id}
-                        className={`group relative overflow-hidden bg-slate-50 border border-slate-100 cursor-pointer hover:shadow-xl hover:shadow-primary/10 transition-all duration-300
+                        className={`group relative overflow-hidden bg-[#14151B] border border-white/5 cursor-pointer hover:shadow-xl hover:shadow-[#A3FF3D]/5 transition-all duration-300
                           ${viewMode === "masonry" ? "gallery-masonry-item" : viewMode === "grid" ? "aspect-square rounded-[1.5rem]" : "flex h-32 rounded-[1.5rem] p-3 items-center gap-6"}
-                          ${selectedIds.has(img.id) ? "ring-4 ring-primary ring-offset-2" : ""}
+                          ${selectedIds.has(img.id) ? "ring-4 ring-[#A3FF3D] ring-offset-2 ring-offset-[#0A0B0F]" : ""}
                         `}
                         onClick={(e) => {
                           if (e.ctrlKey || e.metaKey || selectedIds.size > 0) {

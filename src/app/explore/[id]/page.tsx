@@ -52,7 +52,7 @@ export default async function PublicCollectionPage({
         <div className="max-w-4xl mx-auto px-4 h-14 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2">
             <Link2 className="w-4 h-4 text-primary" />
-            <span className="text-sm font-bold gradient-text">LinkVault</span>
+            <span className="text-sm font-bold gradient-text">vaultOS</span>
           </Link>
           <Link href="/login">
             <Button size="sm" variant="outline" className="text-xs">

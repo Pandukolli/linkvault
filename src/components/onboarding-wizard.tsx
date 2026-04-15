@@ -69,7 +69,7 @@ export function OnboardingWizard() {
       }
     }
 
-    toast.success(t("Welcome to LinkVault", "Welcome to LinkVault"), {
+    toast.success(t("Welcome to vaultOS", "Welcome to vaultOS"), {
       description: t("Your vault is ready.", "Your vault is ready."),
     });
     setClosing(true);

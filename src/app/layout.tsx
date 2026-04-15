@@ -1,31 +1,27 @@
 import type { Metadata } from "next";
-import { Plus_Jakarta_Sans, Bodoni_Moda, Jost } from "next/font/google";
+import { Inter, Space_Grotesk } from "next/font/google";
 import { ThemeProvider } from "@/providers/theme-provider";
 import { QueryProvider } from "@/providers/query-provider";
 import { Toaster } from "sonner";
 import { I18nProvider } from "@/providers/i18n-provider";
+import { TransmissionProvider } from "@/providers/transmission-provider";
 import "./globals.css";
 
-const plusJakartaSans = Plus_Jakarta_Sans({
+const inter = Inter({
   variable: "--font-sans",
   subsets: ["latin"],
 });
 
-const bodoniModa = Bodoni_Moda({
-  variable: "--font-bodoni",
-  subsets: ["latin"],
-});
-
-const jost = Jost({
-  variable: "--font-jost",
+const spaceGrotesk = Space_Grotesk({
+  variable: "--font-heading",
   subsets: ["latin"],
 });
 
 export const metadata: Metadata = {
-  title: "LinkVault — Save, Organize & Share Your Bookmarks",
+  title: "vaultOS — The Elegant Personal Knowledge OS",
   description:
-    "A modern, AI-powered bookmark manager. Save links, auto-tag with AI, organize into collections, and share with the world.",
-  keywords: ["bookmarks", "link manager", "organize links", "AI tagging", "collections"],
+    "The elegant Personal Knowledge OS where notes feel like books, images tell stories, and blogs come alive. A modern, AI-powered system for your digital life.",
+  keywords: ["knowledge base", "personal OS", "notes", "blogging", "AI", "bookmarks"],
 };
 
 export default function RootLayout({
@@ -36,21 +32,23 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${plusJakartaSans.variable} ${bodoniModa.variable} ${jost.variable} h-full antialiased`}
+      className={`${inter.variable} ${spaceGrotesk.variable} h-full antialiased`}
       suppressHydrationWarning
     >
-      <body className="min-h-full flex flex-col font-sans">
+      <body className="min-h-full flex flex-col font-sans bg-black">
         <ThemeProvider>
           <QueryProvider>
             <I18nProvider>
-              {children}
+              <TransmissionProvider>
+                {children}
+              </TransmissionProvider>
               <Toaster
                 position="bottom-right"
                 toastOptions={{
                   style: {
-                    background: "var(--color-zinc-900)",
-                    border: "1px solid var(--color-zinc-800)",
-                    color: "var(--color-slate-100)",
+                    background: "#000000",
+                    border: "1px solid rgba(255, 255, 255, 0.1)",
+                    color: "#F8FAFC",
                     backdropFilter: "blur(12px)",
                   },
                 }}

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useLinks } from "@/hooks/use-links";
 import { useCollections } from "@/hooks/use-collections";
@@ -39,19 +39,21 @@ interface SaveLinkDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   editingLink?: LinkWithTags | null;
+  initialData?: { url?: string; title?: string; description?: string; collectionId?: string; } | null;
 }
 
 export function SaveLinkDialog({
   open,
   onOpenChange,
   editingLink,
+  initialData,
 }: SaveLinkDialogProps) {
   const { t } = useTranslation();
-  const [url, setUrl] = useState(editingLink?.url || "");
-  const [title, setTitle] = useState(editingLink?.title || "");
-  const [description, setDescription] = useState(editingLink?.description || "");
-  const [notes, setNotes] = useState(editingLink?.notes || "");
-  const [tags, setTags] = useState<string[]>(editingLink?.tags?.map((t) => t.name) || []);
+  const [url, setUrl] = useState("");
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+  const [notes, setNotes] = useState("");
+  const [tags, setTags] = useState<string[]>([]);
   const [tagInput, setTagInput] = useState("");
   const [collectionId, setCollectionId] = useState<string>("");
   const [fetchingMeta, setFetchingMeta] = useState(false);
@@ -61,6 +63,34 @@ export function SaveLinkDialog({
   const { collections } = useCollections();
 
   const isEditing = !!editingLink;
+
+  // Sync state when dialog opens
+  useEffect(() => {
+    if (open) {
+      if (editingLink) {
+        setUrl(editingLink.url || "");
+        setTitle(editingLink.title || "");
+        setDescription(editingLink.description || "");
+        setNotes(editingLink.notes || "");
+        setTags(editingLink.tags?.map((t) => t.name) || []);
+        // Note: we're not touching collection ID here directly for edit unless it's available on link
+      } else if (initialData) {
+        setUrl(initialData.url || "");
+        setTitle(initialData.title || "");
+        setDescription(initialData.description || "");
+        setCollectionId(initialData.collectionId || "");
+        setNotes("");
+        setTags([]);
+      } else {
+        setUrl("");
+        setTitle("");
+        setDescription("");
+        setNotes("");
+        setTags([]);
+        setCollectionId("");
+      }
+    }
+  }, [open, editingLink, initialData]);
 
   // Auto-fetch URL metadata
   const fetchMetadata = async () => {
@@ -163,10 +193,10 @@ export function SaveLinkDialog({
         <form onSubmit={handleSubmit} className="space-y-6 mt-4">
           {/* URL */}
           <div className="space-y-2">
-            <Label htmlFor="url" className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">{t("URL", "URL")}</Label>
+            <Label htmlFor="url" className="text-[10px] font-black uppercase tracking-widest text-black ml-1">{t("URL", "URL")}</Label>
             <div className="flex gap-2">
               <div className="relative flex-1">
-                <Globe className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+                <Globe className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-black" />
                 <Input
                   id="url"
                   type="url"
@@ -174,7 +204,7 @@ export function SaveLinkDialog({
                   value={url}
                   onChange={(e) => setUrl(e.target.value)}
                   onBlur={fetchMetadata}
-                  className="pl-11 h-11 bg-slate-50 border border-slate-100 focus:border-primary focus:bg-white rounded-xl text-sm font-bold transition-all"
+                  className="pl-11 h-11 bg-slate-50 border border-black/20 focus:border-primary focus:bg-white rounded-xl text-black font-bold transition-all"
                   required
                 />
               </div>
@@ -184,32 +214,32 @@ export function SaveLinkDialog({
 
           {/* Title */}
           <div className="space-y-2">
-            <Label htmlFor="title" className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">{t("Title", "Title")}</Label>
+            <Label htmlFor="title" className="text-[10px] font-black uppercase tracking-widest text-black ml-1">{t("Title", "Title")}</Label>
             <Input
               id="title"
               placeholder={t("Page title", "Page title")}
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              className="h-11 bg-slate-50 border border-slate-100 focus:border-primary focus:bg-white rounded-xl text-sm font-bold transition-all"
+              className="h-11 bg-slate-50 border border-black/20 focus:border-primary focus:bg-white rounded-xl text-sm font-bold transition-all"
             />
           </div>
 
           {/* Description */}
           <div className="space-y-2">
-            <Label htmlFor="description" className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">{t("Description", "Description")}</Label>
+            <Label htmlFor="description" className="text-[10px] font-black uppercase tracking-widest text-black ml-1">{t("Description", "Description")}</Label>
             <Textarea
               id="description"
               placeholder={t("Brief description...", "Brief description...")}
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              className="h-20 bg-slate-50 border border-slate-100 focus:border-primary focus:bg-white rounded-xl text-sm font-bold transition-all resize-none p-4 shadow-none"
+              className="h-20 bg-slate-50 border border-black/20 focus:border-primary focus:bg-white rounded-xl text-sm font-bold transition-all resize-none p-4 shadow-none"
             />
           </div>
 
           {/* Tags */}
           <div className="space-y-2">
             <div className="flex items-center justify-between px-1">
-              <Label className="text-[10px] font-black uppercase tracking-widest text-slate-400">{t("Tags", "Tags")}</Label>
+              <Label className="text-[10px] font-black uppercase tracking-widest text-black">{t("Tags", "Tags")}</Label>
               {isAIEnabled() && (
                 <Button
                   type="button"
@@ -272,9 +302,9 @@ export function SaveLinkDialog({
           {/* Collection */}
           {!isEditing && collections.length > 0 && (
             <div className="space-y-2">
-              <Label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">{t("Collection", "Collection")}</Label>
+              <Label className="text-[10px] font-black uppercase tracking-widest text-black ml-1">{t("Collection", "Collection")}</Label>
               <Select value={collectionId} onValueChange={(val) => setCollectionId(val as string)}>
-                <SelectTrigger className="h-11 bg-slate-50 border border-slate-100 focus:border-primary focus:bg-white rounded-xl text-sm font-bold transition-all">
+                <SelectTrigger className="h-11 bg-slate-50 border border-black/20 focus:border-primary focus:bg-white rounded-xl text-sm font-bold transition-all">
                   <SelectValue placeholder={t("Select a collection", "Select a collection")} />
                 </SelectTrigger>
                 <SelectContent className="rounded-xl border-elegant shadow-xl">
@@ -297,9 +327,9 @@ export function SaveLinkDialog({
             {(saveLink.isPending || updateLink.isPending) ? (
               <Loader2 className="w-5 h-5 animate-spin mr-3" />
             ) : isEditing ? (
-               <Save className="w-5 h-5 mr-3" />
+              <Save className="w-5 h-5 mr-3" />
             ) : (
-               <Link2 className="w-5 h-5 mr-3" />
+              <Link2 className="w-5 h-5 mr-3" />
             )}
             {isEditing ? t("Save Changes", "Save Changes") : t("Save Link", "Save Link")}
           </Button>

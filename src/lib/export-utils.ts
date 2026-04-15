@@ -1,5 +1,5 @@
 /**
- * Utility functions for exporting LinkVault data cleanly.
+ * Utility functions for exporting vaultOS data cleanly.
  * Formats: JSON, CSV, Markdown.
  */
 
@@ -47,7 +47,7 @@ const triggerDownload = (content: string, filename: string, type: string) => {
 export const exportToJSON = async () => {
   const data = generateMockData();
   const json = JSON.stringify(data, null, 2);
-  triggerDownload(json, `linkvault-export-${Date.now()}.json`, "application/json");
+  triggerDownload(json, `vaultos-export-${Date.now()}.json`, "application/json");
 };
 
 export const exportToCSV = async () => {
@@ -67,12 +67,12 @@ export const exportToCSV = async () => {
   });
   
   const csv = [headers, ...rows].join("\n");
-  triggerDownload(csv, `linkvault-export-${Date.now()}.csv`, "text/csv");
+  triggerDownload(csv, `vaultos-export-${Date.now()}.csv`, "text/csv");
 };
 
 export const exportToMarkdown = async () => {
   const data = generateMockData();
-  let md = "# LinkVault Bookmarks Export\n\n";
+  let md = "# vaultOS Bookmarks Export\n\n";
   
   data.forEach(item => {
     md += `### [${item.title}](${item.url})\n`;
@@ -82,5 +82,5 @@ export const exportToMarkdown = async () => {
     md += `---\n\n`;
   });
   
-  triggerDownload(md, `linkvault-export-${Date.now()}.md`, "text/markdown");
+  triggerDownload(md, `vaultos-export-${Date.now()}.md`, "text/markdown");
 };

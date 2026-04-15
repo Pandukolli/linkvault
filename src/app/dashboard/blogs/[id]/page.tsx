@@ -139,35 +139,38 @@ export default function BlogEditorPage({ params }: { params: Promise<{ id: strin
   };
 
   return (
-    <div className="h-[calc(100vh)] bg-slate-50/50 flex flex-col overflow-hidden relative">
+    <div className="h-[calc(100vh)] bg-transparent flex flex-col overflow-hidden relative">
       {/* Top Navbar */}
-      <div className="h-16 flex-shrink-0 bg-white border-b border-border px-6 flex items-center justify-between z-40 relative shadow-sm">
-        <div className="flex items-center gap-4">
-          <Button variant="ghost" size="icon" className="w-10 h-10 rounded-xl hover:bg-slate-100" onClick={() => router.push("/dashboard/blogs")}>
-            <ChevronLeft className="w-5 h-5" />
+      <div className="h-20 flex-shrink-0 bg-black/40 backdrop-blur-3xl border-b border-white/5 px-8 flex items-center justify-between z-50 relative shadow-2xl">
+        <div className="flex items-center gap-6">
+          <Button variant="ghost" className="h-12 px-4 gap-3 rounded-2xl text-white/30 hover:text-white hover:bg-white/5 transition-all border border-white/5" onClick={() => router.push("/dashboard/blogs")}>
+            <ChevronLeft className="w-4 h-4" />
+            <span className="text-[10px] font-black uppercase tracking-widest">Library</span>
           </Button>
-          <div className="w-px h-6 bg-border mx-2" />
-          <Badge variant="outline" className={`px-3 py-1 font-black uppercase tracking-widest text-[9px] rounded-md ${activeBlog.status === "published" ? "border-emerald-200 text-emerald-600 bg-emerald-50" : "border-slate-200 text-slate-500 bg-slate-50"}`}>
+          <div className="h-6 w-px bg-white/10" />
+          <Badge variant="outline" className={`px-4 py-1.5 font-black uppercase tracking-[0.2em] text-[10px] rounded-xl ${activeBlog.status === "published" ? "border-white/20 text-white bg-white/10" : "border-white/5 text-white/30 bg-black/20"}`}>
             {activeBlog.status}
           </Badge>
-          <div className="flex items-center gap-2 opacity-50 ml-4 font-mono text-[10px] font-bold uppercase tracking-widest">
-            {isSaving ? <><Save className="w-3 h-3 animate-pulse" /> Saving...</> : <><CheckCircle2 className="w-3 h-3 text-emerald-500" /> Synced</>}
+          <div className="flex items-center gap-2 text-white/20 ml-6 font-black text-[9px] uppercase tracking-[0.3em]">
+            {isSaving ? <><Save className="w-3.5 h-3.5 animate-pulse" /> Syncing...</> : <><CheckCircle2 className="w-3.5 h-3.5 text-white/40" /> Archive Synced</>}
           </div>
         </div>
 
-        <div className="flex items-center gap-3">
-          <Button variant="outline" size="sm" className="h-9 px-4 gap-2 rounded-xl text-xs font-black uppercase tracking-widest text-slate-500 hover:text-black hidden md:flex" onClick={() => setSplitView(!splitView)}>
-            {splitView ? <><PanelRightClose className="w-4 h-4" /> Single View</> : <><PanelLeftClose className="w-4 h-4" /> Split View</>}
+        <div className="flex items-center gap-4">
+          <Button variant="ghost" className="h-12 px-6 gap-3 rounded-2xl text-white/30 hover:text-white hover:bg-white/5 transition-all border border-white/5 hidden md:flex" onClick={() => setSplitView(!splitView)}>
+            {splitView ? <PanelRightClose className="w-5 h-5" /> : <PanelLeftClose className="w-5 h-5" />}
+            <span className="text-[10px] font-black uppercase tracking-widest">{splitView ? "Wide" : "Split"}</span>
           </Button>
 
-          <Button variant="outline" size="sm" className={`h-9 px-4 gap-2 rounded-xl text-xs font-black uppercase tracking-widest transition-colors ${showSettings ? "bg-slate-100 text-black border-slate-300" : "text-slate-500 hover:text-black"}`} onClick={() => setShowSettings(!showSettings)}>
-            <Settings2 className="w-4 h-4" /> Settings
+          <Button variant="ghost" className={`h-12 px-6 gap-3 rounded-2xl text-white/30 hover:text-white hover:bg-white/5 transition-all border border-white/5 ${showSettings ? "bg-white/10 text-white border-white/20" : ""}`} onClick={() => setShowSettings(!showSettings)}>
+            <Settings2 className="w-5 h-5" />
+            <span className="text-[10px] font-black uppercase tracking-widest">Config</span>
           </Button>
 
-          <div className="w-px h-6 bg-border mx-2" />
+          <div className="h-6 w-px bg-white/10" />
 
-          <Button className={`h-9 px-6 gap-2 rounded-xl text-xs font-black uppercase tracking-widest shadow-lg transition-all ${activeBlog.status === "draft" ? "bg-primary text-white shadow-primary/20 hover:bg-primary/90" : "bg-black text-white hover:bg-slate-800"}`} onClick={toggleStatus}>
-            {activeBlog.status === "draft" ? <><Globe className="w-4 h-4" /> Publish</> : <><FileEdit className="w-4 h-4" /> Unpublish</>}
+          <Button className={`h-12 px-8 gap-3 rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] shadow-2xl transition-all ${activeBlog.status === "draft" ? "bg-white text-black hover:bg-white/90 shadow-white/10" : "bg-white/10 text-white hover:border-white/20 hover:bg-white/5 border border-white/10"}`} onClick={toggleStatus}>
+            {activeBlog.status === "draft" ? <><Globe className="w-4 h-4" /> Finalize</> : <><FileEdit className="w-4 h-4" /> Retract</>}
           </Button>
         </div>
       </div>
@@ -175,30 +178,30 @@ export default function BlogEditorPage({ params }: { params: Promise<{ id: strin
       {/* Main Workspace */}
       <div className="flex-1 flex overflow-hidden relative">
         {/* Editor Pane */}
-        <div className={`flex-1 flex flex-col bg-white overflow-hidden transition-all duration-500 ${showSettings ? 'mr-0' : ''}`}>
-          <div className="flex-1 overflow-y-auto no-scrollbar scroll-smooth p-10 md:p-16 lg:px-32">
+        <div className={`flex-1 flex flex-col bg-black/20 backdrop-blur-md overflow-hidden transition-all duration-500`}>
+          <div className="flex-1 overflow-y-auto no-scrollbar scroll-smooth p-12 md:p-20 lg:px-40">
             <input
               type="text"
               value={activeBlog.title || ""}
               onChange={(e) => updateBlog.mutate({ id: activeBlog.id, title: e.target.value })}
-              className="w-full text-5xl md:text-6xl font-black tracking-tighter bg-transparent border-none outline-none mb-10 placeholder:text-slate-200 text-black uppercase leading-[0.9]"
+              className="w-full text-7xl font-black tracking-tighter bg-transparent border-none outline-none mb-12 placeholder:text-white/5 text-white uppercase leading-tight drop-shadow-2xl"
               placeholder="Post Title..."
             />
             {/* Split Screen advanced tip tap */}
             <TiptapEditor
               content={activeBlog.content}
               onUpdate={handleContentUpdate}
-              placeholder="Write an epic publication..."
+              placeholder="Initialize your archival composition..."
               autofocus
             />
           </div>
           {/* Footer Stats inside Editor */}
-          <div className="h-8 border-t border-slate-100 bg-slate-50 flex items-center px-6 justify-between text-[10px] font-black uppercase tracking-widest text-slate-400">
-            <div className="flex gap-4">
-              <span>{meta.readingTime || "1"} min read</span>
+          <div className="h-10 border-t border-white/5 bg-black/40 backdrop-blur-3xl flex items-center px-8 justify-between text-[10px] font-black uppercase tracking-[0.3em] text-white/20">
+            <div className="flex gap-6">
+              <span>{meta.readingTime || "1"} min duration</span>
             </div>
             <div>
-              <span className="text-black">{activeBlog.title?.length || 0}</span> / 60 Char Title
+              <span className="text-white/40">{activeBlog.title?.length || 0}</span> / 60 Char Title
             </div>
           </div>
         </div>
@@ -258,15 +261,18 @@ export default function BlogEditorPage({ params }: { params: Promise<{ id: strin
               animate={{ x: 0, opacity: 1 }}
               exit={{ x: 400, opacity: 0 }}
               transition={{ type: "spring", stiffness: 400, damping: 40 }}
-              className="absolute top-0 right-0 bottom-0 w-80 bg-white border-l border-border shadow-2xl z-50 flex flex-col"
+              className="absolute top-0 right-0 bottom-0 w-[400px] bg-black/60 backdrop-blur-3xl border-l border-white/5 shadow-2xl z-[60] flex flex-col"
             >
-              <div className="h-16 flex items-center justify-between px-6 border-b border-border bg-slate-50/50">
-                <h3 className="font-black text-sm uppercase tracking-widest flex items-center gap-2">
-                  <Settings2 className="w-4 h-4 text-primary" /> Post Settings
+              <div className="h-20 flex items-center justify-between px-8 border-b border-white/5">
+                <h3 className="font-black text-[12px] text-white uppercase tracking-[0.3em] flex items-center gap-3">
+                  <Settings2 className="w-5 h-5" /> Config Node
                 </h3>
+                <button onClick={() => setShowSettings(false)} className="text-white/20 hover:text-white transition-colors">
+                  <XIcon className="w-5 h-5" />
+                </button>
               </div>
               
-              <div className="flex-1 overflow-y-auto p-6 space-y-8">
+              <div className="flex-1 overflow-y-auto p-10 space-y-12 no-scrollbar">
 
 
                 {/* Category & Series & Slug Row */}

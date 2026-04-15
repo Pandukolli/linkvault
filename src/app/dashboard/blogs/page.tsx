@@ -59,21 +59,18 @@ export default function BlogsPage() {
   };
 
   return (
-    <div className="max-w-7xl mx-auto px-6 md:px-12 py-12 pb-24 h-full flex flex-col">
-      <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-16 animate-fade-in-up" style={{ animationDuration: "0.6s" }}>
-        <div>
-          <h1 className="text-4xl md:text-5xl font-black text-black tracking-tighter uppercase flex items-center gap-5">
-            <div className="w-14 h-14 rounded-[1.5rem] bg-primary/5 flex items-center justify-center">
-              <PenLine className="w-8 h-8 text-primary" />
-            </div>
+    <div className="max-w-[1500px] mx-auto px-6 md:px-12 py-12 pb-24 h-full flex flex-col">
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-20">
+        <div className="space-y-4">
+          <h1 className="text-7xl font-black text-white tracking-tighter uppercase drop-shadow-2xl">
             Publications
           </h1>
-          <p className="text-xs font-black text-slate-400 uppercase tracking-[0.25em] mt-4 opacity-70">
-            Advanced Editorial &amp; Broadcasting Center
+          <p className="text-white/40 text-[10px] font-black uppercase tracking-[0.4em]">
+            Advanced Editorial & Broadcasting Center
           </p>
         </div>
         <Button
-          className="h-14 px-10 gap-3 bg-black hover:bg-primary text-white rounded-2xl font-black transition-all duration-300 shadow-2xl shadow-black/10 hover:shadow-primary/30 hover:-translate-y-1 uppercase tracking-tighter"
+          className="h-14 px-10 gap-3 bg-white text-black hover:bg-white/90 rounded-2xl font-black transition-all duration-300 shadow-2xl shadow-white/10 hover:-translate-y-1 uppercase tracking-tighter"
           onClick={handleCreateBlog}
         >
           <Plus className="w-5 h-5 stroke-[3]" />
@@ -82,33 +79,32 @@ export default function BlogsPage() {
       </div>
 
       {/* Filter Tabs */}
-      <div className="flex gap-2 mb-10 p-2 bg-slate-50/80 backdrop-blur-xl rounded-[1.5rem] w-fit border border-slate-100 animate-fade-in-up" style={{ animationDuration: "0.8s" }}>
+      <div className="flex gap-2 mb-12 p-1.5 bg-[#080808] rounded-2xl w-fit border border-white/5 shadow-2xl">
         {(["all", "draft", "published"] as const).map((f) => (
           <button
             key={f}
-            className={`px-6 py-3 text-[10px] font-black rounded-xl transition-all duration-300 uppercase tracking-widest ${
+            className={`px-8 py-3 text-[10px] font-black rounded-xl transition-all duration-700 uppercase tracking-widest ${
               filter === f
-                ? "bg-white text-black shadow-xl shadow-black/5"
-                : "text-slate-400 hover:text-black hover:bg-white/40"
+                ? "bg-white text-black"
+                : "text-white/20 hover:text-white"
             }`}
             onClick={() => setFilter(f)}
           >
-            {f} <span className="opacity-40 ml-2">[{blogs.filter((b) => f === "all" || b.status === f).length}]</span>
+            {f} <span className="opacity-30 ml-2">[{blogs.filter((b) => f === "all" || b.status === f).length}]</span>
           </button>
         ))}
       </div>
 
-      {/* Blog Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 animate-fade-in-up" style={{ animationDuration: "1s" }}>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         {isLoading ? (
           Array.from({ length: 6 }).map((_, i) => (
-            <Skeleton key={i} className="h-64 rounded-[2rem] bg-slate-50" />
+            <Skeleton key={i} className="h-64 rounded-[2.5rem] bg-white/5 animate-pulse" />
           ))
         ) : filteredBlogs.length === 0 ? (
-          <div className="col-span-full py-32 flex flex-col items-center justify-center text-center rounded-[3rem] bg-transparent border border-slate-100/50">
-            <h3 className="text-3xl font-black text-slate-300 mb-3 tracking-tighter uppercase">No Records Found</h3>
-            <p className="text-sm text-slate-400 font-bold max-w-sm mx-auto mb-10 uppercase tracking-[0.2em] leading-relaxed">
-              Initiate your first archival string.
+          <div className="col-span-full py-40 flex flex-col items-center justify-center text-center rounded-[3rem] bg-[#050505] border border-white/5">
+            <h3 className="text-4xl font-black text-white/50 mb-4 tracking-tighter uppercase">No Records Found</h3>
+            <p className="text-[11px] text-white/10 font-black max-w-sm mx-auto mb-10 uppercase tracking-[0.3em] leading-relaxed">
+              Initiate your first archival string to populate the grid.
             </p>
           </div>
         ) : (
@@ -121,85 +117,74 @@ export default function BlogsPage() {
             return (
               <div
                 key={blog.id}
-                className="group relative overflow-hidden bg-white border border-slate-100 rounded-[2rem] flex flex-col cursor-pointer shadow-2xl shadow-primary/[0.02] hover:shadow-primary/[0.08] hover:-translate-y-2 hover:border-primary/20 transition-all duration-500 min-h-[340px]"
+                className="group relative overflow-hidden bg-[#050505] border border-white/5 rounded-[2.5rem] flex flex-col cursor-pointer transition-all duration-700 hover:scale-[1.01] hover:border-white/10 min-h-[400px]"
                 onClick={() => {
-                  if (blog.status === "published") {
-                    router.push(`/blogs/${blog.slug}`);
-                  } else {
-                    router.push(`/dashboard/blogs/${blog.id}`);
-                  }
+                  if (blog.status === "published") router.push(`/blogs/${blog.slug}`);
+                  else router.push(`/dashboard/blogs/${blog.id}`);
                 }}
               >
                 {/* Image Area */}
-                <div className="h-40 w-full bg-slate-50 relative overflow-hidden flex-shrink-0">
+                <div className="h-48 w-full bg-white/5 relative overflow-hidden flex-shrink-0">
                   {coverImage ? (
-                    <img src={coverImage} alt={blog.title || "Cover"} className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700" />
+                    <img src={coverImage} alt={blog.title || "Cover"} className="w-full h-full object-cover grayscale opacity-60 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-700" />
                   ) : (
-                    <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-slate-100 to-slate-50">
-                      <FileEdit className="w-8 h-8 text-slate-200" />
+                    <div className="w-full h-full flex items-center justify-center">
+                      <FileEdit className="w-10 h-10 text-white/10 group-hover:text-white transition-colors" />
                     </div>
                   )}
                   {/* Status Tag */}
-                  <div className="absolute top-4 left-4 z-10">
+                  <div className="absolute top-6 left-6 z-10">
                     <Badge 
                       variant="secondary" 
-                      className={`text-[9px] font-black uppercase tracking-widest border-none px-3 py-1 backdrop-blur-md shadow-lg ${
+                      className={`text-[9px] font-black uppercase tracking-widest border-none px-4 py-1.5 backdrop-blur-2xl shadow-2xl ${
                         blog.status === "published"
-                          ? "bg-emerald-500/90 text-white"
-                          : "bg-black/80 text-white"
+                          ? "bg-white text-black"
+                          : "bg-black/60 text-white border border-white/5"
                       }`}
                     >
                       {blog.status}
                     </Badge>
                   </div>
-                  {/* Overlay shadow */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                 </div>
 
                 {/* Content Area */}
-                <div className="p-6 flex flex-col flex-1 relative z-10 bg-white">
-                  <div className="flex items-center gap-3 mb-4 text-[9px] font-black text-slate-400 uppercase tracking-widest">
-                    <span className="flex items-center gap-1.5"><Calendar className="w-3 h-3" /> {new Date(blog.updated_at).toLocaleDateString()}</span>
-                    <span className="w-1 h-1 rounded-full bg-slate-200"/>
-                    <span className="flex items-center gap-1.5"><Clock className="w-3 h-3" /> {readingTime} read</span>
+                <div className="p-8 flex flex-col flex-1">
+                  <div className="flex items-center gap-4 mb-6 text-[9px] font-black text-white/20 uppercase tracking-[0.3em]">
+                    <span className="flex items-center gap-2"><Calendar className="w-3.5 h-3.5" /> {new Date(blog.updated_at).toLocaleDateString()}</span>
+                    <span className="w-1.5 h-1.5 rounded-full bg-white/10"/>
+                    <span className="flex items-center gap-2"><Clock className="w-3.5 h-3.5" /> {readingTime} read</span>
                   </div>
                   
-                  <h3 className="text-xl font-black text-black uppercase tracking-tight line-clamp-2 leading-tight mb-3 group-hover:text-primary transition-colors duration-300">
+                  <h3 className="text-2xl font-black text-white uppercase tracking-tighter line-clamp-2 leading-tight mb-4 group-hover:text-white transition-colors">
                     {blog.title || "Untyped Content"}
                   </h3>
                   
-                  <p className="text-sm font-medium text-slate-500 line-clamp-2 mb-6 flex-1">
+                  <p className="text-sm font-medium text-white/40 line-clamp-2 mb-8 flex-1 leading-relaxed">
                     {excerpt}
                   </p>
 
-                  <div className="flex items-center justify-between border-t border-slate-50 pt-4 mt-auto">
+                  <div className="flex items-center justify-between border-t border-white/5 pt-6 mt-auto">
                     {blog.slug ? (
-                      <div className="flex items-center gap-1.5 text-[10px] font-mono font-bold text-slate-400 truncate max-w-[200px]">
+                      <div className="flex items-center gap-2 text-[10px] font-black font-mono text-white/20 truncate max-w-[200px] uppercase">
                         <Globe className="w-3 h-3" />
                         /{blog.slug}
                       </div>
                     ) : (
-                      <span className="text-[10px] font-mono text-slate-300">Draft</span>
+                      <span className="text-[10px] font-black text-white/10 uppercase tracking-widest">Draft Archival</span>
                     )}
                     
-                    <div className="flex items-center gap-2">
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        className="w-8 h-8 rounded-lg text-slate-300 hover:text-red-500 hover:bg-red-50"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          e.preventDefault();
-                          setDeleteTarget({ id: blog.id, title: blog.title || "Untitled" });
-                        }}
-                      >
-                        <Trash2 className="w-4 h-4" />
-                      </Button>
-                    </div>
+                    <button
+                      className="w-10 h-10 rounded-xl flex items-center justify-center text-white/10 hover:text-white transition-all bg-white/5 hover:bg-white/10"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        e.preventDefault();
+                        setDeleteTarget({ id: blog.id, title: blog.title || "Untitled" });
+                      }}
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </button>
                   </div>
                 </div>
-
-                <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-primary transform -translate-x-full group-hover:translate-x-0 transition-transform duration-500 z-20" />
               </div>
             );
           })
