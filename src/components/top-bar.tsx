@@ -21,7 +21,7 @@ const TABS = [
 ];
 
 interface TopBarProps {
-  onMenuClick: () => void;
+  onMenuClick?: () => void;
   isTransparent?: boolean;
 }
 
