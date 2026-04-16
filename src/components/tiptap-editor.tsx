@@ -43,9 +43,8 @@ import {
   RefreshCw,
   Search,
   ListPlus,
-  Loader2
 } from "lucide-react";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useRef } from "react";
 import { createClient } from "@/lib/supabase/client";
 import {
   DropdownMenu,
@@ -64,6 +63,7 @@ interface TiptapEditorProps {
   placeholder?: string;
   editable?: boolean;
   autofocus?: boolean;
+  debounceMs?: number;
 }
 
 function ToolbarButton({
@@ -170,7 +170,7 @@ function Toolbar({ editor, onImageUpload }: { editor: Editor, onImageUpload: (fi
   };
 
   return (
-    <div className="flex flex-wrap items-center gap-0.5 p-2 border-b border-border bg-muted/30">
+    <div className="flex flex-wrap items-center gap-0.5 p-2 border-b border-border bg-muted/30 opacity-50 hover:opacity-100 transition-opacity duration-300">
       {/* AI Assistant */}
       <DropdownMenu>
         <DropdownMenuTrigger className="focus:outline-none">
@@ -201,154 +201,81 @@ function Toolbar({ editor, onImageUpload }: { editor: Editor, onImageUpload: (fi
       <Separator orientation="vertical" className="h-5 mx-1" />
 
       {/* Undo / Redo */}
-      <ToolbarButton
-        onClick={() => editor.chain().focus().undo().run()}
-        title="Undo"
-      >
+      <ToolbarButton onClick={() => editor.chain().focus().undo().run()} title="Undo">
         <Undo className="w-3.5 h-3.5" />
       </ToolbarButton>
-      <ToolbarButton
-        onClick={() => editor.chain().focus().redo().run()}
-        title="Redo"
-      >
+      <ToolbarButton onClick={() => editor.chain().focus().redo().run()} title="Redo">
         <Redo className="w-3.5 h-3.5" />
       </ToolbarButton>
 
       <Separator orientation="vertical" className="h-5 mx-1" />
 
       {/* Text Formatting */}
-      <ToolbarButton
-        onClick={() => editor.chain().focus().toggleBold().run()}
-        isActive={editor.isActive("bold")}
-        title="Bold"
-      >
+      <ToolbarButton onClick={() => editor.chain().focus().toggleBold().run()} isActive={editor.isActive("bold")} title="Bold">
         <Bold className="w-3.5 h-3.5" />
       </ToolbarButton>
-      <ToolbarButton
-        onClick={() => editor.chain().focus().toggleItalic().run()}
-        isActive={editor.isActive("italic")}
-        title="Italic"
-      >
+      <ToolbarButton onClick={() => editor.chain().focus().toggleItalic().run()} isActive={editor.isActive("italic")} title="Italic">
         <Italic className="w-3.5 h-3.5" />
       </ToolbarButton>
-      <ToolbarButton
-        onClick={() => editor.chain().focus().toggleUnderline().run()}
-        isActive={editor.isActive("underline")}
-        title="Underline"
-      >
+      <ToolbarButton onClick={() => editor.chain().focus().toggleUnderline().run()} isActive={editor.isActive("underline")} title="Underline">
         <UnderlineIcon className="w-3.5 h-3.5" />
       </ToolbarButton>
-      <ToolbarButton
-        onClick={() => editor.chain().focus().toggleStrike().run()}
-        isActive={editor.isActive("strike")}
-        title="Strikethrough"
-      >
+      <ToolbarButton onClick={() => editor.chain().focus().toggleStrike().run()} isActive={editor.isActive("strike")} title="Strikethrough">
         <Strikethrough className="w-3.5 h-3.5" />
       </ToolbarButton>
-      <ToolbarButton
-        onClick={() => editor.chain().focus().toggleHighlight().run()}
-        isActive={editor.isActive("highlight")}
-        title="Highlight"
-      >
+      <ToolbarButton onClick={() => editor.chain().focus().toggleHighlight().run()} isActive={editor.isActive("highlight")} title="Highlight">
         <Highlighter className="w-3.5 h-3.5" />
       </ToolbarButton>
-      <ToolbarButton
-        onClick={() => editor.chain().focus().toggleCode().run()}
-        isActive={editor.isActive("code")}
-        title="Inline Code"
-      >
+      <ToolbarButton onClick={() => editor.chain().focus().toggleCode().run()} isActive={editor.isActive("code")} title="Inline Code">
         <Code className="w-3.5 h-3.5" />
       </ToolbarButton>
 
       <Separator orientation="vertical" className="h-5 mx-1" />
 
       {/* Headings */}
-      <ToolbarButton
-        onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}
-        isActive={editor.isActive("heading", { level: 1 })}
-        title="Heading 1"
-      >
+      <ToolbarButton onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()} isActive={editor.isActive("heading", { level: 1 })} title="Heading 1">
         <Heading1 className="w-3.5 h-3.5" />
       </ToolbarButton>
-      <ToolbarButton
-        onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
-        isActive={editor.isActive("heading", { level: 2 })}
-        title="Heading 2"
-      >
+      <ToolbarButton onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()} isActive={editor.isActive("heading", { level: 2 })} title="Heading 2">
         <Heading2 className="w-3.5 h-3.5" />
       </ToolbarButton>
-      <ToolbarButton
-        onClick={() => editor.chain().focus().toggleHeading({ level: 3 }).run()}
-        isActive={editor.isActive("heading", { level: 3 })}
-        title="Heading 3"
-      >
+      <ToolbarButton onClick={() => editor.chain().focus().toggleHeading({ level: 3 }).run()} isActive={editor.isActive("heading", { level: 3 })} title="Heading 3">
         <Heading3 className="w-3.5 h-3.5" />
       </ToolbarButton>
 
       <Separator orientation="vertical" className="h-5 mx-1" />
 
       {/* Lists */}
-      <ToolbarButton
-        onClick={() => editor.chain().focus().toggleBulletList().run()}
-        isActive={editor.isActive("bulletList")}
-        title="Bullet List"
-      >
+      <ToolbarButton onClick={() => editor.chain().focus().toggleBulletList().run()} isActive={editor.isActive("bulletList")} title="Bullet List">
         <List className="w-3.5 h-3.5" />
       </ToolbarButton>
-      <ToolbarButton
-        onClick={() => editor.chain().focus().toggleOrderedList().run()}
-        isActive={editor.isActive("orderedList")}
-        title="Ordered List"
-      >
+      <ToolbarButton onClick={() => editor.chain().focus().toggleOrderedList().run()} isActive={editor.isActive("orderedList")} title="Ordered List">
         <ListOrdered className="w-3.5 h-3.5" />
       </ToolbarButton>
-      <ToolbarButton
-        onClick={() => editor.chain().focus().toggleTaskList().run()}
-        isActive={editor.isActive("taskList")}
-        title="Task List"
-      >
+      <ToolbarButton onClick={() => editor.chain().focus().toggleTaskList().run()} isActive={editor.isActive("taskList")} title="Task List">
         <ListTodo className="w-3.5 h-3.5" />
       </ToolbarButton>
 
       <Separator orientation="vertical" className="h-5 mx-1" />
 
       {/* Block */}
-      <ToolbarButton
-        onClick={() => editor.chain().focus().toggleBlockquote().run()}
-        isActive={editor.isActive("blockquote")}
-        title="Quote"
-      >
+      <ToolbarButton onClick={() => editor.chain().focus().toggleBlockquote().run()} isActive={editor.isActive("blockquote")} title="Quote">
         <Quote className="w-3.5 h-3.5" />
       </ToolbarButton>
-      <ToolbarButton
-        onClick={() => editor.chain().focus().setHorizontalRule().run()}
-        title="Horizontal Rule"
-      >
+      <ToolbarButton onClick={() => editor.chain().focus().setHorizontalRule().run()} title="Horizontal Rule">
         <Minus className="w-3.5 h-3.5" />
       </ToolbarButton>
 
       <Separator orientation="vertical" className="h-5 mx-1" />
 
       {/* Alignment */}
-      <ToolbarButton
-        onClick={() => editor.chain().focus().setTextAlign("left").run()}
-        isActive={editor.isActive({ textAlign: "left" })}
-        title="Align Left"
-      >
+      <ToolbarButton onClick={() => editor.chain().focus().setTextAlign("left").run()} isActive={editor.isActive({ textAlign: "left" })} title="Align Left">
         <AlignLeft className="w-3.5 h-3.5" />
       </ToolbarButton>
-      <ToolbarButton
-        onClick={() => editor.chain().focus().setTextAlign("center").run()}
-        isActive={editor.isActive({ textAlign: "center" })}
-        title="Align Center"
-      >
+      <ToolbarButton onClick={() => editor.chain().focus().setTextAlign("center").run()} isActive={editor.isActive({ textAlign: "center" })} title="Align Center">
         <AlignCenter className="w-3.5 h-3.5" />
       </ToolbarButton>
-      <ToolbarButton
-        onClick={() => editor.chain().focus().setTextAlign("right").run()}
-        isActive={editor.isActive({ textAlign: "right" })}
-        title="Align Right"
-      >
+      <ToolbarButton onClick={() => editor.chain().focus().setTextAlign("right").run()} isActive={editor.isActive({ textAlign: "right" })} title="Align Right">
         <AlignRight className="w-3.5 h-3.5" />
       </ToolbarButton>
 
@@ -362,13 +289,7 @@ function Toolbar({ editor, onImageUpload }: { editor: Editor, onImageUpload: (fi
         <ImageIcon className="w-3.5 h-3.5" />
       </ToolbarButton>
       <ToolbarButton
-        onClick={() =>
-          editor
-            .chain()
-            .focus()
-            .insertTable({ rows: 3, cols: 3, withHeaderRow: true })
-            .run()
-        }
+        onClick={() => editor.chain().focus().insertTable({ rows: 3, cols: 3, withHeaderRow: true }).run()}
         title="Insert Table"
       >
         <TableIcon className="w-3.5 h-3.5" />
@@ -383,7 +304,11 @@ export function TiptapEditor({
   placeholder = "Start writing...",
   editable = true,
   autofocus = false,
+  debounceMs = 800,
 }: TiptapEditorProps) {
+  const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const initialContentRef = useRef(content);
+
   const editor = useEditor({
     immediatelyRender: false,
     extensions: [
@@ -412,19 +337,23 @@ export function TiptapEditor({
       TableCell,
       TableHeader,
     ],
-    content: content || "",
+    content: initialContentRef.current || "",
     editable,
     autofocus,
     onUpdate: ({ editor }) => {
-      onUpdate?.(editor.getJSON() as Record<string, unknown>);
+      if (!onUpdate) return;
+      // Debounce: clear previous timer and set a new one
+      if (debounceRef.current) clearTimeout(debounceRef.current);
+      debounceRef.current = setTimeout(() => {
+        onUpdate(editor.getJSON() as Record<string, unknown>);
+      }, debounceMs);
     },
     editorProps: {
       attributes: {
         class: "focus:outline-none min-h-[300px]",
       },
-      handleDrop: (view, event, slice, moved) => {
+      handleDrop: (view, event, _slice, moved) => {
         if (!editable || moved) return false;
-        
         const file = event.dataTransfer?.files?.[0];
         if (file && file.type.startsWith('image/')) {
           event.preventDefault();
@@ -435,11 +364,9 @@ export function TiptapEditor({
       },
       handlePaste: (view, event) => {
         if (!editable) return false;
-        
         const file = event.clipboardData?.files?.[0];
         if (file && file.type.startsWith('image/')) {
           event.preventDefault();
-          // Insert at current cursor
           uploadAndInsertImage(file, view);
           return true;
         }
@@ -468,13 +395,12 @@ export function TiptapEditor({
         .from("user-images")
         .getPublicUrl(filePath);
 
-      // Insert image at drop coordinates or current cursor
       if (x !== undefined && y !== undefined) {
         const coordinates = view.posAtCoords({ left: x, top: y });
         if (coordinates) {
-           editor?.chain().focus().insertContentAt(coordinates.pos, { type: 'image', attrs: { src: urlData.publicUrl } }).run();
+          editor?.chain().focus().insertContentAt(coordinates.pos, { type: 'image', attrs: { src: urlData.publicUrl } }).run();
         } else {
-           editor?.chain().focus().setImage({ src: urlData.publicUrl }).run();
+          editor?.chain().focus().setImage({ src: urlData.publicUrl }).run();
         }
       } else {
         editor?.chain().focus().setImage({ src: urlData.publicUrl }).run();
@@ -484,13 +410,6 @@ export function TiptapEditor({
       toast.error(`Upload failed: ${err.message}`);
     }
   };
-
-  // Update content when it changes externally
-  useEffect(() => {
-    if (editor && content && JSON.stringify(editor.getJSON()) !== JSON.stringify(content)) {
-      editor.commands.setContent(content);
-    }
-  }, [content, editor]);
 
   if (!editor) {
     return (

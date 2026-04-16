@@ -20,6 +20,7 @@ const TABS = [
   { id: "dashboard", label: "LINK", href: "/dashboard", color: "#FF4DFF" },
   { id: "notes", label: "NOTES", href: "/dashboard/notes", color: "#00F5FF" },
   { id: "blogs", label: "BLOGS", href: "/dashboard/blogs", color: "#06B6D4" },
+  { id: "blog-diary", label: "DIARY", href: "/blog-diary", color: "#34D399" },
   { id: "resume", label: "RESUME", href: "/dashboard/resume", color: "#5E7BFF" },
   { id: "gallery", label: "GALLERY", href: "/dashboard/gallery", color: "#A78BFA" },
   { id: "project", label: "PROJECT", href: "/dashboard/projects", color: "#F8FAFC" },

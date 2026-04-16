@@ -45,7 +45,6 @@ export function useBlogs() {
       if (!user) throw new Error("Not authenticated");
 
       const baseSlug = input.slug || generateSlug(input.title);
-      // Append a short unique suffix to avoid slug collisions
       const suffix = Date.now().toString(36).slice(-5);
       const slug = input.slug ? baseSlug : `${baseSlug}-${suffix}`;
 
@@ -126,6 +125,7 @@ export function useBlogs() {
   return { blogs, isLoading, error, createBlog, updateBlog, deleteBlog };
 }
 
+// Used by /blogs/[slug] — single blog by slug (published only)
 export function usePublicBlog(slug: string) {
   const supabase = createClient();
   
@@ -143,5 +143,25 @@ export function usePublicBlog(slug: string) {
       return data as Blog;
     },
     enabled: !!slug
+  });
+}
+
+// Used by Blog Diary — all published blogs from all users
+export function usePublicBlogs() {
+  const supabase = createClient();
+
+  return useQuery<Blog[]>({
+    queryKey: ["public_blogs"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("blogs")
+        .select("*")
+        .eq("status", "published")
+        .order("published_at", { ascending: false });
+
+      if (error) throw error;
+      return (data || []) as Blog[];
+    },
+    staleTime: 1000 * 60 * 2, // 2 min cache
   });
 }

@@ -443,6 +443,8 @@ function NotesToolbar({
   onFontChange,
   isHandwriting,
   onHandwritingToggle,
+  showVoice,
+  onVoiceToggle,
 }: {
   editor: Editor;
   pageColor: string;
@@ -451,6 +453,8 @@ function NotesToolbar({
   onFontChange: (font: string) => void;
   isHandwriting?: boolean;
   onHandwritingToggle?: (val: boolean) => void;
+  showVoice: boolean;
+  onVoiceToggle: () => void;
 }) {
   const addLink = useCallback(() => {
     const url = window.prompt("Enter URL (include https://):");
@@ -476,13 +480,22 @@ function NotesToolbar({
       }
       const url = await uploadImage(file);
       if (url) {
-        editor.chain().focus().setImage({ src: url }).run();
+        // Insert image and then an empty paragraph so the cursor lands right after it without overwriting the image
+        const pos = editor.state.selection.to;
+        editor
+          .chain()
+          .focus()
+          .insertContentAt(pos, [
+            { type: 'image', attrs: { src: url } },
+            { type: 'paragraph' }
+          ])
+          .run();
       }
     };
     input.click();
   }, [editor]);
 
-  const [showVoice, setShowVoice] = useState(false);
+  // showVoice is now lifted to NotesEditor — received as prop
   const [isFocused, setIsFocused] = useState(false);
 
   useEffect(() => {
@@ -549,17 +562,18 @@ function NotesToolbar({
         <Sep />
 
         <div className="relative">
-          <ToolBtn onClick={() => setShowVoice(!showVoice)} title="Record Voice Note" isActive={showVoice}>
+          <ToolBtn onClick={onVoiceToggle} title="Record Voice Note" isActive={showVoice}>
             <Mic className="w-3.5 h-3.5" />
           </ToolBtn>
           {showVoice && (
             <div className="absolute top-full mt-2 left-0 z-50">
               <VoiceNoteRecorder 
                 onSave={(url, dur) => {
-                  editor.chain().focus().insertContent({ type: "voiceNote", attrs: { url, duration: dur } }).run();
-                  setShowVoice(false);
+                  const pos = editor.state.selection.to;
+                  editor.chain().focus().insertContentAt(pos, { type: "voiceNote", attrs: { url, duration: dur } }).run();
+                  onVoiceToggle(); // close after save
                 }} 
-                onCancel={() => setShowVoice(false)} 
+                onCancel={onVoiceToggle} 
               />
             </div>
           )}
@@ -649,6 +663,8 @@ export function NotesEditor({
   onHandwritingToggle,
 }: NotesEditorProps) {
   const isInternalUpdate = useRef(false);
+  // Lifted from NotesToolbar so state persists through re-renders
+  const [showVoice, setShowVoice] = useState(false);
 
   const editor = useEditor({
     immediatelyRender: false,
@@ -732,24 +748,9 @@ export function NotesEditor({
     },
   });
 
-  // Optional external sync logic
-  useEffect(() => {
-    if (editor && content && !isInternalUpdate.current) {
-      // Filter out our custom underscore properties before comparison
-      const pureContent = Object.fromEntries(
-        Object.entries(content || {}).filter(([key]) => !key.startsWith('_'))
-      );
-      
-      const cur = JSON.stringify(editor.getJSON());
-      const next = JSON.stringify(pureContent);
-      
-      if (cur !== next && Object.keys(pureContent).length > 0) {
-        editor.commands.setContent(pureContent, { emitUpdate: false });
-      }
-    }
-    isInternalUpdate.current = false;
-  }, [content, editor, undefined]);
-
+  // Optional external sync logic removed because we now use `key={activeNote.id}` in the parent 
+  // to force remount on switch, which completely eliminates race condition overwrites while typing!
+  
   // Update font family dynamically
   useEffect(() => {
     if (editor) {
@@ -811,6 +812,8 @@ export function NotesEditor({
           onFontChange={onFontChange!} 
           isHandwriting={isHandwriting}
           onHandwritingToggle={onHandwritingToggle}
+          showVoice={showVoice}
+          onVoiceToggle={() => setShowVoice(v => !v)}
         />
       )}
       {editor && editor.isActive('image') && (

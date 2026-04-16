@@ -346,6 +346,7 @@ export default function NotesPage() {
                   <input type="text" className="nb-title-input" value={localTitle} onChange={e => handleTitleUpdate(e.target.value)} placeholder="Title..." />
                 </div>
                 <NotesEditor
+                  key={activeNote.id}
                   content={activeNote.content as any}
                   onUpdate={handleContentUpdate}
                   pageColor={pageColor}
