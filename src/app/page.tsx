@@ -23,7 +23,7 @@ export default function LandingPage() {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
   const { links } = useLinks();
   const recentLinks = links?.slice(0, 3) || [];
-  
+
   const { scrollY } = useScroll();
   const y1 = useTransform(scrollY, [0, 500], [0, 200]);
   const y2 = useTransform(scrollY, [0, 500], [0, -150]);
@@ -70,7 +70,7 @@ export default function LandingPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-[#0A0B0F] text-slate-100 selection:bg-[#A3FF3D]/20 selection:text-[#A3FF3D] overflow-x-hidden pt-20">
+    <div className="min-h-screen bg-[#0A0B0F] text-slate-100 selection:bg-[#06B6D4]/20 selection:text-[#06B6D4] overflow-x-hidden pt-20">
       {/* Navigation */}
       <nav className="fixed top-0 left-0 right-0 z-50 border-b border-white/5 bg-[#0A0B0F]/90 backdrop-blur-3xl">
         <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
@@ -119,7 +119,7 @@ export default function LandingPage() {
               animate={{ opacity: 1, x: 0 }}
               className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-white/5 bg-[#14151B] text-[9px] font-bold text-slate-400 uppercase tracking-[0.4em] mb-8"
             >
-              <span className="w-1.5 h-1.5 rounded-full bg-[#A3FF3D] animate-pulse" />
+              <span className="w-1.5 h-1.5 rounded-full bg-[#06B6D4] animate-pulse" />
               Machine-Assisted Knowledge
             </motion.div>
 
@@ -131,7 +131,7 @@ export default function LandingPage() {
             >
               Next-Gen
               <br />
-              <span className="text-[#A3FF3D]">Vaulting.</span>
+              <span className="text-[#06B6D4]">Vaulting.</span>
             </motion.h1>
 
             <motion.p
@@ -177,7 +177,7 @@ export default function LandingPage() {
           <div className="relative h-[650px] hidden lg:block">
             <motion.div
               style={{ y: y1, rotate }}
-              className="absolute top-0 right-0 w-full h-[550px] rounded-[4rem] bg-stone-900 border-3 border-white/100 overflow-hidden shadow-2xl"
+              className="absolute top-0 right-0 w-full h-[550px] rounded-[4rem] bg-black border-3 border-white/100 overflow-hidden shadow-2xl"
             >
               <div className="absolute inset-0 bg-blue-500 mix-blend-overlay" />
               <div className="p-16 h-full">
@@ -229,9 +229,9 @@ export default function LandingPage() {
             {features.map((feature, i) => (
               <div
                 key={i}
-                className="group relative overflow-hidden rounded-[3rem] bg-[#14151B] border border-white/5 p-12 transition-all duration-700 hover:border-[#A3FF3D]/20 hover:scale-[1.02]"
+                className="group relative overflow-hidden rounded-[3rem] bg-[#14151B] border border-white/5 p-12 transition-all duration-700 hover:border-[#06B6D4]/20 hover:scale-[1.02]"
               >
-                <div className="w-16 h-16 rounded-[1.5rem] bg-[#1F2129] text-[#A3FF3D] flex items-center justify-center mb-10 border border-white/5 transition-transform shadow-xl group-hover:bg-[#A3FF3D] group-hover:text-[#0A0B0F]">
+                <div className="w-16 h-16 rounded-[1.5rem] bg-[#1F2129] text-[#06B6D4] flex items-center justify-center mb-10 border border-white/5 transition-transform shadow-xl group-hover:bg-[#06B6D4] group-hover:text-[#0A0B0F]">
                   <feature.icon className="w-7 h-7" />
                 </div>
                 <h3 className="text-2xl font-black mb-5 tracking-tighter text-slate-100 uppercase">{feature.title}</h3>
@@ -247,11 +247,11 @@ export default function LandingPage() {
       {/* Premium Footer */}
       <footer className="relative pt-32 pb-16 px-6 bg-[#0A0B0F] overflow-hidden">
         {/* Aesthetic Separator */}
-        <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-[#A3FF3D]/30 to-transparent opacity-50" />
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[300px] h-[200px] bg-[#A3FF3D]/5 blur-[120px] pointer-events-none" />
-        
+        <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-[#06B6D4]/30 to-transparent opacity-50" />
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[300px] h-[200px] bg-[#06B6D4]/5 blur-[120px] pointer-events-none" />
+
         <div className="max-w-7xl mx-auto flex flex-col lg:flex-row justify-between gap-20 relative z-10">
-          
+
           {/* Brand Identity */}
           <div className="flex flex-col gap-8 w-full lg:w-1/3">
             <Logo size={48} showText={true} />
@@ -263,79 +263,79 @@ export default function LandingPage() {
           {/* Dynamic Recent Links module if authenticated */}
           {isAuthenticated && (
             <div className="w-full lg:w-1/3 flex flex-col gap-6">
-               <div className="flex items-center gap-2">
-                 <div className="w-1.5 h-1.5 rounded-full bg-[#00F5FF] animate-pulse" />
-                 <span className="text-[10px] font-black uppercase tracking-[0.2em] text-[#00F5FF]">Neural Stream (Recent)</span>
-               </div>
-               
-               {recentLinks.length > 0 ? (
-                 <div className="flex flex-col gap-4">
-                   {recentLinks.map((link, i) => (
-                      <Link 
-                        key={link.id} 
-                        href={link.url} 
-                        target="_blank" 
-                        rel="noreferrer"
-                        className="group flex items-center justify-between p-4 rounded-2xl bg-[#14151B] border border-white/5 hover:border-[#00F5FF]/30 transition-all duration-500 hover:translate-x-2"
-                      >
-                         <div className="flex flex-col gap-1 overflow-hidden pr-4">
-                            <span className="text-[12px] font-bold text-white truncate">{link.title || link.url}</span>
-                            <span className="text-[9px] text-white/30 uppercase tracking-widest truncate">{new URL(link.url).hostname}</span>
-                         </div>
-                         <div className="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center group-hover:bg-[#00F5FF]/10 transition-colors shrink-0">
-                           <ExternalLink className="w-3 h-3 text-white/40 group-hover:text-[#00F5FF]" />
-                         </div>
-                      </Link>
-                   ))}
-                 </div>
-               ) : (
-                  <div className="p-4 rounded-xl border border-white/5 bg-white/5 border-dashed">
-                     <span className="text-[11px] font-medium text-white/30">Your vault is empty. Initialize your knowledge base today.</span>
-                  </div>
-               )}
+              <div className="flex items-center gap-2">
+                <div className="w-1.5 h-1.5 rounded-full bg-[#00F5FF] animate-pulse" />
+                <span className="text-[10px] font-black uppercase tracking-[0.2em] text-[#00F5FF]">Neural Stream (Recent)</span>
+              </div>
+
+              {recentLinks.length > 0 ? (
+                <div className="flex flex-col gap-4">
+                  {recentLinks.map((link, i) => (
+                    <Link
+                      key={link.id}
+                      href={link.url}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="group flex items-center justify-between p-4 rounded-2xl bg-[#14151B] border border-white/5 hover:border-[#00F5FF]/30 transition-all duration-500 hover:translate-x-2"
+                    >
+                      <div className="flex flex-col gap-1 overflow-hidden pr-4">
+                        <span className="text-[12px] font-bold text-white truncate">{link.title || link.url}</span>
+                        <span className="text-[9px] text-white/30 uppercase tracking-widest truncate">{new URL(link.url).hostname}</span>
+                      </div>
+                      <div className="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center group-hover:bg-[#00F5FF]/10 transition-colors shrink-0">
+                        <ExternalLink className="w-3 h-3 text-white/40 group-hover:text-[#00F5FF]" />
+                      </div>
+                    </Link>
+                  ))}
+                </div>
+              ) : (
+                <div className="p-4 rounded-xl border border-white/5 bg-white/5 border-dashed">
+                  <span className="text-[11px] font-medium text-white/30">Your vault is empty. Initialize your knowledge base today.</span>
+                </div>
+              )}
             </div>
           )}
 
           {/* Navigation Matrix */}
           <div className="w-full lg:w-1/4 flex flex-col gap-8 lg:text-right">
-             <div className="space-y-4">
-               <span className="text-[10px] font-bold text-white/20 uppercase tracking-[0.3em] block">Sectors</span>
-               <div className="flex flex-col gap-3 lg:items-end">
-                  <Link href="/dashboard/project" className="text-[12px] font-bold text-slate-400 hover:text-[#5E7BFF] transition-colors relative group w-max">
-                     <span className="relative z-10">Project</span>
-                     <span className="absolute -bottom-1 left-0 right-0 h-[1px] bg-[#5E7BFF] scale-x-0 group-hover:scale-x-100 transition-transform origin-right" />
-                  </Link>
-                  <Link href="/dashboard/gallery" className="text-[12px] font-bold text-slate-400 hover:text-[#FF4DFF] transition-colors relative group w-max">
-                     <span className="relative z-10">Gallery</span>
-                     <span className="absolute -bottom-1 left-0 right-0 h-[1px] bg-[#FF4DFF] scale-x-0 group-hover:scale-x-100 transition-transform origin-right" />
-                  </Link>
-                  <Link href="/dashboard/notes" className="text-[12px] font-bold text-slate-400 hover:text-[#A3FF3D] transition-colors relative group w-max">
-                     <span className="relative z-10">Notes</span>
-                     <span className="absolute -bottom-1 left-0 right-0 h-[1px] bg-[#A3FF3D] scale-x-0 group-hover:scale-x-100 transition-transform origin-right" />
-                  </Link>
-               </div>
-             </div>
+            <div className="space-y-4">
+              <span className="text-[10px] font-bold text-white/20 uppercase tracking-[0.3em] block">Sectors</span>
+              <div className="flex flex-col gap-3 lg:items-end">
+                <Link href="/dashboard/project" className="text-[12px] font-bold text-slate-400 hover:text-[#5E7BFF] transition-colors relative group w-max">
+                  <span className="relative z-10">Project</span>
+                  <span className="absolute -bottom-1 left-0 right-0 h-[1px] bg-[#5E7BFF] scale-x-0 group-hover:scale-x-100 transition-transform origin-right" />
+                </Link>
+                <Link href="/dashboard/gallery" className="text-[12px] font-bold text-slate-400 hover:text-[#FF4DFF] transition-colors relative group w-max">
+                  <span className="relative z-10">Gallery</span>
+                  <span className="absolute -bottom-1 left-0 right-0 h-[1px] bg-[#FF4DFF] scale-x-0 group-hover:scale-x-100 transition-transform origin-right" />
+                </Link>
+                <Link href="/dashboard/notes" className="text-[12px] font-bold text-slate-400 hover:text-[#06B6D4] transition-colors relative group w-max">
+                  <span className="relative z-10">Notes</span>
+                  <span className="absolute -bottom-1 left-0 right-0 h-[1px] bg-[#06B6D4] scale-x-0 group-hover:scale-x-100 transition-transform origin-right" />
+                </Link>
+              </div>
+            </div>
 
-             <div className="space-y-4 pt-8 border-t border-white/5">
-                <span className="text-[10px] font-bold text-white/20 uppercase tracking-[0.3em] block">Directory</span>
-                <div className="flex flex-row flex-wrap lg:justify-end gap-x-6 gap-y-2">
-                   <Link href="#" className="text-[10px] font-medium uppercase tracking-widest text-slate-500 hover:text-white transition-colors">Privacy</Link>
-                   <Link href="#" className="text-[10px] font-medium uppercase tracking-widest text-slate-500 hover:text-white transition-colors">Terms</Link>
-                   <Link href="#" className="text-[10px] font-medium uppercase tracking-widest text-slate-500 hover:text-white transition-colors">Manifesto</Link>
-                </div>
-             </div>
+            <div className="space-y-4 pt-8 border-t border-white/5">
+              <span className="text-[10px] font-bold text-white/20 uppercase tracking-[0.3em] block">Directory</span>
+              <div className="flex flex-row flex-wrap lg:justify-end gap-x-6 gap-y-2">
+                <Link href="#" className="text-[10px] font-medium uppercase tracking-widest text-slate-500 hover:text-white transition-colors">Privacy</Link>
+                <Link href="#" className="text-[10px] font-medium uppercase tracking-widest text-slate-500 hover:text-white transition-colors">Terms</Link>
+                <Link href="#" className="text-[10px] font-medium uppercase tracking-widest text-slate-500 hover:text-white transition-colors">Manifesto</Link>
+              </div>
+            </div>
           </div>
         </div>
 
         {/* Absolute Bottom Signature */}
         <div className="mt-20 flex flex-col sm:flex-row items-center justify-between gap-4 max-w-7xl mx-auto text-center sm:text-left">
-           <p className="text-[9px] font-bold text-[#A3FF3D]/40 uppercase tracking-[0.2em] flex items-center gap-3">
-             <span className="w-1.5 h-1.5 rounded-full bg-[#A3FF3D]" />
-             System Online — All systems nominal
-           </p>
-           <p className="text-[9px] font-bold text-white/10 uppercase tracking-[0.2em]">
-             © {new Date().getFullYear()} VaultOS. Architected for the Extraordinary.
-           </p>
+          <p className="text-[9px] font-bold text-[#06B6D4]/40 uppercase tracking-[0.2em] flex items-center gap-3">
+            <span className="w-1.5 h-1.5 rounded-full bg-[#06B6D4]" />
+            System Online — All systems nominal
+          </p>
+          <p className="text-[9px] font-bold text-white/10 uppercase tracking-[0.2em]">
+            © {new Date().getFullYear()} VaultOS. Architected for the Extraordinary.
+          </p>
         </div>
       </footer>
     </div>

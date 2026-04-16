@@ -100,10 +100,10 @@ export function ClipboardSyncController() {
     if (pref === null) {
       toast.custom(
         (t) => (
-          <div className="flex flex-col gap-3 p-4 bg-[#14151B] border border-[#A3FF3D]/30 rounded-2xl shadow-2xl relative overflow-hidden">
-            <div className="absolute top-0 right-0 w-24 h-24 bg-[#A3FF3D]/10 blur-2xl rounded-full" />
+          <div className="flex flex-col gap-3 p-4 bg-[#14151B] border border-[#06B6D4]/30 rounded-2xl shadow-2xl relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-24 h-24 bg-[#06B6D4]/10 blur-2xl rounded-full" />
             <h3 className="text-sm font-black text-white flex items-center gap-2 uppercase tracking-widest relative z-10 w-full mb-1">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#A3FF3D] animate-pulse" />
+              <span className="w-1.5 h-1.5 rounded-full bg-[#06B6D4] animate-pulse" />
               Neural Sync Detection
             </h3>
             <p className="text-[12px] text-slate-300 relative z-10 font-bold mb-2 pr-4 leading-relaxed">
@@ -116,7 +116,7 @@ export function ClipboardSyncController() {
                   toggleSync(true);
                   toast.dismiss(t);
                 }}
-                className="bg-[#A3FF3D] hover:bg-[#A3FF3D]/90 text-black font-black uppercase tracking-widest text-[10px] px-6 h-9 rounded-xl shadow-lg shadow-[#A3FF3D]/20 transition-all hover:scale-105"
+                className="bg-[#06B6D4] hover:bg-[#06B6D4]/90 text-black font-black uppercase tracking-widest text-[10px] px-6 h-9 rounded-xl shadow-lg shadow-[#06B6D4]/20 transition-all hover:scale-105"
               >
                 Authorize
               </Button>
@@ -147,11 +147,11 @@ export function ClipboardSyncController() {
         initialData={
           clipData
             ? {
-                url: clipData.url,
-                title: clipData.title,
-                description: clipData.description,
-                collectionId: collectionId,
-              }
+              url: clipData.url,
+              title: clipData.title,
+              description: clipData.description,
+              collectionId: collectionId,
+            }
             : null
         }
       />

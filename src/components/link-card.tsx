@@ -66,7 +66,7 @@ export function LinkCard({
         initial={{ opacity: 0, x: -10 }}
         animate={{ opacity: 1, x: 0 }}
         exit={{ opacity: 0, x: 10 }}
-        className="group flex items-center gap-5 p-4 rounded-2xl bg-[#14151B] border border-white/5 hover:border-[#A3FF3D]/20 transition-all duration-300"
+        className="group flex items-center gap-5 p-4 rounded-2xl bg-[#14151B] border border-white/5 hover:border-[#06B6D4]/20 transition-all duration-300"
       >
         {/* Favicon */}
         <div className="w-12 h-12 rounded-xl bg-slate-50 flex items-center justify-center flex-shrink-0 overflow-hidden border border-slate-100 transition-transform duration-500 group-hover:scale-105">
@@ -79,7 +79,7 @@ export function LinkCard({
 
         {/* Info */}
         <div className="flex-1 min-w-0">
-          <h3 className="font-bold text-slate-100 text-base truncate group-hover:text-[#A3FF3D] transition-colors decoration-2 underline-offset-4">{link.title || link.url}</h3>
+          <h3 className="font-bold text-slate-100 text-base truncate group-hover:text-[#06B6D4] transition-colors decoration-2 underline-offset-4">{link.title || link.url}</h3>
           <p className="text-[10px] text-slate-500 font-bold uppercase tracking-widest mt-0.5 transition-colors italic">{hostname}</p>
         </div>
 
@@ -138,19 +138,19 @@ export function LinkCard({
             unoptimized
           />
         ) : (
-           <div className="absolute inset-0 flex items-center justify-center opacity-10">
-             <Link2 className="w-24 h-24 text-slate-400" />
-           </div>
+          <div className="absolute inset-0 flex items-center justify-center opacity-10">
+            <Link2 className="w-24 h-24 text-slate-400" />
+          </div>
         )}
         <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-        
+
         {/* Hover Favicon Badge */}
         <div className="absolute top-4 left-4 w-10 h-10 rounded-xl bg-white/90 border border-slate-100 flex items-center justify-center backdrop-blur-md transition-all duration-300 group-hover:scale-110 shadow-sm">
-           {link.favicon ? (
-             <Image src={link.favicon} alt="" width={22} height={22} className="rounded" unoptimized />
-           ) : (
-             <Link2 className="w-4.5 h-4.5 text-slate-400" />
-           )}
+          {link.favicon ? (
+            <Image src={link.favicon} alt="" width={22} height={22} className="rounded" unoptimized />
+          ) : (
+            <Link2 className="w-4.5 h-4.5 text-slate-400" />
+          )}
         </div>
       </div>
 
@@ -158,7 +158,7 @@ export function LinkCard({
         {/* Header */}
         <div className="flex items-start justify-between gap-3">
           <div className="flex-1 min-w-0">
-            <h3 className="font-bold text-slate-100 text-base leading-tight line-clamp-2 transition-all tracking-tight group-hover:text-[#A3FF3D]">
+            <h3 className="font-bold text-slate-100 text-base leading-tight line-clamp-2 transition-all tracking-tight group-hover:text-[#06B6D4]">
               {link.title || link.url}
             </h3>
             <p className="text-[10px] text-slate-500 mt-2 font-black uppercase tracking-[0.2em] italic">{hostname}</p>
@@ -188,7 +188,7 @@ export function LinkCard({
               )}
             </>
           ) : (
-             <div className="h-5 w-1" /> // Spacer
+            <div className="h-5 w-1" /> // Spacer
           )}
         </div>
 
@@ -202,9 +202,8 @@ export function LinkCard({
               onClick={(e) => { e.preventDefault(); onToggleFavorite?.(link.id, !!link.is_favorite); }}
             >
               <Heart
-                className={`w-4.5 h-4.5 transition-all duration-300 ${
-                  link.is_favorite ? "fill-red-500 text-red-500 scale-105" : "text-slate-500"
-                }`}
+                className={`w-4.5 h-4.5 transition-all duration-300 ${link.is_favorite ? "fill-red-500 text-red-500 scale-105" : "text-slate-500"
+                  }`}
               />
             </Button>
             <a href={link.url} target="_blank" rel="noopener noreferrer">
@@ -247,8 +246,8 @@ function ActionsMenu({
         <MoreHorizontal className="w-4 h-4 text-slate-500" />
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-56 bg-[#1F2129] border border-white/5 p-1.5 shadow-[0_20px_50px_rgba(0,0,0,0.5)]">
-        <DropdownMenuItem onClick={() => onEdit?.(link)} className="cursor-pointer rounded-lg font-bold text-sm h-10 px-3 text-slate-100 focus:bg-[#A3FF3D]/10">
-          <Pencil className="w-4 h-4 mr-3 text-[#A3FF3D]" />
+        <DropdownMenuItem onClick={() => onEdit?.(link)} className="cursor-pointer rounded-lg font-bold text-sm h-10 px-3 text-slate-100 focus:bg-[#06B6D4]/10">
+          <Pencil className="w-4 h-4 mr-3 text-[#06B6D4]" />
           {t("Edit", "Edit")}
         </DropdownMenuItem>
         <DropdownMenuItem onClick={() => onMoveToCollection?.(link)} className="cursor-pointer rounded-lg font-bold text-sm h-10 px-3">

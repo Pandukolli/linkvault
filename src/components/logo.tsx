@@ -32,7 +32,7 @@ export function Logo({ className = "", size = 32, showText = true }: LogoProps) 
       {showText && (
         <div className="flex flex-col leading-tight">
           <span className="text-[14px] font-black tracking-[0.25em] text-white -mb-0.5">
-            Vault<span className="uppercase text-[#A3FF3D]">OS</span>
+            Vault<span className="uppercase text-[#06B6D4]">OS</span>
           </span>
           <span className="text-[7px] font-bold tracking-[0.5em] uppercase text-white/20">
             Neural Grid

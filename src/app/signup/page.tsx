@@ -66,11 +66,11 @@ export default function SignupPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[#0F1117] selection:bg-[#A3FF3D]/20 overflow-hidden relative">
+    <div className="min-h-screen flex items-center justify-center bg-[#0F1117] selection:bg-[#06B6D4]/20 overflow-hidden relative">
       {/* Decorative background elements */}
       <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
         <div className="absolute top-[-10%] right-[-10%] w-[40%] h-[40%] bg-[#4C2EFF]/10 blur-[120px] rounded-full" />
-        <div className="absolute bottom-[-10%] left-[-10%] w-[40%] h-[40%] bg-[#A3FF3D]/5 blur-[120px] rounded-full" />
+        <div className="absolute bottom-[-10%] left-[-10%] w-[40%] h-[40%] bg-[#06B6D4]/5 blur-[120px] rounded-full" />
       </div>
 
       <motion.div
@@ -85,11 +85,11 @@ export default function SignupPage() {
         </div>
 
         <div className="bg-[#1A1D27] rounded-[2.5rem] p-10 sm:p-12 border border-[#24283B] shadow-2xl relative overflow-hidden group">
-          <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#A3FF3D]/20 to-transparent" />
-          
+          <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#06B6D4]/20 to-transparent" />
+
           <div className="text-center mb-10">
-             <h2 className="text-2xl font-bold text-white tracking-tight">{t("Create Account", "Create Account")}</h2>
-             <p className="text-xs font-bold text-[#A3A8B8] mt-1 uppercase tracking-widest">{t("Initialize Your Archive", "Initialize Your Archive")}</p>
+            <h2 className="text-2xl font-bold text-white tracking-tight">{t("Create Account", "Create Account")}</h2>
+            <p className="text-xs font-bold text-[#A3A8B8] mt-1 uppercase tracking-widest">{t("Initialize Your Archive", "Initialize Your Archive")}</p>
           </div>
 
           <div className="space-y-6">
@@ -100,7 +100,7 @@ export default function SignupPage() {
               className="w-full h-14 text-sm font-bold border-[#24283B] bg-transparent hover:bg-[#24283B] hover:text-white transition-all duration-300 rounded-2xl shadow-none gap-3 text-[#F8FAFC]"
             >
               {googleLoading ? (
-                <Loader2 className="w-4 h-4 animate-spin text-[#A3FF3D]" />
+                <Loader2 className="w-4 h-4 animate-spin text-[#06B6D4]" />
               ) : (
                 <>
                   <svg className="w-5 h-5" viewBox="0 0 24 24">
@@ -127,14 +127,14 @@ export default function SignupPage() {
               <div className="space-y-2">
                 <Label htmlFor="fullName" className="text-[10px] font-bold uppercase tracking-widest text-[#A3A8B8] ml-1">{t("Full Name", "Full Name")}</Label>
                 <div className="relative group">
-                  <User className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-[#A3A8B8] group-focus-within:text-[#A3FF3D] transition-colors" />
+                  <User className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-[#A3A8B8] group-focus-within:text-[#06B6D4] transition-colors" />
                   <Input
                     id="fullName"
                     type="text"
                     placeholder="John Doe"
                     value={fullName}
                     onChange={(e) => setFullName(e.target.value)}
-                    className="pl-11 h-13 bg-[#0F1117] border-[#24283B] focus:border-[#A3FF3D]/30 rounded-2xl font-medium text-white transition-all shadow-inner"
+                    className="pl-11 h-13 bg-[#0F1117] border-[#24283B] focus:border-[#06B6D4]/30 rounded-2xl font-medium text-white transition-all shadow-inner"
                     required
                   />
                 </div>
@@ -143,30 +143,30 @@ export default function SignupPage() {
               <div className="space-y-2">
                 <Label htmlFor="email" className="text-[10px] font-bold uppercase tracking-widest text-[#A3A8B8] ml-1">{t("Email Address", "Email Address")}</Label>
                 <div className="relative group">
-                  <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-[#A3A8B8] group-focus-within:text-[#A3FF3D] transition-colors" />
+                  <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-[#A3A8B8] group-focus-within:text-[#06B6D4] transition-colors" />
                   <Input
                     id="email"
                     type="email"
                     placeholder="operator@vaultos.app"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="pl-11 h-13 bg-[#0F1117] border-[#24283B] focus:border-[#A3FF3D]/30 rounded-2xl font-medium text-white transition-all shadow-inner"
+                    className="pl-11 h-13 bg-[#0F1117] border-[#24283B] focus:border-[#06B6D4]/30 rounded-2xl font-medium text-white transition-all shadow-inner"
                     required
                   />
                 </div>
               </div>
-              
+
               <div className="space-y-2">
                 <Label htmlFor="password" className="text-[10px] font-bold uppercase tracking-widest text-[#A3A8B8] ml-1">{t("Password", "Password")}</Label>
                 <div className="relative group">
-                  <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-[#A3A8B8] group-focus-within:text-[#A3FF3D] transition-colors" />
+                  <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-[#A3A8B8] group-focus-within:text-[#06B6D4] transition-colors" />
                   <Input
                     id="password"
                     type="password"
                     placeholder="••••••••"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="pl-11 h-13 bg-[#0F1117] border-[#24283B] focus:border-[#A3FF3D]/30 rounded-2xl font-medium text-white transition-all shadow-inner"
+                    className="pl-11 h-13 bg-[#0F1117] border-[#24283B] focus:border-[#06B6D4]/30 rounded-2xl font-medium text-white transition-all shadow-inner"
                     required
                   />
                 </div>
@@ -175,7 +175,7 @@ export default function SignupPage() {
               <Button
                 type="submit"
                 disabled={loading}
-                className="w-full h-14 bg-[#A3FF3D] hover:bg-[#A3FF3D]/90 text-[#0F1117] rounded-2xl font-bold uppercase tracking-widest shadow-lg shadow-[#A3FF3D]/10 hover:shadow-[#A3FF3D]/20 transition-all hover:-translate-y-0.5 mt-2"
+                className="w-full h-14 bg-[#06B6D4] hover:bg-[#06B6D4]/90 text-[#0F1117] rounded-2xl font-bold uppercase tracking-widest shadow-lg shadow-[#06B6D4]/10 hover:shadow-[#06B6D4]/20 transition-all hover:-translate-y-0.5 mt-2"
               >
                 {loading ? (
                   <Loader2 className="w-5 h-5 animate-spin" />
@@ -193,7 +193,7 @@ export default function SignupPage() {
                 {t("Already on vaultOS?", "Already on vaultOS?")}{" "}
                 <Link
                   href="/login"
-                  className="text-[#A3FF3D] hover:text-[#A3FF3D]/70 transition-all ml-1 font-bold"
+                  className="text-[#06B6D4] hover:text-[#06B6D4]/70 transition-all ml-1 font-bold"
                 >
                   {t("Sign In", "Sign In")}
                 </Link>
@@ -201,7 +201,7 @@ export default function SignupPage() {
             </div>
           </div>
         </div>
-        
+
         <p className="mt-10 text-center text-[10px] font-bold uppercase tracking-[0.2em] text-[#A3A8B8] opacity-50">© 2026 vaultOS // Personal Knowledge OS</p>
       </motion.div>
     </div>

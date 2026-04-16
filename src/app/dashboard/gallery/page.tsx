@@ -50,17 +50,17 @@ export default function GalleryPage() {
   const [mode, setMode] = useState<GalleryMode>("upload");
   const [viewMode, setViewMode] = useState<ViewMode>("masonry");
   const [searchQuery, setSearchQuery] = useState("");
-  
+
   // Selection & Lightbox
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
-  
+
   // Project state
   const [selectedProject, setSelectedProject] = useState<string | null>(null);
-  
+
   // Story Edit State
   const [editingStoryImage, setEditingStoryImage] = useState<UserImage | null>(null);
-  
+
   // Delete DB Dialog
   const [deleteIds, setDeleteIds] = useState<string[] | null>(null);
 
@@ -69,18 +69,18 @@ export default function GalleryPage() {
   // Derived state
   const filteredImages = useMemo(() => {
     let result = images;
-    
+
     // Search filter
     if (searchQuery) {
       const q = searchQuery.toLowerCase();
-      result = result.filter(img => 
+      result = result.filter(img =>
         (img.title && img.title.toLowerCase().includes(q)) ||
         (img.caption && img.caption.toLowerCase().includes(q)) ||
         (img.story && img.story.toLowerCase().includes(q)) ||
         (img.folder && img.folder.toLowerCase().includes(q))
       );
     }
-    
+
     // Mode filter
     if (mode === "projects" && selectedProject) {
       result = result.filter(img => img.folder === selectedProject);
@@ -90,7 +90,7 @@ export default function GalleryPage() {
       // In quick upload, maybe only show general or all non-story? Let's show all for now, but grouped by date later
       result = result.filter(img => !img.is_story);
     }
-    
+
     return result;
   }, [images, searchQuery, mode, selectedProject]);
 
@@ -160,17 +160,17 @@ export default function GalleryPage() {
             Visual Hub
           </h1>
           <p className="text-slate-400 text-[10px] font-black uppercase tracking-[0.4em]">
-            <span className="text-[#A3FF3D]">{images.length} assets</span> • <span className="text-[#5E7BFF]">{projects.length} projects</span> • <span className="text-[#FF4DFF]">{images.filter(i=>i.is_story).length} stories</span>
+            <span className="text-[#06B6D4]">{images.length} assets</span> • <span className="text-[#5E7BFF]">{projects.length} projects</span> • <span className="text-[#FF4DFF]">{images.filter(i => i.is_story).length} stories</span>
           </p>
         </div>
-        
+
         <div className="flex items-center gap-4">
           {/* Search */}
           <div className="relative group hidden md:block">
             <Search className="w-4 h-4 absolute left-4 top-1/2 -translate-y-1/2 text-white/20 group-focus-within:text-white transition-colors" />
-            <input 
-              type="text" 
-              placeholder="Query visuals..." 
+            <input
+              type="text"
+              placeholder="Query visuals..."
               value={searchQuery}
               onChange={e => setSearchQuery(e.target.value)}
               className="pl-12 pr-4 h-14 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-xl font-bold text-sm text-white focus:border-white/30 focus:outline-none transition-all w-64 shadow-2xl"
@@ -200,7 +200,7 @@ export default function GalleryPage() {
         {/* Mode Tabs */}
         <div className="flex gap-2 p-1.5 bg-[#14151B] rounded-2xl border border-white/5 shadow-2xl">
           {[
-            { id: "upload", label: "Quick Upload", icon: Layers, color: "#A3FF3D" },
+            { id: "upload", label: "Quick Upload", icon: Layers, color: "#06B6D4" },
             { id: "projects", label: "Projects", icon: FolderOpen, color: "#5E7BFF" },
             { id: "stories", label: "Stories", icon: Film, color: "#FF4DFF" }
           ].map((m) => (
@@ -211,11 +211,10 @@ export default function GalleryPage() {
                 setSelectedProject(null);
                 setSelectedIds(new Set());
               }}
-              className={`flex items-center gap-3 px-8 py-3 text-[10px] font-black rounded-xl transition-all duration-700 uppercase tracking-widest ${
-                mode === m.id
-                  ? "bg-slate-100 text-[#0A0B0F] shadow-2xl shadow-white/5"
-                  : "text-slate-400 hover:text-slate-100"
-              }`}
+              className={`flex items-center gap-3 px-8 py-3 text-[10px] font-black rounded-xl transition-all duration-700 uppercase tracking-widest ${mode === m.id
+                ? "bg-slate-100 text-[#0A0B0F] shadow-2xl shadow-white/5"
+                : "text-slate-400 hover:text-slate-100"
+                }`}
             >
               <m.icon className="w-4 h-4" style={{ color: mode === m.id ? 'inherit' : m.color }} />
               {m.label}
@@ -238,7 +237,7 @@ export default function GalleryPage() {
           )}
 
           <div className="flex gap-1 p-1.5 bg-[#14151B] rounded-xl hidden sm:flex border border-white/5">
-            {[ 
+            {[
               { id: "masonry", icon: LayoutGrid },
               { id: "grid", icon: Grid3X3 },
               { id: "list", icon: List }
@@ -256,7 +255,7 @@ export default function GalleryPage() {
       </div>
 
       {/* Content Area */}
-      <div 
+      <div
         className="min-h-[50vh]"
         onDrop={e => { e.preventDefault(); handleFileUpload(e.dataTransfer.files); }}
         onDragOver={e => e.preventDefault()}
@@ -269,9 +268,9 @@ export default function GalleryPage() {
           <AnimatePresence mode="wait">
             {/* PROJECTS SUB-VIEW (When showing project folders) */}
             {mode === "projects" && !selectedProject && (
-              <motion.div key="projects-list" initial={{opacity:0}} animate={{opacity:1}} exit={{opacity:0}} className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6">
+              <motion.div key="projects-list" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6">
                 {projects.map(proj => (
-                  <div 
+                  <div
                     key={proj.name}
                     className="group card-elevated p-4 cursor-pointer flex flex-col gap-4 bg-white"
                     onClick={() => setSelectedProject(proj.name)}
@@ -295,8 +294,8 @@ export default function GalleryPage() {
 
             {/* STORIES VIEW */}
             {mode === "stories" && (
-              <motion.div key="stories" initial={{opacity:0}} animate={{opacity:1}} exit={{opacity:0}}>
-                {images.filter(i=>!i.is_story).length > 0 && (
+              <motion.div key="stories" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+                {images.filter(i => !i.is_story).length > 0 && (
                   <div className="mb-10 text-center">
                     <p className="text-sm font-bold text-slate-400 uppercase tracking-widest mb-4">Want to create a story?</p>
                     <Button variant="outline" className="rounded-full shadow-sm font-black" onClick={() => setMode("upload")}>
@@ -306,10 +305,10 @@ export default function GalleryPage() {
                 )}
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
                   {filteredImages.map((img, i) => (
-                    <motion.div 
-                      key={img.id} 
+                    <motion.div
+                      key={img.id}
                       className="polaroid-card group cursor-pointer"
-                      whileHover={{ scale: 1.02, rotate: i%2===0 ? 1 : -1 }}
+                      whileHover={{ scale: 1.02, rotate: i % 2 === 0 ? 1 : -1 }}
                       transition={{ type: "spring", stiffness: 300 }}
                       onClick={() => setEditingStoryImage(img)}
                     >
@@ -335,7 +334,7 @@ export default function GalleryPage() {
 
             {/* QUICK UPLOAD / PROJECT ASSETS VIEW */}
             {(mode === "upload" || (mode === "projects" && selectedProject)) && (
-              <motion.div key="images-grid" initial={{opacity:0}} animate={{opacity:1}} exit={{opacity:0}}>
+              <motion.div key="images-grid" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
                 {mode === "projects" && selectedProject && (
                   <div className="flex items-center gap-4 mb-8">
                     <Button variant="outline" size="icon" className="rounded-full" onClick={() => setSelectedProject(null)}>
@@ -346,9 +345,9 @@ export default function GalleryPage() {
                 )}
 
                 {filteredImages.length === 0 ? (
-                  <div className="text-center py-32 rounded-[3.5rem] bg-[#14151B] border border-white/5 shadow-2xl cursor-pointer group transition-all duration-700 hover:border-[#A3FF3D]/20" onClick={() => fileInputRef.current?.click()}>
+                  <div className="text-center py-32 rounded-[3.5rem] bg-[#14151B] border border-white/5 shadow-2xl cursor-pointer group transition-all duration-700 hover:border-[#06B6D4]/20" onClick={() => fileInputRef.current?.click()}>
                     <div className="w-24 h-24 mx-auto bg-[#1F2129] rounded-[2rem] flex items-center justify-center mb-8 border border-white/5 shadow-inner transition-all duration-500">
-                      <Upload className="w-10 h-10 text-[#A3FF3D] opacity-40 group-hover:opacity-100 transition-opacity" />
+                      <Upload className="w-10 h-10 text-[#06B6D4] opacity-40 group-hover:opacity-100 transition-opacity" />
                     </div>
                     <h3 className="text-3xl font-black text-slate-100 mb-3 tracking-tighter uppercase">Drop Visuals Here</h3>
                     <p className="text-sm text-slate-400 font-bold max-w-sm mx-auto mb-10 uppercase tracking-[0.2em] leading-relaxed">
@@ -360,9 +359,9 @@ export default function GalleryPage() {
                     {filteredImages.map((img, index) => (
                       <div
                         key={img.id}
-                        className={`group relative overflow-hidden bg-[#14151B] border border-white/5 cursor-pointer hover:shadow-xl hover:shadow-[#A3FF3D]/5 transition-all duration-300
+                        className={`group relative overflow-hidden bg-[#14151B] border border-white/5 cursor-pointer hover:shadow-xl hover:shadow-[#06B6D4]/5 transition-all duration-300
                           ${viewMode === "masonry" ? "gallery-masonry-item" : viewMode === "grid" ? "aspect-square rounded-[1.5rem]" : "flex h-32 rounded-[1.5rem] p-3 items-center gap-6"}
-                          ${selectedIds.has(img.id) ? "ring-4 ring-[#A3FF3D] ring-offset-2 ring-offset-[#0A0B0F]" : ""}
+                          ${selectedIds.has(img.id) ? "ring-4 ring-[#06B6D4] ring-offset-2 ring-offset-[#0A0B0F]" : ""}
                         `}
                         onClick={(e) => {
                           if (e.ctrlKey || e.metaKey || selectedIds.size > 0) {
@@ -375,7 +374,7 @@ export default function GalleryPage() {
                         <div className={`${viewMode === "list" ? "w-40 h-full rounded-xl overflow-hidden shrink-0" : "w-full h-full"}`}>
                           <img src={img.url} className={`w-full h-full object-cover img-zoom-hover ${viewMode === "masonry" ? "h-auto" : ""}`} loading="lazy" />
                         </div>
-                        
+
                         {/* Hover Overlay for Grid/Masonry */}
                         {viewMode !== "list" && (
                           <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-4">
@@ -391,7 +390,7 @@ export default function GalleryPage() {
                             <span className="text-slate-400 text-xs font-bold uppercase tracking-widest mt-2">{img.folder} • {new Date(img.created_at).toLocaleDateString()}</span>
                           </div>
                         )}
-                        
+
                         {/* Type Icons */}
                         {img.is_story && (
                           <div className="absolute top-4 right-4 w-8 h-8 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center text-white">
@@ -418,7 +417,7 @@ export default function GalleryPage() {
             <button className="absolute top-6 right-6 w-12 h-12 bg-white/10 hover:bg-white/20 rounded-full flex items-center justify-center text-white transition-colors z-50" onClick={() => setLightboxIndex(null)}>
               <X className="w-6 h-6" />
             </button>
-            
+
             {/* Nav arrows */}
             <button className="absolute left-6 top-1/2 -translate-y-1/2 w-14 h-14 bg-white/5 hover:bg-white/20 rounded-full flex items-center justify-center text-white transition-colors z-50 disabled:opacity-20" disabled={lightboxIndex === 0} onClick={() => setLightboxIndex(prev => prev! - 1)}>
               <ChevronLeft className="w-8 h-8" />
@@ -429,7 +428,7 @@ export default function GalleryPage() {
 
             <div className="w-full h-full max-w-7xl max-h-[85vh] p-4 md:p-12 flex flex-col md:flex-row gap-8 items-center justify-center relative">
               {/* Image */}
-              <motion.div 
+              <motion.div
                 key={`lb-img-${lightboxIndex}`}
                 initial={{ opacity: 0, scale: 0.9, filter: "blur(10px)" }}
                 animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
@@ -438,9 +437,9 @@ export default function GalleryPage() {
               >
                 <img src={filteredImages[lightboxIndex].url} className="max-w-full max-h-full object-contain drop-shadow-2xl rounded-lg" />
               </motion.div>
-              
+
               {/* Info sidebar */}
-              <motion.div 
+              <motion.div
                 initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.2 }}
                 className="w-full md:w-80 bg-white/5 backdrop-blur-md border border-white/10 rounded-[2rem] p-6 text-white shrink-0 flex flex-col hidden md:flex"
               >
@@ -448,18 +447,18 @@ export default function GalleryPage() {
                 <div className="space-y-4 flex-1">
                   <div>
                     <Label className="text-[10px] text-white/50 uppercase tracking-widest">Caption</Label>
-                    <Input 
+                    <Input
                       key={`caption-${filteredImages[lightboxIndex].id}`}
-                      className="bg-transparent border-white/20 text-white mt-1 h-12 focus:border-primary focus:ring-0" 
+                      className="bg-transparent border-white/20 text-white mt-1 h-12 focus:border-primary focus:ring-0"
                       defaultValue={filteredImages[lightboxIndex].caption || ""}
                       onBlur={e => updateImage.mutate({ id: filteredImages[lightboxIndex].id, caption: e.target.value })}
                     />
                   </div>
                   <div>
                     <Label className="text-[10px] text-white/50 uppercase tracking-widest">Folder Mapping</Label>
-                    <Input 
+                    <Input
                       key={`folder-${filteredImages[lightboxIndex].id}`}
-                      className="bg-transparent border-white/20 text-white mt-1 h-12 focus:border-primary focus:ring-0" 
+                      className="bg-transparent border-white/20 text-white mt-1 h-12 focus:border-primary focus:ring-0"
                       defaultValue={filteredImages[lightboxIndex].folder || ""}
                       onBlur={e => updateImage.mutate({ id: filteredImages[lightboxIndex].id, folder: e.target.value })}
                     />
@@ -467,22 +466,22 @@ export default function GalleryPage() {
                   <div>
                     <Label className="text-[10px] text-white/50 uppercase tracking-widest">Type</Label>
                     <div className="flex gap-2 mt-2">
-                       <Button 
-                         variant={filteredImages[lightboxIndex].is_story ? "default" : "outline"} 
-                         className={`flex-1 h-10 text-xs ${!filteredImages[lightboxIndex].is_story ? "bg-transparent text-white border-white/20" : ""}`}
-                         onClick={() => updateImage.mutate({ id: filteredImages[lightboxIndex].id, is_story: !filteredImages[lightboxIndex].is_story })}
-                       >
-                         {filteredImages[lightboxIndex].is_story ? "Is Story" : "Make Story"}
-                       </Button>
+                      <Button
+                        variant={filteredImages[lightboxIndex].is_story ? "default" : "outline"}
+                        className={`flex-1 h-10 text-xs ${!filteredImages[lightboxIndex].is_story ? "bg-transparent text-white border-white/20" : ""}`}
+                        onClick={() => updateImage.mutate({ id: filteredImages[lightboxIndex].id, is_story: !filteredImages[lightboxIndex].is_story })}
+                      >
+                        {filteredImages[lightboxIndex].is_story ? "Is Story" : "Make Story"}
+                      </Button>
                     </div>
                   </div>
                 </div>
-                
+
                 <div className="pt-6 border-t border-white/10 text-[10px] text-white/40 uppercase tracking-widest space-y-2">
                   <p>Added: {new Date(filteredImages[lightboxIndex].created_at).toLocaleDateString()}</p>
-                  <p>ID: {filteredImages[lightboxIndex].id.slice(0,8)}</p>
+                  <p>ID: {filteredImages[lightboxIndex].id.slice(0, 8)}</p>
                 </div>
-                
+
                 <Button variant="destructive" className="w-full mt-6 bg-red-500/20 text-red-400 hover:bg-red-500 hover:text-white" onClick={() => setDeleteIds([filteredImages[lightboxIndex].id])}>
                   <Trash2 className="w-4 h-4 mr-2" /> Delete Media
                 </Button>
@@ -498,67 +497,67 @@ export default function GalleryPage() {
           {editingStoryImage && (
             <div className="flex flex-col md:flex-row h-[70vh]">
               <div className="w-full md:w-1/2 h-full bg-slate-100 flex items-center justify-center p-8 relative">
-                 <img src={editingStoryImage.url} className="max-w-full max-h-full object-contain drop-shadow-xl" />
-                 <div className="film-grain" />
+                <img src={editingStoryImage.url} className="max-w-full max-h-full object-contain drop-shadow-xl" />
+                <div className="film-grain" />
               </div>
               <div className="w-full md:w-1/2 p-8 md:p-12 flex flex-col bg-white">
-                 <div className="flex items-center gap-3 mb-8 text-primary">
-                    <Feather className="w-5 h-5" />
-                    <span className="text-[10px] font-black uppercase tracking-[0.3em]">Story Studio</span>
-                 </div>
-                 
-                 <input 
-                   key={`title-${editingStoryImage.id}`}
-                   type="text" 
-                   className="text-3xl font-black mb-4 focus:outline-none bg-transparent" 
-                   placeholder="A Beautiful Memory..." 
-                   defaultValue={editingStoryImage.title || ""}
-                   onBlur={e => updateImage.mutate({ id: editingStoryImage.id, title: e.target.value })}
-                 />
-                 
-                 <textarea 
-                   key={`story-${editingStoryImage.id}`}
-                   className="flex-1 resize-none focus:outline-none bg-transparent text-slate-600 font-serif text-lg leading-relaxed pt-2"
-                   placeholder="Every picture tells a story. Write yours here..."
-                   defaultValue={editingStoryImage.story || ""}
-                   onBlur={e => updateImage.mutate({ id: editingStoryImage.id, story: e.target.value })}
-                 />
-                 
-                 <div className="mt-8 pt-8 border-t border-slate-100 flex justify-between items-center">
-                   <Button variant="ghost" className="text-slate-400" onClick={() => setEditingStoryImage(null)}>Close</Button>
-                   <Button 
-                     className="bg-black hover:bg-primary text-white rounded-xl gap-2 font-black uppercase tracking-widest text-[10px] h-12 px-6 shadow-xl"
-                     onClick={async () => {
-                       const slug = editingStoryImage.slug || editingStoryImage.title?.toLowerCase().replace(/[^a-z0-9]+/g, '-') || "story";
-                       
-                       const isPublishing = !editingStoryImage.published_at;
-                       
-                       // Set published state
-                       await updateImage.mutateAsync({ 
-                         id: editingStoryImage.id, 
-                         published_at: isPublishing ? new Date().toISOString() : null,
-                         slug
-                       });
-                       
-                       if (isPublishing) {
-                         const storyUrl = `${window.location.origin}/gallery/story/${editingStoryImage.id}`;
-                         navigator.clipboard.writeText(storyUrl);
-                         toast.success("Story Published!", { description: "Public link copied to clipboard." });
-                       } else {
-                         toast.success("Story Unpublished.");
-                       }
-                       
-                       // Close dialog
-                       setEditingStoryImage(null);
-                     }}
-                   >
-                     {editingStoryImage.published_at ? (
-                       <>Unpublish Story</>
-                     ) : (
-                       <><Share2 className="w-4 h-4" /> Publish Story</>
-                     )}
-                   </Button>
-                 </div>
+                <div className="flex items-center gap-3 mb-8 text-primary">
+                  <Feather className="w-5 h-5" />
+                  <span className="text-[10px] font-black uppercase tracking-[0.3em]">Story Studio</span>
+                </div>
+
+                <input
+                  key={`title-${editingStoryImage.id}`}
+                  type="text"
+                  className="text-3xl font-black mb-4 focus:outline-none bg-transparent"
+                  placeholder="A Beautiful Memory..."
+                  defaultValue={editingStoryImage.title || ""}
+                  onBlur={e => updateImage.mutate({ id: editingStoryImage.id, title: e.target.value })}
+                />
+
+                <textarea
+                  key={`story-${editingStoryImage.id}`}
+                  className="flex-1 resize-none focus:outline-none bg-transparent text-slate-600 font-serif text-lg leading-relaxed pt-2"
+                  placeholder="Every picture tells a story. Write yours here..."
+                  defaultValue={editingStoryImage.story || ""}
+                  onBlur={e => updateImage.mutate({ id: editingStoryImage.id, story: e.target.value })}
+                />
+
+                <div className="mt-8 pt-8 border-t border-slate-100 flex justify-between items-center">
+                  <Button variant="ghost" className="text-slate-400" onClick={() => setEditingStoryImage(null)}>Close</Button>
+                  <Button
+                    className="bg-black hover:bg-primary text-white rounded-xl gap-2 font-black uppercase tracking-widest text-[10px] h-12 px-6 shadow-xl"
+                    onClick={async () => {
+                      const slug = editingStoryImage.slug || editingStoryImage.title?.toLowerCase().replace(/[^a-z0-9]+/g, '-') || "story";
+
+                      const isPublishing = !editingStoryImage.published_at;
+
+                      // Set published state
+                      await updateImage.mutateAsync({
+                        id: editingStoryImage.id,
+                        published_at: isPublishing ? new Date().toISOString() : null,
+                        slug
+                      });
+
+                      if (isPublishing) {
+                        const storyUrl = `${window.location.origin}/gallery/story/${editingStoryImage.id}`;
+                        navigator.clipboard.writeText(storyUrl);
+                        toast.success("Story Published!", { description: "Public link copied to clipboard." });
+                      } else {
+                        toast.success("Story Unpublished.");
+                      }
+
+                      // Close dialog
+                      setEditingStoryImage(null);
+                    }}
+                  >
+                    {editingStoryImage.published_at ? (
+                      <>Unpublish Story</>
+                    ) : (
+                      <><Share2 className="w-4 h-4" /> Publish Story</>
+                    )}
+                  </Button>
+                </div>
               </div>
             </div>
           )}

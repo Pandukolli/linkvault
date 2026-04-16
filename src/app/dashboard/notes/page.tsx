@@ -4,6 +4,8 @@ import { useState, useEffect, useCallback, useRef, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useNotes } from "@/hooks/use-notes";
 import { NotesEditor, PAGE_COLORS, EDITOR_FONTS } from "@/components/notes-editor";
+import { WeatherWidget } from "@/components/weather-widget";
+import { MoodTrendGraph } from "@/components/mood-trend-graph";
 import { Skeleton } from "@/components/ui/skeleton";
 import { toast } from "sonner";
 import {
@@ -25,7 +27,7 @@ function formatRelative(d: string) {
   if (diff < 604800) return `${Math.floor(diff / 86400)}d ago`;
   return formatDate(d);
 }
-function dateKey(d: string | Date | undefined) { 
+function dateKey(d: string | Date | undefined) {
   if (!d) return "";
   const dt = new Date(d);
   return `${dt.getFullYear()}-${String(dt.getMonth() + 1).padStart(2, "0")}-${String(dt.getDate()).padStart(2, "0")}`;
@@ -78,21 +80,23 @@ interface EnhancedContent {
   _fontFamily?: string;
   _coverImage?: string;
   _icon?: string;
+  _isHandwriting?: boolean;
+  _mood?: string;
   _history?: any[];
 }
 
 export default function NotesPage() {
   const { notes, isLoading, createNote, updateNote, deleteNote } = useNotes();
-  
+
   const [selectedNote, setSelectedNote] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
-  
+
   const [isSaving, setIsSaving] = useState(false);
   const [scrollProgress, setScrollProgress] = useState(0);
   const [stats, setStats] = useState({ words: 0, chars: 0 });
-  
+
   const [localTitle, setLocalTitle] = useState("");
   const [pageColor, setPageColor] = useState(PAGE_COLORS[0].value);
   const [fontFamily, setFontFamily] = useState(EDITOR_FONTS[0].value);
@@ -100,7 +104,9 @@ export default function NotesPage() {
   const [noteIcon, setNoteIcon] = useState<string | null>(null);
   const [tags, setTags] = useState<string[]>([]);
   const [newTagInput, setNewTagInput] = useState("");
-  
+  const [isHandwriting, setIsHandwriting] = useState(false);
+  const [mood, setMood] = useState<string | null>(null);
+
   const [showCoverPicker, setShowCoverPicker] = useState(false);
   const [showIconPicker, setShowIconPicker] = useState(false);
 
@@ -125,7 +131,7 @@ export default function NotesPage() {
   const dayNotes = useMemo(() => {
     if (!activeNote) return [];
     const date = dateKey(activeNote.created_at);
-    return notes.filter(n => dateKey(n.created_at) === date).sort((a,b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime());
+    return notes.filter(n => dateKey(n.created_at) === date).sort((a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime());
   }, [notes, activeNote]);
 
   const currentPageIndex = dayNotes.findIndex(n => n.id === selectedNote);
@@ -139,6 +145,8 @@ export default function NotesPage() {
       setCoverImage(ext?._coverImage || null);
       setNoteIcon(ext?._icon || null);
       setTags(ext?._tags || []);
+      setIsHandwriting(ext?._isHandwriting || false);
+      setMood(ext?._mood || null);
       setScrollProgress(0);
     }
   }, [activeNote?.id]);
@@ -154,12 +162,14 @@ export default function NotesPage() {
       _fontFamily: extra?._fontFamily ?? fontFamily,
       _coverImage: extra?._coverImage !== undefined ? extra._coverImage : coverImage || undefined,
       _icon: extra?._icon !== undefined ? extra._icon : noteIcon || undefined,
+      _isHandwriting: extra?._isHandwriting !== undefined ? extra._isHandwriting : isHandwriting,
+      _mood: extra?._mood !== undefined ? extra._mood : mood || undefined,
     };
-    updateNote.mutate({ id: selectedNote, content: final }, { 
+    updateNote.mutate({ id: selectedNote, content: final }, {
       onSuccess: () => { setIsSaving(false); pendingContent.current = null; },
       onError: () => setIsSaving(false)
     });
-  }, [selectedNote, activeNote, tags, pageColor, fontFamily, coverImage, noteIcon, updateNote]);
+  }, [selectedNote, activeNote, tags, pageColor, fontFamily, coverImage, noteIcon, isHandwriting, mood, updateNote]);
 
   const handleContentUpdate = (content: any, s: any) => {
     pendingContent.current = content;
@@ -189,11 +199,11 @@ export default function NotesPage() {
     const title = baseTitle || "Untitled";
     const sameDayCount = notes.filter(n => dateKey(n.created_at) === dateKey(new Date()) && n.title?.startsWith(title)).length;
     const finalTitle = sameDayCount > 0 ? `${title} - Page ${sameDayCount + 1}` : title;
-    
-    createNote.mutate({ 
-      title: finalTitle, 
-      is_daily: !!baseTitle, 
-      content: { type: "doc", content: [{ type: "paragraph" }] } 
+
+    createNote.mutate({
+      title: finalTitle,
+      is_daily: !!baseTitle,
+      content: { type: "doc", content: [{ type: "paragraph" }] }
     }, { onSuccess: d => setSelectedNote(d.id) });
   };
 
@@ -225,7 +235,7 @@ export default function NotesPage() {
   return (
     <div className={`nb-page ${isFullscreen ? "nb-fullscreen" : ""}`}>
       <div className="nb-cal-strip no-print">
-        <div className="nb-cal-label"><Calendar className="w-4 h-4" /><span> Timeline</span></div>
+        <div className="nb-cal-label"><Calendar className="w-4 h-4 text=white" /><span> Timeline</span></div>
         <div className="nb-cal-scroll" ref={calendarRef}>
           {calendarDays.map(day => {
             const k = dateKey(day);
@@ -258,6 +268,7 @@ export default function NotesPage() {
                 <Search className="nb-search-ico" />
                 <input type="text" className="nb-search-input" placeholder="Search..." value={searchQuery} onChange={e => setSearchQuery(e.target.value)} />
               </div>
+              <div className="px-4"><MoodTrendGraph notes={notes} /></div>
               <div className="nb-list">
                 {filteredNotes.map(note => {
                   const nt = note.content as EnhancedContent;
@@ -314,24 +325,45 @@ export default function NotesPage() {
                   </div>
                 )}
                 <div className="nb-icon-box" onClick={() => setShowIconPicker(true)}>{noteIcon || <Feather className="w-8 h-8 opacity-20" />}</div>
-                <div className="nb-tags-bar no-print">
-                  <Tag className="w-3.5 h-3.5" />
-                  {tags.map(t => <span key={t} className="nb-tag">#{t} <X className="w-2 h-2" onClick={() => removeTag(t)} /></span>)}
-                  <input type="text" className="nb-tag-input" placeholder="Add tag..." value={newTagInput} onChange={e => setNewTagInput(e.target.value)} onKeyDown={addTag} />
+                <div className="nb-tags-bar no-print flex justify-between w-full">
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <Tag className="w-3.5 h-3.5" />
+                    {tags.map(t => <span key={t} className="nb-tag">#{t} <X className="w-2 h-2" onClick={() => removeTag(t)} /></span>)}
+                    <input type="text" className="nb-tag-input" placeholder="Add tag..." value={newTagInput} onChange={e => setNewTagInput(e.target.value)} onKeyDown={addTag} />
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <WeatherWidget />
+                    <div className="flex bg-black/5 rounded-full px-2 py-1 gap-1">
+                      {[{ m: "happy", e: "😊" }, { m: "good", e: "🙂" }, { m: "neutral", e: "😐" }, { m: "sad", e: "😔" }, { m: "awful", e: "😢" }].map(item => (
+                        <button key={item.m} onClick={() => { setMood(item.m); forceSaveNow(undefined, { _mood: item.m }); }} className={`w-6 h-6 flex items-center justify-center rounded-full text-sm hover:scale-110 transition-all ${mood === item.m ? 'bg-white shadow scale-110' : 'opacity-40 hover:opacity-100'}`}>
+                          {item.e}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
                 </div>
                 <div className="nb-title-zone" style={{ fontFamily }}>
                   <input type="text" className="nb-title-input" value={localTitle} onChange={e => handleTitleUpdate(e.target.value)} placeholder="Title..." />
                 </div>
-                <NotesEditor content={activeNote.content as any} onUpdate={handleContentUpdate} pageColor={pageColor} onPageColorChange={c => { setPageColor(c); forceSaveNow(undefined, { _pageColor: c }); }} fontFamily={fontFamily} onFontChange={f => { setFontFamily(f); forceSaveNow(undefined, { _fontFamily: f }); }} />
+                <NotesEditor
+                  content={activeNote.content as any}
+                  onUpdate={handleContentUpdate}
+                  pageColor={pageColor}
+                  onPageColorChange={c => { setPageColor(c); forceSaveNow(undefined, { _pageColor: c }); }}
+                  fontFamily={fontFamily}
+                  onFontChange={f => { setFontFamily(f); forceSaveNow(undefined, { _fontFamily: f }); }}
+                  isHandwriting={isHandwriting}
+                  onHandwritingToggle={b => { setIsHandwriting(b); forceSaveNow(undefined, { _isHandwriting: b }); }}
+                />
               </div>
               <div className="nb-book-footer no-print">
                 <div className="nb-footer-left"><span>{stats.words} words</span><span className="mx-2">·</span><span>{stats.chars} chars</span></div>
                 <div className="nb-footer-right flex items-center gap-4">
                   <div className="flex bg-black/5 rounded p-0.5">
-                    <button onClick={() => currentPageIndex > 0 && setSelectedNote(dayNotes[currentPageIndex-1].id)}><ChevronLeft className="w-4 h-4" /></button>
+                    <button onClick={() => currentPageIndex > 0 && setSelectedNote(dayNotes[currentPageIndex - 1].id)}><ChevronLeft className="w-4 h-4" /></button>
                     <button onClick={() => {
                       if (currentPageIndex < dayNotes.length - 1) {
-                        setSelectedNote(dayNotes[currentPageIndex+1].id);
+                        setSelectedNote(dayNotes[currentPageIndex + 1].id);
                       } else {
                         const dateTitle = activeNote.is_daily ? activeNote.title?.split(" - Page ")[0] : undefined;
                         handleNewNote(dateTitle);
@@ -351,8 +383,8 @@ export default function NotesPage() {
                 <p className="text-slate-400 text-sm font-medium tracking-wide mb-10 select-none cursor-default">
                   Select a document from the sidebar, or begin a new one.
                 </p>
-                <button 
-                  className="h-12 px-8 rounded-2xl bg-black text-white text-[11px] font-bold uppercase tracking-[0.2em] hover:-translate-y-1 hover:bg-primary transition-all duration-300 shadow-xl shadow-black/10" 
+                <button
+                  className="h-12 px-8 rounded-2xl bg-black text-white text-[11px] font-bold uppercase tracking-[0.2em] hover:-translate-y-1 hover:bg-primary transition-all duration-300 shadow-xl shadow-black/10"
                   onClick={() => handleNewNote()}
                 >
                   Initialize Page

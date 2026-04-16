@@ -66,12 +66,12 @@ function LinksContent() {
       {/* Sidebar Section */}
       <aside className="w-full lg:w-64 shrink-0 flex flex-col gap-8 sticky top-32 z-10">
         <div className="flex flex-col gap-1">
-          <Button onClick={() => setDialogOpen(true)} className="h-14 mb-8 w-full gap-3 bg-[#A3FF3D] text-black hover:bg-[#A3FF3D]/90 rounded-2xl font-black uppercase tracking-widest transition-all shadow-2xl shadow-[#A3FF3D]/10 hover:-translate-y-1">
+          <Button onClick={() => setDialogOpen(true)} className="h-14 mb-8 w-full gap-3 bg-[#06B6D4] text-black hover:bg-[#06B6D4]/90 rounded-2xl font-black uppercase tracking-widest transition-all shadow-2xl shadow-[#06B6D4]/10 hover:-translate-y-1">
             <Zap className="w-5 h-5 fill-black" />
             Paste Vault Link
           </Button>
 
-          <span className="text-[9px] font-black uppercase tracking-[0.3em] text-[#A3FF3D] px-4 mb-2">My Links</span>
+          <span className="text-[9px] font-black uppercase tracking-[0.3em] text-[#06B6D4] px-4 mb-2">My Links</span>
           <button
             onClick={() => setActiveFilter("all")}
             className={`flex items-center gap-3 px-4 py-3 rounded-2xl transition-all font-bold text-[13px] tracking-tight ${activeFilter === "all" ? "bg-white text-black shadow-lg" : "text-white/40 hover:bg-white/5 hover:text-white"}`}
@@ -118,7 +118,7 @@ function LinksContent() {
             <h1 className="text-4xl md:text-5xl font-black text-white tracking-tighter uppercase">
               {activeFilter === "all" ? "All Artifacts" : activeFilter === "favorites" ? "Starred" : collections.find(c => c.id === activeFilter.split("_")[1])?.name || "Filtered Links"}
             </h1>
-            <p className="text-[#A3FF3D]/60 text-[10px] font-black uppercase tracking-[0.4em]">
+            <p className="text-[#06B6D4]/60 text-[10px] font-black uppercase tracking-[0.4em]">
               Neural Sync Operational
             </p>
           </div>

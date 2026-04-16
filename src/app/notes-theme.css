@@ -213,13 +213,13 @@
 }
 .nb-tag {
   display: flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 600;
-  color: #c4b5fd; background: rgba(139, 92, 246, 0.1); padding: 4px 10px; border-radius: 6px;
-  border: 1px solid rgba(139, 92, 246, 0.2);
+  color: #000000; background: rgba(0, 0, 0, 0.1); padding: 4px 10px; border-radius: 6px;
+  border: 1px solid rgba(0, 0, 0, 0.2);
 }
 .nb-tag button { background: none; border: none; color: inherit; cursor: pointer; padding: 0; outline: none; opacity: 0.7; }
 .nb-tag button:hover { opacity: 1; }
 .nb-tag-input {
-  background: transparent; border: none; outline: none; font-size: 12px; color: #94a3b8; width: 120px;
+  background: transparent; border: none; outline: none; font-size: 12px; color: #000000; width: 120px; font-weight: bold;
 }
 
 /* Title Zone - Seamless with Paper */
@@ -309,14 +309,14 @@
 
 .nb-editor-content-wrap .ProseMirror {
   outline: none; min-height: 100vh;
-  font-size: 16px; line-height: 1.7; color: #1e293b;
+  font-size: 16px; line-height: 1.7; color: #000000;
   width: 100%; margin: 0; padding: 0;
 }
 
 /* Typography styles matching dark modes automatically inside the wrapper based on the paper background (all colors given are light) */
-.nb-editor-content-wrap .ProseMirror h1 { font-size: 2.2rem; font-weight: 800; margin: 2rem 0 1rem; line-height: 1.2; color: #1a202c; }
-.nb-editor-content-wrap .ProseMirror h2 { font-size: 1.75rem; font-weight: 700; margin: 1.75rem 0 0.8rem; color: #2d3748; }
-.nb-editor-content-wrap .ProseMirror h3 { font-size: 1.35rem; font-weight: 700; margin: 1.5rem 0 0.5rem; color: #4a5568; }
+.nb-editor-content-wrap .ProseMirror h1 { font-size: 2.2rem; font-weight: 800; margin: 2rem 0 1rem; line-height: 1.2; color: #000000; }
+.nb-editor-content-wrap .ProseMirror h2 { font-size: 1.75rem; font-weight: 700; margin: 1.75rem 0 0.8rem; color: #050505; }
+.nb-editor-content-wrap .ProseMirror h3 { font-size: 1.35rem; font-weight: 700; margin: 1.5rem 0 0.5rem; color: #111111; }
 .nb-editor-content-wrap .ProseMirror p { margin: 0.5rem 0 1rem; }
 .nb-editor-content-wrap .ProseMirror blockquote {
   border-left: 4px solid #94a3b8; padding-left: 1.25rem; margin: 1.5rem 0;
@@ -349,17 +349,54 @@
     0 0 0 1px rgba(0,0,0, 0.04);
   transform: rotate(-0.5deg);
   transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.4s ease, outline 0.1s ease;
+  z-index: 5;
 }
 .nb-editor-content-wrap .ProseMirror img.nb-image:hover {
   transform: rotate(0deg) scale(1.02);
   box-shadow: 
     0 25px 35px -5px rgba(0, 0, 0, 0.2), 
     0 15px 15px -10px rgba(0, 0, 0, 0.1);
+  z-index: 15;
 }
 .nb-editor-content-wrap .ProseMirror img.nb-image.ProseMirror-selectednode {
   outline: 4px solid #38bdf8; outline-offset: 4px;
   box-shadow: 0 30px 40px -5px rgba(0,0,0,0.3);
   transform: rotate(0deg) scale(1.03);
+  z-index: 20;
+}
+
+/* Layered Elements */
+.nb-sticker {
+  display: inline-block;
+  font-size: 3rem;
+  user-select: none;
+  cursor: grab;
+  z-index: 2;
+  transition: transform 0.3s;
+}
+.nb-sticker:active { cursor: grabbing; }
+
+/* Handwriting Simulator */
+.nb-handwriting .ProseMirror h1,
+.nb-handwriting .ProseMirror h2,
+.nb-handwriting .ProseMirror h3,
+.nb-handwriting .ProseMirror p,
+.nb-handwriting .nb-title-input {
+  font-family: inherit !important;
+  letter-spacing: 0.5px;
+}
+.nb-handwriting .ProseMirror p {
+  line-height: 1.5;
+  text-shadow: 0.5px 0.5px 1px rgba(0,0,10,0.1);
+  color: #1a1a24;
+}
+
+.nb-voice-note {
+  display: flex; align-items: center; gap: 12px;
+  background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(10px);
+  border: 1px solid rgba(0, 0, 0, 0.1); border-radius: 99px;
+  padding: 8px 16px; margin: 12px 0; width: max-content;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05); z-index: 10; position: relative;
 }
 .nb-editor-content-wrap .ProseMirror ul, .nb-editor-content-wrap .ProseMirror ol { padding-left: 1.75rem; margin: 1rem 0; }
 .nb-editor-content-wrap .ProseMirror hr {
@@ -401,15 +438,15 @@
 .ntb-toolbar-row2 { margin-top: 2px; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 6px; }
 
 .ntb-btn {
-  width: 32px; height: 32px; border-radius: 6px; border: none; background: transparent; color: #64748b;
+  width: 32px; height: 32px; border-radius: 6px; border: none; background: transparent; color: #000000;
   cursor: pointer; display: flex; align-items: center; justify-content: center;
   transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
 }
-.ntb-btn:hover { background: rgba(0,0,0,0.05); color: var(--foreground); transform: scale(1.05); }
+.ntb-btn:hover { background: rgba(0,0,0,0.05); color: #000000; transform: scale(1.05); }
 .ntb-btn:active { transform: scale(0.95); transition-duration: 0.1s; }
 .ntb-btn.active { 
   background: var(--primary);
-  color: white; 
+  color: #000000; 
 }
 .ntb-sep { width: 1px; height: 18px; background: rgba(0,0,0,0.1); margin: 0 8px; }
 

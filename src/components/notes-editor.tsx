@@ -12,7 +12,37 @@ import TiptapImage from "@tiptap/extension-image";
 import TiptapLink from "@tiptap/extension-link";
 import { TextStyle } from "@tiptap/extension-text-style";
 import { Color } from "@tiptap/extension-color";
-import { Extension } from "@tiptap/core";
+import { Extension, Node, mergeAttributes } from "@tiptap/core";
+import { VoiceNoteRecorder } from "./voice-note-recorder";
+
+export const VoiceNoteExtension = Node.create({
+  name: "voiceNote",
+  group: "block",
+  atom: true,
+  addAttributes() {
+    return { url: { default: null }, duration: { default: 0 }, timestamp: { default: 0 } };
+  },
+  parseHTML() { return [{ tag: "div.nb-voice-note" }]; },
+  renderHTML({ HTMLAttributes }) {
+    return [
+      "div", 
+      mergeAttributes(HTMLAttributes, { class: "nb-voice-note", contenteditable: "false" }),
+      ["span", {}, "🎙️ Voice Note "],
+      ["audio", { src: HTMLAttributes.url, controls: "true", class: "h-8" }]
+    ];
+  },
+});
+
+export const StickerExtension = Node.create({
+  name: "sticker",
+  group: "inline",
+  inline: true,
+  addAttributes() { return { emoji: { default: "⭐" } }; },
+  parseHTML() { return [{ tag: "span.nb-sticker" }]; },
+  renderHTML({ HTMLAttributes }) {
+    return ["span", mergeAttributes(HTMLAttributes, { class: "nb-sticker" }), HTMLAttributes.emoji];
+  },
+});
 
 /* ─────────── Custom Font Size Extension ─────────── */
 const FontSize = Extension.create({
@@ -107,6 +137,9 @@ import {
   Columns,
   Rows,
   Trash2,
+  Mic,
+  PenTool,
+  StickyNote
 } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 
@@ -162,6 +195,35 @@ interface NotesEditorProps {
   onPageColorChange?: (color: string) => void;
   fontFamily?: string;
   onFontChange?: (font: string) => void;
+  isHandwriting?: boolean;
+  onHandwritingToggle?: (checked: boolean) => void;
+}
+
+const STICKERS = [
+  "⭐", "💖", "🌸", "📌", "🎈", "✨", "🔥", "🎀", "🧸",
+  "❤️", "💜", "💙", "🌻", "🌿", "🍀", "🌙", "☁️", "⚡",
+  "🦋", "🐱", "🐶", "☕", "📸", "🎨", "🎵", "🍓", "🍰",
+  "💡", "🔒", "🔑", "🚀", "💎", "🦄", "🌈", "☀️", "🎉"
+];
+
+function StickerPicker({ onSelect }: { onSelect: (emoji: string) => void }) {
+  const [open, setOpen] = useState(false);
+  return (
+    <div className="relative">
+      <ToolBtn onClick={() => setOpen(!open)} title="Add Sticker"><StickyNote className="w-3.5 h-3.5" /></ToolBtn>
+      {open && (
+         <div className="absolute top-10 left-0 bg-white/95 backdrop-blur-xl shadow-xl border border-slate-200 p-3 rounded-[16px] w-[220px] max-h-64 overflow-y-auto z-50">
+           <div className="grid grid-cols-6 gap-2">
+             {STICKERS.map(s => (
+               <button key={s} onClick={() => { onSelect(s); setOpen(false); }} className="text-xl flex items-center justify-center hover:bg-slate-100 hover:scale-125 transition-all p-1 rounded-md">
+                 {s}
+               </button>
+             ))}
+           </div>
+         </div>
+      )}
+    </div>
+  );
 }
 
 /* ─────────── Toolbar Button ─────────── */
@@ -205,7 +267,7 @@ function FontSelector({
 
   useEffect(() => {
     function handleClick(e: MouseEvent) {
-      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
+      if (ref.current && !ref.current.contains(e.target as any)) setOpen(false);
     }
     document.addEventListener("mousedown", handleClick);
     return () => document.removeEventListener("mousedown", handleClick);
@@ -292,7 +354,7 @@ function PageColorPicker({
 
   useEffect(() => {
     function handleClick(e: MouseEvent) {
-      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
+      if (ref.current && !ref.current.contains(e.target as any)) setOpen(false);
     }
     document.addEventListener("mousedown", handleClick);
     return () => document.removeEventListener("mousedown", handleClick);
@@ -379,12 +441,16 @@ function NotesToolbar({
   onPageColorChange,
   fontFamily,
   onFontChange,
+  isHandwriting,
+  onHandwritingToggle,
 }: {
   editor: Editor;
   pageColor: string;
   onPageColorChange: (color: string) => void;
   fontFamily: string;
   onFontChange: (font: string) => void;
+  isHandwriting?: boolean;
+  onHandwritingToggle?: (val: boolean) => void;
 }) {
   const addLink = useCallback(() => {
     const url = window.prompt("Enter URL (include https://):");
@@ -414,6 +480,17 @@ function NotesToolbar({
       }
     };
     input.click();
+  }, [editor]);
+
+  const [showVoice, setShowVoice] = useState(false);
+  const [isFocused, setIsFocused] = useState(false);
+
+  useEffect(() => {
+    if (!editor) return;
+    const updateFocus = () => setIsFocused(editor.isFocused);
+    editor.on("focus", updateFocus);
+    editor.on("blur", updateFocus);
+    return () => { editor.off("focus", updateFocus); editor.off("blur", updateFocus); }
   }, [editor]);
 
   return (
@@ -467,6 +544,31 @@ function NotesToolbar({
 
         <ToolBtn onClick={() => editor.chain().focus().toggleCode().run()} isActive={editor.isActive("code")} title="Inline Code">
           <Code className="w-3.5 h-3.5" />
+        </ToolBtn>
+
+        <Sep />
+
+        <div className="relative">
+          <ToolBtn onClick={() => setShowVoice(!showVoice)} title="Record Voice Note" isActive={showVoice}>
+            <Mic className="w-3.5 h-3.5" />
+          </ToolBtn>
+          {showVoice && (
+            <div className="absolute top-full mt-2 left-0 z-50">
+              <VoiceNoteRecorder 
+                onSave={(url, dur) => {
+                  editor.chain().focus().insertContent({ type: "voiceNote", attrs: { url, duration: dur } }).run();
+                  setShowVoice(false);
+                }} 
+                onCancel={() => setShowVoice(false)} 
+              />
+            </div>
+          )}
+        </div>
+
+        <StickerPicker onSelect={(s) => editor.chain().focus().insertContent({ type: "sticker", attrs: { emoji: s } }).run()} />
+
+        <ToolBtn onClick={() => { if(onHandwritingToggle) onHandwritingToggle(!isHandwriting); }} title="Handwriting Mode" isActive={isHandwriting}>
+          <PenTool className="w-3.5 h-3.5" />
         </ToolBtn>
 
         <div className="ml-auto flex items-center gap-1">
@@ -543,6 +645,8 @@ export function NotesEditor({
   onPageColorChange,
   fontFamily = "'Qwigley', cursive",
   onFontChange,
+  isHandwriting = false,
+  onHandwritingToggle,
 }: NotesEditorProps) {
   const isInternalUpdate = useRef(false);
 
@@ -558,6 +662,8 @@ export function NotesEditor({
       TextStyle,
       Color,
       FontSize,
+      VoiceNoteExtension,
+      StickerExtension,
       TiptapLink.configure({
         openOnClick: false,
         HTMLAttributes: { class: "nb-link" },
@@ -584,7 +690,7 @@ export function NotesEditor({
     },
     editorProps: {
       attributes: {
-        class: `nb-prosemirror ${showGridLines ? "nb-grid-lines" : ""}`,
+        class: `nb-prosemirror ${showGridLines ? "nb-grid-lines" : ""} ${isHandwriting ? "nb-handwriting" : ""}`,
         style: `font-family: ${fontFamily}`,
       },
       handleDrop: (view, event) => {
@@ -697,12 +803,14 @@ export function NotesEditor({
   return (
     <div className="nb-editor-wrapper">
       {editable && (
-        <NotesToolbar
-          editor={editor}
-          pageColor={pageColor}
-          onPageColorChange={onPageColorChange || (() => {})}
-          fontFamily={fontFamily}
-          onFontChange={onFontChange || (() => {})}
+        <NotesToolbar 
+          editor={editor} 
+          pageColor={pageColor} 
+          onPageColorChange={onPageColorChange!} 
+          fontFamily={fontFamily} 
+          onFontChange={onFontChange!} 
+          isHandwriting={isHandwriting}
+          onHandwritingToggle={onHandwritingToggle}
         />
       )}
       {editor && editor.isActive('image') && (
