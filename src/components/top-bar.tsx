@@ -1,15 +1,21 @@
 "use client";
 
-import { Menu, Activity } from "lucide-react";
+import { Activity, ClipboardPaste } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { UserMenu } from "@/components/user-menu";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { useTranslation } from "react-i18next";
 import { useProfile } from "@/hooks/use-profile";
 import { Logo } from "@/components/logo";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { useClipboardSync } from "@/hooks/use-clipboard-sync";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 const TABS = [
   { id: "dashboard", label: "LINK", href: "/dashboard", color: "#FF4DFF" },
@@ -28,16 +34,17 @@ interface TopBarProps {
 export function TopBar({ onMenuClick, isTransparent = false }: TopBarProps) {
   const { t } = useTranslation();
   const pathname = usePathname();
-  const router = useRouter();
   const { profile } = useProfile();
-  const { isSyncActive, toggleSync } = useClipboardSync();
+  const { isSyncActive, toggleSync, triggerPaste } = useClipboardSync();
 
   const firstName = profile?.full_name?.split(" ")[0] || "operator";
 
   return (
-    <header className={cn(
-      "h-24 flex items-center justify-between px-8 md:px-12 sticky top-0 z-40 transition-all duration-700 w-full bg-black border-b border-white/5 shadow-2xl"
-    )}>
+    <header
+      className={cn(
+        "h-24 flex items-center justify-between px-8 md:px-12 sticky top-0 z-40 transition-all duration-700 w-full bg-black border-b border-white/5 shadow-2xl"
+      )}
+    >
       {/* Left: Logo */}
       <div className="flex items-center gap-8 w-1/4">
         <Link href="/" className="hover:opacity-80 transition-opacity">
@@ -54,20 +61,23 @@ export function TopBar({ onMenuClick, isTransparent = false }: TopBarProps) {
       <nav className="hidden lg:flex flex-1 justify-center">
         <div className="flex items-center gap-2 p-1.5 rounded-2xl bg-[#14151B] border border-white/5 shadow-2xl">
           {TABS.map((tab) => {
-            const isActive = pathname === tab.href || (tab.id === 'dashboard' && pathname === '/dashboard');
-            const isActiveLink = tab.id === 'dashboard' && pathname === '/dashboard/links';
+            const isActive =
+              pathname === tab.href ||
+              (tab.id === "dashboard" && pathname === "/dashboard");
+            const isActiveLink =
+              tab.id === "dashboard" && pathname === "/dashboard/links";
             const reallyActive = isActive || isActiveLink;
-            
+
             return (
               <Link
                 key={tab.id}
                 href={tab.href}
-                className={`px-6 py-2 rounded-xl text-[10px] font-black uppercase tracking-[0.2em] transition-all duration-700 ease-[0.16, 1, 0.3, 1] whitespace-nowrap ${
-                  reallyActive 
-                    ? "text-black" 
+                className={`px-6 py-2 rounded-xl text-[10px] font-black uppercase tracking-[0.2em] transition-all duration-700 whitespace-nowrap ${
+                  reallyActive
+                    ? "text-black"
                     : "text-slate-400 hover:text-slate-100"
                 }`}
-                style={{ 
+                style={{
                   backgroundColor: reallyActive ? tab.color : "transparent",
                 }}
               >
@@ -78,27 +88,91 @@ export function TopBar({ onMenuClick, isTransparent = false }: TopBarProps) {
         </div>
       </nav>
 
-      {/* Right: User Settings */}
-      <div className="flex items-center justify-end gap-6 w-1/4">
-        <div className="flex items-center gap-4">
-          <button 
-            onClick={() => toggleSync(!isSyncActive)}
-            title={isSyncActive ? "Neural Sync Active" : "Enable Neural Sync"}
-            className="group relative flex items-center justify-center w-10 h-10 rounded-full bg-[#14151B] border border-white/5 hover:bg-white/5 transition-all outline-none"
-          >
-            {isSyncActive && (
-               <span className="absolute inset-0 rounded-full animate-ping bg-[#A3FF3D]/30" style={{ animationDuration: '2s' }} />
-            )}
-            <Activity className={`w-4 h-4 transition-colors z-10 ${
-              isSyncActive ? "text-[#A3FF3D]" : "text-white/30 group-hover:text-white"
-            }`} />
-          </button>
-          
-          <p className="hidden xl:block text-[10px] font-bold text-slate-400 uppercase tracking-[0.4em] ml-2">
-            {firstName}
-          </p>
-          <UserMenu />
-        </div>
+      {/* Right: Clipboard controls + User */}
+      <div className="flex items-center justify-end gap-3 w-1/4">
+        <TooltipProvider>
+          {/* ── Clipboard Status Indicator ── */}
+          <Tooltip>
+            <TooltipTrigger>
+              <button
+                onClick={() => toggleSync(!isSyncActive)}
+                aria-label={
+                  isSyncActive
+                    ? "Clipboard Sync Active — click to disable"
+                    : "Enable Clipboard Sync"
+                }
+                className="group relative flex items-center gap-2 px-3 h-9 rounded-full bg-[#14151B] border border-white/5 hover:bg-white/5 transition-all outline-none"
+              >
+                {/* Pulsing ring when active */}
+                {isSyncActive && (
+                  <span
+                    className="absolute inset-0 rounded-full animate-ping bg-[#A3FF3D]/20"
+                    style={{ animationDuration: "2s" }}
+                  />
+                )}
+
+                {/* Green dot indicator */}
+                <span
+                  className={cn(
+                    "relative z-10 w-2 h-2 rounded-full transition-all duration-500 flex-shrink-0",
+                    isSyncActive
+                      ? "bg-[#A3FF3D] shadow-[0_0_6px_2px_rgba(163,255,61,0.6)] animate-pulse"
+                      : "bg-white/20"
+                  )}
+                />
+
+                <Activity
+                  className={cn(
+                    "w-3.5 h-3.5 z-10 transition-colors flex-shrink-0",
+                    isSyncActive
+                      ? "text-[#A3FF3D]"
+                      : "text-white/30 group-hover:text-white"
+                  )}
+                />
+
+                {/* Label — only on XL+ */}
+                <span
+                  className={cn(
+                    "hidden xl:block text-[9px] font-black uppercase tracking-[0.2em] z-10 transition-colors",
+                    isSyncActive ? "text-[#A3FF3D]" : "text-white/30 group-hover:text-white"
+                  )}
+                >
+                  {isSyncActive ? "Sync: Active" : "Sync: Off"}
+                </span>
+              </button>
+            </TooltipTrigger>
+            <TooltipContent side="bottom">
+              {isSyncActive
+                ? "Clipboard Sync ACTIVE — links you copy are auto-saved. Click to disable."
+                : "Click to enable Clipboard Auto-Save"}
+            </TooltipContent>
+          </Tooltip>
+
+          {/* ── Manual Paste Link button (fallback for production) ── */}
+          {isSyncActive && (
+            <Tooltip>
+              <TooltipTrigger>
+                <Button
+                  size="icon"
+                  variant="ghost"
+                  onClick={triggerPaste}
+                  aria-label="Paste link from clipboard"
+                  className="w-9 h-9 rounded-full bg-[#14151B] border border-white/5 hover:bg-[#A3FF3D]/10 hover:border-[#A3FF3D]/30 transition-all"
+                >
+                  <ClipboardPaste className="w-4 h-4 text-white/50 hover:text-[#A3FF3D] transition-colors" />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent side="bottom">
+                Paste Link — manually trigger clipboard read
+              </TooltipContent>
+            </Tooltip>
+          )}
+        </TooltipProvider>
+
+        <p className="hidden xl:block text-[10px] font-bold text-slate-400 uppercase tracking-[0.4em]">
+          {firstName}
+        </p>
+        <UserMenu />
       </div>
     </header>
   );
