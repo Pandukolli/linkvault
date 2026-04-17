@@ -166,56 +166,52 @@ export default function ResumesPage() {
            </div>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {isLoading ? (
             [...Array(4)].map((_, i) => (
-              <Skeleton key={i} className="h-[280px] rounded-[2.5rem] bg-white border border-slate-100 shadow-sm" />
+              <Skeleton key={i} className="h-[200px] rounded-[1.5rem] bg-white border border-slate-100 shadow-sm" />
             ))
           ) : (
             resumes.map((resume) => (
               <motion.div
                 key={resume.id}
-                whileHover={{ y: -8, scale: 1.02 }}
-                className="group relative h-[280px] bg-white border border-slate-200 rounded-[2.5rem] p-8 cursor-pointer transition-all hover:border-blue-500 hover:shadow-[0_40px_80px_-20px_rgba(37,99,235,0.15)] flex flex-col overflow-hidden"
+                whileHover={{ y: -4, scale: 1.01 }}
+                className="group relative h-[210px] bg-white border border-slate-200 rounded-[1.5rem] p-6 cursor-pointer transition-all hover:border-blue-500 hover:shadow-[0_30px_60px_-15px_rgba(37,99,235,0.12)] flex flex-col overflow-hidden"
                 onClick={() => setSelectedResumeId(resume.id)}
               >
-                {/* Mini Preview Overlay */}
-                <div className="absolute top-0 right-0 w-32 h-full bg-slate-50/50 border-l border-slate-100 p-6 flex flex-col gap-2 opacity-50 group-hover:opacity-100 transition-opacity">
-                   <div className="h-1.5 w-full bg-slate-200 rounded-full" />
-                   <div className="h-1.5 w-1/2 bg-slate-200 rounded-full" />
-                   <div className="mt-4 h-1 w-full bg-slate-100 rounded-full" />
-                   <div className="h-1 w-full bg-slate-100 rounded-full" />
-                </div>
+                {/* Architectural Accent */}
+                <div className="absolute top-0 right-0 w-24 h-24 bg-blue-500/[0.03] rounded-bl-[4rem] group-hover:bg-blue-500/[0.06] transition-colors" />
   
                 <div className="relative z-10 h-full flex flex-col">
-                  <div className="w-12 h-12 rounded-2xl bg-slate-900 text-white flex items-center justify-center mb-6 shadow-lg shadow-slate-900/20 group-hover:bg-[#2563EB] transition-colors">
-                    <FileCode className="w-5 h-5" />
-                  </div>
-                  
-                  <h3 className="text-2xl font-black text-[#111827] uppercase tracking-tighter leading-tight group-hover:text-[#2563EB] line-clamp-2 mb-2 pr-20 font-space transition-colors">
-                    {resume.title}
-                  </h3>
-  
-                  <div className="flex gap-2 mb-4">
-                    <span className="text-[8px] font-black text-blue-600 bg-blue-50 px-2.5 py-1 rounded-md uppercase tracking-[0.2em] border border-blue-500/10">
-                      {resume.template_name}
+                  <div className="flex justify-between items-start mb-4">
+                    <div className="w-10 h-10 rounded-xl bg-slate-900 text-white flex items-center justify-center shadow-lg shadow-slate-900/10 group-hover:bg-[#2563EB] transition-colors">
+                      <FileCode className="w-4 h-4" />
+                    </div>
+                    <span className="text-[7px] font-black text-blue-600/60 uppercase tracking-[0.25em] border border-blue-500/10 px-2 py-1 rounded-full">
+                      Archived: {resume.template_name}
                     </span>
                   </div>
-  
-                  <div className="mt-auto flex items-center justify-between border-t border-slate-50 pt-6">
-                     <div className="flex items-center gap-2 text-[9px] font-black text-slate-400 uppercase tracking-[0.15em]">
-                        <Clock className="w-3.5 h-3.5" />
+                  
+                  <h3 className="text-xl font-black text-[#111827] uppercase tracking-tighter leading-none group-hover:text-[#2563EB] line-clamp-2 mb-1 pr-4 font-space transition-colors">
+                    {resume.title}
+                  </h3>
+                  <p className="text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-4">Version {resume.version}.0 Node</p>
+   
+                  <div className="mt-auto flex items-center justify-between border-t border-slate-50 pt-5">
+                     <div className="flex items-center gap-2 text-[8px] font-black text-slate-400 uppercase tracking-[0.1em]">
+                        <Clock className="w-3 h-3" />
                         {new Date(resume.updated_at).toLocaleDateString()}
                      </div>
-                     <div className="w-8 h-8 rounded-full border border-slate-100 flex items-center justify-center group-hover:bg-[#2563EB]/10 group-hover:border-blue-500/20 group-hover:text-blue-600 transition-all">
-                        <ArrowRight className="w-4 h-4" />
+                     <div className="flex items-center gap-2">
+                        <span className="text-[8px] font-black text-slate-300 uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-opacity">Record Open</span>
+                        <div className="w-7 h-7 rounded-full border border-slate-100 flex items-center justify-center group-hover:bg-blue-600 group-hover:text-white transition-all">
+                           <ArrowRight className="w-3.5 h-3.5" />
+                        </div>
                      </div>
                   </div>
                 </div>
-  
-                <div className="absolute bottom-0 left-0 w-full h-1 bg-transparent group-hover:bg-[#2563EB] transition-colors" />
               </motion.div>
-            ) )
+            ))
           )}
         </div>
       )}
