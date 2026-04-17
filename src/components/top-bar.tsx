@@ -1,6 +1,6 @@
 "use client";
 
-import { Activity, ClipboardPaste } from "lucide-react";
+import { Activity, ClipboardPaste, Menu } from "lucide-react";
 import { UserMenu } from "@/components/user-menu";
 import { usePathname } from "next/navigation";
 import { useTranslation } from "react-i18next";
@@ -17,13 +17,13 @@ import {
 } from "@/components/ui/tooltip";
 
 const TABS = [
-  { id: "dashboard", label: "LINK", href: "/dashboard", color: "#FF4DFF" },
-  { id: "notes", label: "NOTES", href: "/dashboard/notes", color: "#00F5FF" },
-  { id: "blogs", label: "BLOGS", href: "/dashboard/blogs", color: "#06B6D4" },
-  { id: "blog-diary", label: "DIARY", href: "/blog-diary", color: "#34D399" },
-  { id: "resume", label: "RESUME", href: "/dashboard/resume", color: "#5E7BFF" },
-  { id: "gallery", label: "GALLERY", href: "/dashboard/gallery", color: "#A78BFA" },
-  { id: "project", label: "PROJECT", href: "/dashboard/projects", color: "#F8FAFC" },
+  { id: "dashboard", label: "Links", href: "/dashboard" },
+  { id: "notes", label: "Notes", href: "/dashboard/notes" },
+  { id: "blogs", label: "Blogs", href: "/dashboard/blogs" },
+  { id: "blog-diary", label: "Diary", href: "/blog-diary" },
+  { id: "resume", label: "Resumes", href: "/dashboard/resumes" },
+  { id: "gallery", label: "Gallery", href: "/dashboard/gallery" },
+  { id: "project", label: "Projects", href: "/dashboard/projects" },
 ];
 
 interface TopBarProps {
@@ -37,29 +37,30 @@ export function TopBar({ onMenuClick, isTransparent = false }: TopBarProps) {
   const { profile } = useProfile();
   const { isSyncActive, toggleSync, triggerPaste } = useClipboardSync();
 
-  const firstName = profile?.full_name?.split(" ")[0] || "operator";
+  const firstName = profile?.full_name?.split(" ")[0] || "User";
 
   return (
     <header
       className={cn(
-        "h-24 flex items-center justify-between px-8 md:px-12 sticky top-0 z-40 transition-all duration-700 w-full bg-black border-b border-white/5 shadow-2xl"
+        "h-20 flex items-center justify-between px-6 md:px-10 sticky top-0 z-40 transition-all duration-300 w-full bg-white border-b border-[#E5E7EB]"
       )}
     >
-      {/* Left: Logo */}
-      <div className="flex items-center gap-8 w-1/4">
+      {/* Left: Logo & Sidebar Trigger */}
+      <div className="flex items-center gap-6 w-1/4">
+        <button 
+          onClick={onMenuClick}
+          className="lg:hidden p-2 hover:bg-[#F1F5F9] rounded-md transition-colors"
+        >
+          <Menu className="w-5 h-5 text-[#6B7280]" />
+        </button>
         <Link href="/" className="hover:opacity-80 transition-opacity">
-          <Logo size={32} className="hidden md:flex text-[#5E7BFF]" />
+          <Logo size={28} showText={false} className="text-[#2563EB]" />
         </Link>
-        <div className="md:hidden">
-          <Link href="/">
-            <Logo size={24} showText={false} className="text-[#5E7BFF]" />
-          </Link>
-        </div>
       </div>
 
-      {/* Center: Universal Pill Navigation */}
+      {/* Center: Tabs */}
       <nav className="hidden lg:flex flex-1 justify-center">
-        <div className="flex items-center gap-2 p-1.5 rounded-2xl bg-[#14151B] border border-white/5 shadow-2xl">
+        <div className="flex items-center gap-2 p-1 bg-[#F1F5F9] border border-[#E5E7EB] rounded-md">
           {TABS.map((tab) => {
             const isActive =
               pathname === tab.href ||
@@ -72,13 +73,12 @@ export function TopBar({ onMenuClick, isTransparent = false }: TopBarProps) {
               <Link
                 key={tab.id}
                 href={tab.href}
-                className={`px-6 py-2 rounded-xl text-[10px] font-black uppercase tracking-[0.2em] transition-all duration-700 whitespace-nowrap ${reallyActive
-                  ? "text-black"
-                  : "text-slate-400 hover:text-slate-100"
-                  }`}
-                style={{
-                  backgroundColor: reallyActive ? tab.color : "transparent",
-                }}
+                className={cn(
+                  "px-4 py-1.5 rounded-md text-xs font-bold transition-all duration-200 whitespace-nowrap",
+                  reallyActive
+                    ? "bg-[#2563EB] text-white shadow-sm"
+                    : "text-[#6B7280] hover:text-[#111827] hover:bg-white/50"
+                )}
               >
                 {t(tab.label, tab.label)}
               </Link>
@@ -87,84 +87,48 @@ export function TopBar({ onMenuClick, isTransparent = false }: TopBarProps) {
         </div>
       </nav>
 
-      {/* Right: Clipboard controls + User */}
+      {/* Right: Actions */}
       <div className="flex items-center justify-end gap-3 w-1/4">
         <TooltipProvider>
-          {/* ── Clipboard Status Indicator ── */}
+          {/* Clipboard Status */}
           <Tooltip>
-            {/* TooltipTrigger renders its own <button> — put onClick here, use div inside */}
             <TooltipTrigger
               onClick={() => toggleSync(!isSyncActive)}
-              aria-label={
-                isSyncActive
-                  ? "Clipboard Sync Active — click to disable"
-                  : "Enable Clipboard Sync"
-              }
-              className="group relative flex items-center gap-2 px-3 h-9 rounded-full bg-[#14151B] border border-white/5 hover:bg-white/5 transition-all outline-none"
-            >
-              {/* Pulsing ring when active */}
-              {isSyncActive && (
-                <span
-                  className="absolute inset-0 rounded-full animate-ping bg-[#06B6D4]/20"
-                  style={{ animationDuration: "2s" }}
-                />
+              className={cn(
+                "group relative flex items-center gap-2 px-3 h-9 rounded-md border transition-all outline-none",
+                isSyncActive 
+                  ? "bg-blue-50 border-blue-200 text-[#2563EB]" 
+                  : "bg-white border-[#E5E7EB] text-[#6B7280] hover:bg-[#F8FAFC]"
               )}
-
-              {/* Status dot */}
-              <span
-                className={cn(
-                  "relative z-10 w-2 h-2 rounded-full transition-all duration-500 flex-shrink-0",
-                  isSyncActive
-                    ? "bg-[#06B6D4] shadow-[0_0_6px_2px_rgba(139,92,246,0.6)] animate-pulse"
-                    : "bg-white/20"
-                )}
-              />
-
-              <Activity
-                className={cn(
-                  "w-3.5 h-3.5 z-10 transition-colors flex-shrink-0",
-                  isSyncActive
-                    ? "text-[#06B6D4]"
-                    : "text-white/30 group-hover:text-white"
-                )}
-              />
-
-              {/* Label — only on XL+ */}
-              <span
-                className={cn(
-                  "hidden xl:block text-[9px] font-black uppercase tracking-[0.2em] z-10 transition-colors",
-                  isSyncActive ? "text-[#06B6D4]" : "text-white/30 group-hover:text-white"
-                )}
-              >
-                {isSyncActive ? "Sync: Active" : "Sync: Off"}
+            >
+              <Activity className={cn("w-3.5 h-3.5", isSyncActive ? "animate-pulse" : "opacity-50")} />
+              <span className="hidden xl:block text-[10px] font-bold uppercase tracking-wider">
+                {isSyncActive ? "Sync Active" : "Sync Off"}
               </span>
             </TooltipTrigger>
-            <TooltipContent side="bottom">
-              {isSyncActive
-                ? "Clipboard Sync ACTIVE — links auto-saved. Click to disable."
-                : "Click to enable Clipboard Auto-Save"}
+            <TooltipContent side="bottom" className="bg-white border-[#E5E7EB] text-[#111827] text-xs font-semibold">
+              {isSyncActive ? "Auto-Save Enabled" : "Click to enable Auto-Save"}
             </TooltipContent>
           </Tooltip>
 
-          {/* ── Manual Paste Link button (fallback for production) ── */}
           {isSyncActive && (
             <Tooltip>
-              {/* TooltipTrigger is the button — no nested Button component */}
               <TooltipTrigger
                 onClick={triggerPaste}
-                aria-label="Paste link from clipboard"
-                className="flex items-center justify-center w-9 h-9 rounded-full bg-[#14151B] border border-white/5 hover:bg-[#06B6D4]/10 hover:border-[#06B6D4]/30 transition-all"
+                className="flex items-center justify-center w-9 h-9 rounded-md bg-white border border-[#E5E7EB] text-[#6B7280] hover:border-[#2563EB] hover:text-[#2563EB] transition-all"
               >
-                <ClipboardPaste className="w-4 h-4 text-white/50 group-hover:text-[#06B6D4] transition-colors" />
+                <ClipboardPaste className="w-4 h-4" />
               </TooltipTrigger>
-              <TooltipContent side="bottom">
-                Paste Link — manually trigger clipboard read
+              <TooltipContent side="bottom" className="bg-white border-[#E5E7EB] text-[#111827] text-xs font-semibold">
+                Paste Now
               </TooltipContent>
             </Tooltip>
           )}
         </TooltipProvider>
 
-        <p className="hidden xl:block text-[10px] font-bold text-slate-400 uppercase tracking-[0.4em]">
+        <div className="h-4 w-[1px] bg-[#E5E7EB] mx-1 hidden sm:block" />
+
+        <p className="hidden xl:block text-[10px] font-bold text-[#6B7280] uppercase tracking-wider">
           {firstName}
         </p>
         <UserMenu />

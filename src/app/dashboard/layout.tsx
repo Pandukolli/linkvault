@@ -8,18 +8,18 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   return (
-    <div className="flex h-screen overflow-hidden bg-[#0F1117]">
+    <div className="flex h-screen overflow-hidden bg-[#F8FAFC]">
       {/* Clipboard auto-save engine — mounted once at layout level */}
       <ClipboardSyncController />
 
       {/* Main Content Area */}
       <div className="flex-1 flex flex-col min-w-0 overflow-hidden relative z-10">
         <TopBar
-          isTransparent={true}
+          isTransparent={false}
           onMenuClick={() => setSidebarOpen(!sidebarOpen)}
         />
 
-        <main className="flex-1 overflow-x-hidden overflow-y-auto w-full scroll-smooth bg-[#0F1117]">
+        <main className="flex-1 overflow-x-hidden overflow-y-auto w-full scroll-smooth bg-[#F8FAFC]">
           <div className="max-w-[1600px] mx-auto h-full p-6 md:p-8 lg:p-12">
             {children}
           </div>

@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter, Space_Grotesk, Caveat, Kalam } from "next/font/google";
+import { Inter, Merriweather, Space_Grotesk } from "next/font/google";
 import { ThemeProvider } from "@/providers/theme-provider";
 import { QueryProvider } from "@/providers/query-provider";
 import { Toaster } from "sonner";
@@ -12,26 +12,21 @@ const inter = Inter({
   subsets: ["latin"],
 });
 
+const merriweather = Merriweather({
+  weight: ["300", "400", "700", "900"],
+  variable: "--font-serif",
+  subsets: ["latin"],
+});
+
 const spaceGrotesk = Space_Grotesk({
-  variable: "--font-heading",
-  subsets: ["latin"],
-});
-
-const caveat = Caveat({
-  variable: "--font-caveat",
-  subsets: ["latin"],
-});
-
-const kalam = Kalam({
-  weight: ["300", "400", "700"],
-  variable: "--font-kalam",
+  variable: "--font-space",
   subsets: ["latin"],
 });
 
 export const metadata: Metadata = {
-  title: "vaultOS — The Elegant Personal Knowledge OS",
+  title: "LinkVault — Professional Knowledge Platform",
   description:
-    "The elegant Personal Knowledge OS where notes feel like books, images tell stories, and blogs come alive. A modern, AI-powered system for your digital life.",
+    "A structured, secure, and professional hub for digital artifacts. Architected for clarity, clean hierarchy, and optimal reading experiences.",
   keywords: ["knowledge base", "personal OS", "notes", "blogging", "AI", "bookmarks"],
 };
 
@@ -43,11 +38,11 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${inter.variable} ${spaceGrotesk.variable} ${caveat.variable} ${kalam.variable} h-full antialiased`}
+      className={`${inter.variable} ${merriweather.variable} ${spaceGrotesk.variable} h-full antialiased`}
       suppressHydrationWarning
     >
-      <body className="min-h-full flex flex-col font-sans bg-black">
-        <ThemeProvider>
+      <body className="min-h-full flex flex-col font-sans bg-[#F8FAFC] text-[#111827]">
+        <ThemeProvider defaultTheme="light"强制LightMode={true}>
           <QueryProvider>
             <I18nProvider>
               <TransmissionProvider>
@@ -57,10 +52,10 @@ export default function RootLayout({
                 position="bottom-right"
                 toastOptions={{
                   style: {
-                    background: "#000000",
-                    border: "1px solid rgba(255, 255, 255, 0.1)",
-                    color: "#F8FAFC",
-                    backdropFilter: "blur(12px)",
+                    background: "#FFFFFF",
+                    border: "1px solid #E5E7EB",
+                    color: "#111827",
+                    borderRadius: "6px",
                   },
                 }}
               />

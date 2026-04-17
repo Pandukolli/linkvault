@@ -11,6 +11,7 @@ import { SaveLinkDialog } from "@/components/save-link-dialog";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Plus, Grid3X3, List, Link2, Folder, Star, Globe, Zap } from "lucide-react";
+import { cn } from "@/lib/utils";
 import type { LinkWithTags } from "@/lib/types";
 
 import { Suspense } from "react";
@@ -28,24 +29,14 @@ function LinksContent() {
   const { links, isLoading, toggleFavorite, deleteLink } = useLinks(searchQuery);
   const { collections } = useCollections();
 
-  // Filter links based on the active selection
   const displayedLinks = useMemo(() => {
     if (activeFilter === "all") return links;
     if (activeFilter === "favorites") return links.filter(l => l.is_favorite);
 
-    // Check if it's a collection filter
     if (activeFilter.startsWith("col_")) {
       const colId = activeFilter.split("col_")[1];
-      // Since `useLinks` returns links and we might not have `collection_links` populated in the base link, 
-      // wait, `useLinks` doesn't return collection relation. But we can check if there's a workaround.
-      // For now, if we don't have collection links in `useLinks`, filtering by collection requires the `useCollection` hook. 
-      // Actually, since this is a heavy UI change, we can let the `CollectionList` do the work, or just show all for now if no smart filter.
-      // To keep it clean, let's just use the client-side domain matching for smart collections if they aren't fully linked in the DB relation for `useLinks`.
-      // Or just look up collection ID. Since `useLinks` doesn't join, let's just show All. But the user explicitly requested Collection filtering.
-      // We will filter by the Domain name to simulate smart collections locally if DB relations are complex to wrangle here!
       const col = collections.find(c => c.id === colId);
       if (col) {
-        // Find links that belong to this collection's domain or name
         return links.filter(l => {
           try {
             const domain = new URL(l.url).hostname.replace("www.", "").split(".")[0];
@@ -61,50 +52,53 @@ function LinksContent() {
   }, [links, activeFilter, collections]);
 
   return (
-    <div className="flex flex-col lg:flex-row gap-12 max-w-[1600px] pb-32 pt-8 items-start relative h-full">
+    <div className="flex flex-col lg:flex-row gap-8 max-w-[1600px] pb-32 pt-4 items-start relative h-full">
 
       {/* Sidebar Section */}
       <aside className="w-full lg:w-64 shrink-0 flex flex-col gap-8 sticky top-32 z-10">
         <div className="flex flex-col gap-1">
-          <Button onClick={() => setDialogOpen(true)} className="h-14 mb-8 w-full gap-3 bg-[#06B6D4] text-black hover:bg-[#06B6D4]/90 rounded-2xl font-black uppercase tracking-widest transition-all shadow-2xl shadow-[#06B6D4]/10 hover:-translate-y-1">
-            <Zap className="w-5 h-5 fill-black" />
-            Paste Vault Link
+          <Button 
+            onClick={() => setDialogOpen(true)} 
+            className="h-12 mb-6 w-full gap-3 bg-[#2563EB] text-white hover:bg-[#1D4ED8] rounded-md font-bold shadow-md shadow-blue-500/10"
+          >
+            <Zap className="w-4 h-4" />
+            Add New Link
           </Button>
 
-          <span className="text-[9px] font-black uppercase tracking-[0.3em] text-[#06B6D4] px-4 mb-2">My Links</span>
+          <span className="text-[10px] font-bold uppercase tracking-wider text-[#9CA3AF] px-4 mb-2">My Links</span>
           <button
             onClick={() => setActiveFilter("all")}
-            className={`flex items-center gap-3 px-4 py-3 rounded-2xl transition-all font-bold text-[13px] tracking-tight ${activeFilter === "all" ? "bg-white text-black shadow-lg" : "text-white/40 hover:bg-white/5 hover:text-white"}`}
+            className={`flex items-center gap-3 px-4 py-2.5 rounded-md transition-all font-bold text-sm ${activeFilter === "all" ? "bg-white text-[#2563EB] shadow-sm border border-[#E5E7EB]" : "text-[#6B7280] hover:bg-white hover:text-[#111827]"}`}
           >
-            <Globe className="w-4 h-4 opacity-100" />
+            <Globe className="w-4 h-4" />
             All Links
-            <span className="ml-auto text-[10px] opacity-90">{links.length}</span>
+            <span className="ml-auto text-xs opacity-60 text-[#9CA3AF]">{links.length}</span>
           </button>
 
           <button
             onClick={() => setActiveFilter("favorites")}
-            className={`flex items-center gap-3 px-4 py-3 rounded-2xl transition-all font-bold text-[13px] tracking-tight ${activeFilter === "favorites" ? "bg-[#FF4DFF] text-white shadow-[#FF4DFF]/20 shadow-lg" : "text-white/40 hover:bg-white/5 hover:text-white"}`}
+            className={`flex items-center gap-3 px-4 py-2.5 rounded-md transition-all font-bold text-sm ${activeFilter === "favorites" ? "bg-white text-[#EF4444] shadow-sm border border-[#E5E7EB]" : "text-[#6B7280] hover:bg-white hover:text-[#EF4444]"}`}
           >
-            <Star className="w-4 h-4 opacity-90" />
+            <Star className={cn("w-4 h-4", activeFilter === "favorites" && "fill-current")} />
             Favorites
-            <span className="ml-auto text-[10px] opacity-90">{links.filter(l => l.is_favorite).length}</span>
+            <span className="ml-auto text-xs opacity-60 text-[#9CA3AF]">{links.filter(l => l.is_favorite).length}</span>
           </button>
         </div>
 
         <div className="flex flex-col gap-1">
-          <span className="text-[9px] font-black uppercase tracking-[0.3em] text-white/70 px-4 mb-2">Smart Collections</span>
+          <span className="text-[10px] font-bold uppercase tracking-wider text-[#9CA3AF] px-4 mb-2">Smart Collections</span>
           {collections.map(col => (
             <button
               key={col.id}
               onClick={() => setActiveFilter(`col_${col.id}`)}
-              className={`flex items-center gap-3 px-4 py-3 rounded-2xl transition-all font-bold text-[13px] tracking-tight ${activeFilter === `col_${col.id}` ? "bg-[#00F5FF]/10 text-[#00F5FF] border border-[#00F5FF]/20" : "text-white/40 hover:bg-white/5 hover:text-white border border-transparent"}`}
+              className={`flex items-center gap-3 px-4 py-2.5 rounded-md transition-all font-bold text-sm ${activeFilter === `col_${col.id}` ? "bg-white text-[#2563EB] shadow-sm border border-[#E5E7EB]" : "text-[#6B7280] hover:bg-white hover:text-[#111827]"}`}
             >
               <Folder className="w-4 h-4 opacity-70" />
               <span className="truncate">{col.name}</span>
             </button>
           ))}
           {collections.length === 0 && (
-            <p className="text-[10px] px-4 text-white/20 italic">No smart collections detected.</p>
+            <p className="text-[10px] px-4 text-[#9CA3AF] italic">No smart collections detected.</p>
           )}
         </div>
       </aside>
@@ -113,29 +107,29 @@ function LinksContent() {
       <main className="flex-1 flex flex-col w-full min-w-0">
 
         {/* Header Options */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-8 w-full border-b border-white/5 pb-8">
-          <div className="space-y-2">
-            <h1 className="text-4xl md:text-5xl font-black text-white tracking-tighter uppercase">
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-8 w-full border-b border-[#E5E7EB] pb-8">
+          <div className="space-y-1">
+            <h1 className="text-3xl md:text-4xl font-bold text-[#111827] tracking-tight">
               {activeFilter === "all" ? "All Artifacts" : activeFilter === "favorites" ? "Starred" : collections.find(c => c.id === activeFilter.split("_")[1])?.name || "Filtered Links"}
             </h1>
-            <p className="text-[#06B6D4]/60 text-[10px] font-black uppercase tracking-[0.4em]">
-              Neural Sync Operational
+            <p className="text-[#6B7280] text-xs font-semibold">
+              Status: <span className="text-[#22C55E]">All systems nominal</span>
             </p>
           </div>
 
-          <div className="flex items-center gap-2 p-1.5 rounded-2xl bg-[#14151B] border border-white/5 shadow-2xl">
+          <div className="flex items-center gap-1.5 p-1 rounded-md bg-[#F1F5F9] border border-[#E5E7EB]">
             <Button
               variant="ghost"
-              size="icon"
-              className={`h-10 w-10 rounded-xl transition-all duration-500 ${viewMode === "grid" ? "bg-white text-black" : "text-slate-500 hover:text-slate-100"}`}
+              size="icon-sm"
+              className={cn("bg-transparent", viewMode === "grid" && "bg-white text-[#2563EB] shadow-sm")}
               onClick={() => setViewMode("grid")}
             >
               <Grid3X3 className="w-4 h-4" />
             </Button>
             <Button
               variant="ghost"
-              size="icon"
-              className={`h-10 w-10 rounded-xl transition-all duration-500 ${viewMode === "list" ? "bg-white text-black" : "text-slate-500 hover:text-slate-100"}`}
+              size="icon-sm"
+              className={cn("bg-transparent", viewMode === "list" && "bg-white text-[#2563EB] shadow-sm")}
               onClick={() => setViewMode("list")}
             >
               <List className="w-4 h-4" />
@@ -150,7 +144,7 @@ function LinksContent() {
             : "space-y-4"
           }>
             {[...Array(6)].map((_, i) => (
-              <Skeleton key={i} className={viewMode === "grid" ? "h-64 rounded-[2rem] bg-white/5 animate-pulse" : "h-20 rounded-2xl bg-white/5 animate-pulse"} />
+              <Skeleton key={i} className={viewMode === "grid" ? "h-64 rounded-md bg-[#F1F5F9] animate-pulse" : "h-16 rounded-md bg-[#F1F5F9] animate-pulse"} />
             ))}
           </div>
         ) : displayedLinks.length > 0 ? (
@@ -158,7 +152,7 @@ function LinksContent() {
             ? "grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6"
             : "space-y-4"
           }>
-            <AnimatePresence mode="popLayout">
+            <AnimatePresence mode="popLayout" initial={false}>
               {displayedLinks.map((link) => (
                 <LinkCard
                   key={link.id}
@@ -172,17 +166,17 @@ function LinksContent() {
             </AnimatePresence>
           </div>
         ) : (
-          <div className="flex flex-col items-center justify-center py-32 text-center rounded-[3rem] bg-[#14151B] border border-white/5 shadow-2xl">
-            <div className="w-20 h-20 mx-auto bg-black rounded-[2rem] flex items-center justify-center mb-8 border border-white/5 shadow-xl">
-              <Link2 className="w-8 h-8 text-white/20" />
+          <div className="flex flex-col items-center justify-center py-32 text-center rounded-md bg-white border border-[#E5E7EB]">
+            <div className="w-16 h-16 mx-auto bg-[#F8FAFC] rounded-md flex items-center justify-center mb-6 border border-[#E5E7EB]">
+              <Link2 className="w-8 h-8 text-[#9CA3AF]" />
             </div>
-            <h3 className="text-2xl font-black text-white mb-2 tracking-tighter uppercase">
+            <h3 className="text-xl font-bold text-[#111827] mb-2 tracking-tight">
               {searchQuery ? "No matches found" : "Void Detected"}
             </h3>
-            <p className="text-[10px] text-white/30 font-bold max-w-sm mx-auto uppercase tracking-[0.3em]">
+            <p className="text-sm text-[#6B7280] font-serif max-w-sm mx-auto">
               {searchQuery
-                ? "Refine your entry query"
-                : "No digital artifacts exist in this sector. Await clipboard intelligence."}
+                ? "Refine your entry query or clear the search filter."
+                : "No digital artifacts exist in this sector yet."}
             </p>
           </div>
         )}
@@ -199,13 +193,14 @@ function LinksContent() {
   );
 }
 
+
 export default function LinksPage() {
   return (
     <Suspense fallback={
-      <div className="space-y-10 max-w-7xl pb-20">
-        <Skeleton className="h-20 w-full" />
+      <div className="space-y-10 max-w-7xl pb-20 pt-8">
+        <Skeleton className="h-20 w-full rounded-md" />
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {[...Array(6)].map((_, i) => <Skeleton key={i} className="h-64 rounded-[2rem]" />)}
+          {[...Array(6)].map((_, i) => <Skeleton key={i} className="h-64 rounded-md" />)}
         </div>
       </div>
     }>

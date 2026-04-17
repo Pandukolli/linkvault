@@ -378,14 +378,14 @@ export default function NotesPage() {
           ) : (
             <div className="h-full flex flex-col items-center justify-center p-12 bg-transparent no-print">
               <div className="text-center animate-fade-in-up" style={{ animationDuration: "0.6s" }}>
-                <h2 className="text-4xl text-slate-200 font-black tracking-tighter mb-4 select-none cursor-default">
+                <h2 className="text-4xl text-[#111827] font-black tracking-tighter mb-4 select-none cursor-default">
                   Notes
                 </h2>
-                <p className="text-slate-400 text-sm font-medium tracking-wide mb-10 select-none cursor-default">
+                <p className="text-[#64748b] text-sm font-medium tracking-wide mb-10 select-none cursor-default">
                   Select a document from the sidebar, or begin a new one.
                 </p>
                 <button
-                  className="h-12 px-8 rounded-2xl bg-black text-white text-[11px] font-bold uppercase tracking-[0.2em] hover:-translate-y-1 hover:bg-primary transition-all duration-300 shadow-xl shadow-black/10"
+                  className="h-12 px-8 rounded-2xl bg-[#2563EB] text-white text-[11px] font-bold uppercase tracking-[0.2em] hover:-translate-y-1 hover:bg-[#1D4ED8] transition-all duration-300 shadow-xl shadow-blue-500/10"
                   onClick={() => handleNewNote()}
                 >
                   Initialize Page

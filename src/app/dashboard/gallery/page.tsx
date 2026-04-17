@@ -4,6 +4,7 @@ import { useState, useRef, useCallback, useMemo, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { toast } from "sonner";
 import { useImages } from "@/hooks/use-images";
+import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -87,7 +88,6 @@ export default function GalleryPage() {
     } else if (mode === "stories") {
       result = result.filter(img => img.is_story);
     } else if (mode === "upload") {
-      // In quick upload, maybe only show general or all non-story? Let's show all for now, but grouped by date later
       result = result.filter(img => !img.is_story);
     }
 
@@ -116,7 +116,6 @@ export default function GalleryPage() {
         folder: mode === "projects" && selectedProject ? selectedProject : "general",
       });
     }
-    // Switch to upload mode if not already and no project selected
     if (mode !== "upload" && !selectedProject) setMode("upload");
   }, [uploadImage, mode, selectedProject]);
 
@@ -152,37 +151,43 @@ export default function GalleryPage() {
   }, [lightboxIndex, filteredImages.length]);
 
   return (
-    <div className="max-w-[1600px] mx-auto px-6 md:px-12 py-12 pb-24 h-full relative">
+    <div className="max-w-[1600px] mx-auto pb-24 h-full relative">
       {/* Hero Header */}
-      <div className="flex flex-col xl:flex-row xl:items-end justify-between gap-8 mb-20">
+      <div className="flex flex-col xl:flex-row xl:items-end justify-between gap-8 mb-16 pt-4 border-b border-[#E5E7EB] pb-12">
         <div className="space-y-4">
-          <h1 className="text-7xl font-black text-slate-100 tracking-tighter uppercase">
-            Visual Hub
+          <div className="flex items-center gap-3">
+             <div className="w-8 h-8 rounded-md bg-[#2563EB]/5 border border-[#2563EB]/10 flex items-center justify-center">
+                <ImageIcon className="w-4 h-4 text-[#2563EB]" />
+              </div>
+              <span className="text-xs font-bold uppercase tracking-wider text-[#2563EB]">Visual Archive</span>
+          </div>
+          <h1 className="text-6xl font-black text-[#111827] tracking-tighter uppercase leading-none">
+            Gallery
           </h1>
-          <p className="text-slate-400 text-[10px] font-black uppercase tracking-[0.4em]">
-            <span className="text-[#06B6D4]">{images.length} assets</span> • <span className="text-[#5E7BFF]">{projects.length} projects</span> • <span className="text-[#FF4DFF]">{images.filter(i => i.is_story).length} stories</span>
+          <p className="text-[#6B7280] text-[10px] font-bold uppercase tracking-[0.2em]">
+            <span className="text-[#2563EB]">{images.length} assets</span> • {projects.length} PROJECTS • {images.filter(i => i.is_story).length} STORIES
           </p>
         </div>
 
         <div className="flex items-center gap-4">
           {/* Search */}
           <div className="relative group hidden md:block">
-            <Search className="w-4 h-4 absolute left-4 top-1/2 -translate-y-1/2 text-white/20 group-focus-within:text-white transition-colors" />
+            <Search className="w-4 h-4 absolute left-4 top-1/2 -translate-y-1/2 text-[#9CA3AF] group-focus-within:text-[#2563EB] transition-colors" />
             <input
               type="text"
               placeholder="Query visuals..."
               value={searchQuery}
               onChange={e => setSearchQuery(e.target.value)}
-              className="pl-12 pr-4 h-14 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-xl font-bold text-sm text-white focus:border-white/30 focus:outline-none transition-all w-64 shadow-2xl"
+              className="pl-12 pr-4 h-12 rounded-md bg-white border border-[#E5E7EB] font-bold text-sm text-[#111827] focus:border-[#2563EB] focus:outline-none transition-all w-64"
             />
           </div>
 
           <Button
-            className="h-14 px-8 gap-3 bg-white text-black hover:bg-white/90 rounded-2xl font-black transition-all duration-300 shadow-2xl shadow-white/10 hover:-translate-y-1 uppercase tracking-tighter"
+            className="h-12 px-8 gap-3 bg-[#F97316] text-white hover:bg-[#EA580C] rounded-md font-bold shadow-lg shadow-orange-500/20"
             onClick={() => fileInputRef.current?.click()}
           >
-            <Upload className="w-5 h-5 stroke-[3]" />
-            Upload
+            <Upload className="w-4 h-4" />
+            Upload Media
           </Button>
           <input
             ref={fileInputRef}
@@ -195,14 +200,14 @@ export default function GalleryPage() {
         </div>
       </div>
 
-      {/* Main Controls row */}
-      <div className="flex flex-col md:flex-row justify-between items-center gap-6 mb-12 pb-8 border-b border-white/5">
+      {/* Main Controls */}
+      <div className="flex flex-col md:flex-row justify-between items-center gap-6 mb-12">
         {/* Mode Tabs */}
-        <div className="flex gap-2 p-1.5 bg-[#14151B] rounded-2xl border border-white/5 shadow-2xl">
+        <div className="flex gap-1.5 p-1 bg-[#F1F5F9] rounded-md border border-[#E5E7EB]">
           {[
-            { id: "upload", label: "Quick Upload", icon: Layers, color: "#06B6D4" },
-            { id: "projects", label: "Projects", icon: FolderOpen, color: "#5E7BFF" },
-            { id: "stories", label: "Stories", icon: Film, color: "#FF4DFF" }
+            { id: "upload", label: "Uploads", icon: Layers },
+            { id: "projects", label: "Projects", icon: FolderOpen },
+            { id: "stories", label: "Stories", icon: Film }
           ].map((m) => (
             <button
               key={m.id}
@@ -211,12 +216,12 @@ export default function GalleryPage() {
                 setSelectedProject(null);
                 setSelectedIds(new Set());
               }}
-              className={`flex items-center gap-3 px-8 py-3 text-[10px] font-black rounded-xl transition-all duration-700 uppercase tracking-widest ${mode === m.id
-                ? "bg-slate-100 text-[#0A0B0F] shadow-2xl shadow-white/5"
-                : "text-slate-400 hover:text-slate-100"
+              className={`flex items-center gap-3 px-6 py-2 text-xs font-bold rounded-md transition-all uppercase tracking-wider ${mode === m.id
+                ? "bg-white text-[#2563EB] shadow-sm border border-[#E5E7EB]"
+                : "text-[#6B7280] hover:text-[#111827]"
                 }`}
             >
-              <m.icon className="w-4 h-4" style={{ color: mode === m.id ? 'inherit' : m.color }} />
+              <m.icon className="w-4 h-4" />
               {m.label}
             </button>
           ))}
@@ -225,18 +230,18 @@ export default function GalleryPage() {
         {/* Action / View controls */}
         <div className="flex items-center gap-6">
           {selectedIds.size > 0 && (
-            <div className="flex items-center gap-4 pr-6 border-r border-white/10">
-              <span className="text-[10px] font-black text-white uppercase tracking-[0.2em]">{selectedIds.size} Encrypted</span>
-              <button className="text-[10px] font-black uppercase tracking-widest text-red-400 hover:text-red-500" onClick={handleBulkDelete}>
+            <div className="flex items-center gap-4 pr-6 border-r border-[#E5E7EB]">
+              <span className="text-[10px] font-bold text-[#111827] uppercase tracking-wider">{selectedIds.size} Selected</span>
+              <button className="text-[10px] font-bold uppercase tracking-widest text-[#EF4444] hover:underline" onClick={handleBulkDelete}>
                 Delete
               </button>
-              <button className="text-[10px] font-black uppercase tracking-widest text-white/30 hover:text-white" onClick={() => setSelectedIds(new Set())}>
+              <button className="text-[10px] font-bold uppercase tracking-widest text-[#9CA3AF] hover:text-[#111827]" onClick={() => setSelectedIds(new Set())}>
                 Cancel
               </button>
             </div>
           )}
 
-          <div className="flex gap-1 p-1.5 bg-[#14151B] rounded-xl hidden sm:flex border border-white/5">
+          <div className="flex gap-1 p-1 bg-[#F1F5F9] rounded-md hidden sm:flex border border-[#E5E7EB]">
             {[
               { id: "masonry", icon: LayoutGrid },
               { id: "grid", icon: Grid3X3 },
@@ -245,9 +250,9 @@ export default function GalleryPage() {
               <button
                 key={v.id}
                 onClick={() => setViewMode(v.id as ViewMode)}
-                className={`p-2.5 rounded-lg transition-all duration-500 ${viewMode === v.id ? "bg-slate-100 text-[#0A0B0F]" : "text-slate-500 hover:text-slate-100"}`}
+                className={`p-2 rounded-md transition-all ${viewMode === v.id ? "bg-white text-[#2563EB] shadow-sm" : "text-[#6B7280] hover:text-[#111827]"}`}
               >
-                <v.icon className="w-5 h-5" />
+                <v.icon className="w-4.5 h-4.5" />
               </button>
             ))}
           </div>
@@ -262,106 +267,93 @@ export default function GalleryPage() {
       >
         {isLoading ? (
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-            {Array.from({ length: 8 }).map((_, i) => <Skeleton key={i} className="aspect-square rounded-[2rem] bg-slate-50" />)}
+            {Array.from({ length: 8 }).map((_, i) => <Skeleton key={i} className="aspect-square rounded-md bg-[#F1F5F9]" />)}
           </div>
         ) : (
           <AnimatePresence mode="wait">
-            {/* PROJECTS SUB-VIEW (When showing project folders) */}
             {mode === "projects" && !selectedProject && (
-              <motion.div key="projects-list" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6">
+              <motion.div key="projects-list" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-8">
                 {projects.map(proj => (
                   <div
                     key={proj.name}
-                    className="group card-elevated p-4 cursor-pointer flex flex-col gap-4 bg-white"
+                    className="group bg-white border border-[#E5E7EB] rounded-md p-4 cursor-pointer flex flex-col gap-4 hover:border-[#2563EB] hover:shadow-lg transition-all"
                     onClick={() => setSelectedProject(proj.name)}
                   >
-                    <div className="aspect-[4/3] rounded-2xl bg-slate-100 overflow-hidden relative">
+                    <div className="aspect-[4/3] rounded-md bg-[#F8FAFC] overflow-hidden relative border border-[#E5E7EB]">
                       {proj.cover ? (
-                        <img src={proj.cover} alt={proj.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+                        <img src={proj.cover} alt="" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
                       ) : (
-                        <div className="w-full h-full flex items-center justify-center text-slate-300"><FolderOpen className="w-8 h-8" /></div>
+                        <div className="w-full h-full flex items-center justify-center text-[#9CA3AF]"><FolderOpen className="w-8 h-8" /></div>
                       )}
-                      <div className="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors" />
                     </div>
-                    <div className="px-2 pb-2">
-                      <h3 className="font-black text-lg uppercase tracking-tight">{proj.name}</h3>
-                      <p className="text-[10px] uppercase tracking-widest text-slate-400 font-bold mt-1">{proj.count} Assets</p>
+                    <div>
+                      <h3 className="font-bold text-lg text-[#111827] tracking-tight">{proj.name}</h3>
+                      <p className="text-[10px] uppercase tracking-widest text-[#9CA3AF] font-bold mt-1">{proj.count} ASSETS</p>
                     </div>
                   </div>
                 ))}
               </motion.div>
             )}
 
-            {/* STORIES VIEW */}
             {mode === "stories" && (
               <motion.div key="stories" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-                {images.filter(i => !i.is_story).length > 0 && (
-                  <div className="mb-10 text-center">
-                    <p className="text-sm font-bold text-slate-400 uppercase tracking-widest mb-4">Want to create a story?</p>
-                    <Button variant="outline" className="rounded-full shadow-sm font-black" onClick={() => setMode("upload")}>
-                      Select images from Uploads to make a story
-                    </Button>
-                  </div>
-                )}
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
                   {filteredImages.map((img, i) => (
                     <motion.div
                       key={img.id}
-                      className="polaroid-card group cursor-pointer"
-                      whileHover={{ scale: 1.02, rotate: i % 2 === 0 ? 1 : -1 }}
-                      transition={{ type: "spring", stiffness: 300 }}
+                      className="bg-white border border-[#E5E7EB] rounded-md p-6 group cursor-pointer hover:border-[#F97316] transition-all"
+                      whileHover={{ y: -4 }}
                       onClick={() => setEditingStoryImage(img)}
                     >
-                      <div className="aspect-square bg-slate-100 overflow-hidden mb-6 relative">
-                        <img src={img.url} className="w-full h-full object-cover" />
-                        <div className="film-grain" /> {/* Cinematic effect */}
+                      <div className="aspect-square bg-[#F8FAFC] rounded-md overflow-hidden mb-6 relative border border-[#E5E7EB]">
+                        <img src={img.url} alt="" className="w-full h-full object-cover" />
                       </div>
-                      <div className="px-2">
-                        <h4 className="font-bold font-serif text-2xl leading-tight mb-2 opacity-90">{img.title || "Untitled Tale"}</h4>
-                        <p className="text-sm text-slate-500 font-medium italic line-clamp-3">{img.story || "Write a captivating story about this captured moment..."}</p>
+                      <div className="px-2 text-center">
+                        <h4 className="font-bold text-xl text-[#111827] tracking-tight mb-2">{img.title || "Untitled Tale"}</h4>
+                        <p className="text-sm text-[#6B7280] font-serif italic line-clamp-3 leading-relaxed">{img.story || "No story content yet."}</p>
                       </div>
                     </motion.div>
                   ))}
                   {filteredImages.length === 0 && (
-                    <div className="col-span-full py-20 text-center">
-                      <Film className="w-12 h-12 text-slate-200 mx-auto mb-4" />
-                      <h3 className="text-2xl font-black uppercase tracking-tighter">No Stories Yet</h3>
+                    <div className="col-span-full py-32 text-center rounded-md border border-dashed border-[#E5E7EB]">
+                      <Film className="w-12 h-12 text-[#E5E7EB] mx-auto mb-4" />
+                      <h3 className="text-xl font-bold text-[#9CA3AF] tracking-tight">No Stories Yet</h3>
                     </div>
                   )}
                 </div>
               </motion.div>
             )}
 
-            {/* QUICK UPLOAD / PROJECT ASSETS VIEW */}
             {(mode === "upload" || (mode === "projects" && selectedProject)) && (
               <motion.div key="images-grid" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
                 {mode === "projects" && selectedProject && (
                   <div className="flex items-center gap-4 mb-8">
-                    <Button variant="outline" size="icon" className="rounded-full" onClick={() => setSelectedProject(null)}>
+                    <Button variant="outline" size="icon-sm" className="rounded-md" onClick={() => setSelectedProject(null)}>
                       <ChevronLeft className="w-4 h-4" />
                     </Button>
-                    <h2 className="text-2xl font-black uppercase tracking-tight">{selectedProject}</h2>
+                    <h2 className="text-xl font-bold uppercase tracking-tight text-[#111827]">{selectedProject}</h2>
                   </div>
                 )}
 
                 {filteredImages.length === 0 ? (
-                  <div className="text-center py-32 rounded-[3.5rem] bg-[#14151B] border border-white/5 shadow-2xl cursor-pointer group transition-all duration-700 hover:border-[#06B6D4]/20" onClick={() => fileInputRef.current?.click()}>
-                    <div className="w-24 h-24 mx-auto bg-[#1F2129] rounded-[2rem] flex items-center justify-center mb-8 border border-white/5 shadow-inner transition-all duration-500">
-                      <Upload className="w-10 h-10 text-[#06B6D4] opacity-40 group-hover:opacity-100 transition-opacity" />
+                  <div className="text-center py-32 rounded-md bg-white border border-dashed border-[#E5E7EB] group transition-all hover:border-[#2563EB]" onClick={() => fileInputRef.current?.click()}>
+                    <div className="w-20 h-20 mx-auto bg-[#F8FAFC] rounded-md flex items-center justify-center mb-6 border border-[#E5E7EB]">
+                      <Upload className="w-8 h-8 text-[#9CA3AF] group-hover:text-[#2563EB] transition-colors" />
                     </div>
-                    <h3 className="text-3xl font-black text-slate-100 mb-3 tracking-tighter uppercase">Drop Visuals Here</h3>
-                    <p className="text-sm text-slate-400 font-bold max-w-sm mx-auto mb-10 uppercase tracking-[0.2em] leading-relaxed">
-                      Transform your raw assets into a beautifully organized gallery.
+                    <h3 className="text-2xl font-bold text-[#111827] mb-2 tracking-tight">Initialize Visual Sync</h3>
+                    <p className="text-sm text-[#6B7280] font-serif max-w-sm mx-auto mb-8">
+                      Select multiple assets to start your professional gallery collection.
                     </p>
+                    <Button className="bg-[#2563EB] text-white">Select Images</Button>
                   </div>
                 ) : (
-                  <div className={viewMode === "masonry" ? "gallery-masonry" : viewMode === "grid" ? "grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4" : "flex flex-col gap-4"}>
+                  <div className={viewMode === "masonry" ? "columns-1 sm:columns-2 md:columns-3 lg:columns-4 gap-6 space-y-6" : viewMode === "grid" ? "grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-6" : "flex flex-col gap-4"}>
                     {filteredImages.map((img, index) => (
                       <div
                         key={img.id}
-                        className={`group relative overflow-hidden bg-[#14151B] border border-white/5 cursor-pointer hover:shadow-xl hover:shadow-[#06B6D4]/5 transition-all duration-300
-                          ${viewMode === "masonry" ? "gallery-masonry-item" : viewMode === "grid" ? "aspect-square rounded-[1.5rem]" : "flex h-32 rounded-[1.5rem] p-3 items-center gap-6"}
-                          ${selectedIds.has(img.id) ? "ring-4 ring-[#06B6D4] ring-offset-2 ring-offset-[#0A0B0F]" : ""}
+                        className={`group relative overflow-hidden bg-white border border-[#E5E7EB] rounded-md cursor-pointer hover:border-[#2563EB] hover:shadow-lg transition-all duration-300
+                          ${viewMode === "grid" ? "aspect-square" : viewMode === "list" ? "flex h-24 p-2 items-center gap-6" : "break-inside-avoid"}
+                          ${selectedIds.has(img.id) ? "border-[#2563EB] border-2 shadow-lg shadow-blue-500/20" : ""}
                         `}
                         onClick={(e) => {
                           if (e.ctrlKey || e.metaKey || selectedIds.size > 0) {
@@ -371,30 +363,26 @@ export default function GalleryPage() {
                           }
                         }}
                       >
-                        <div className={`${viewMode === "list" ? "w-40 h-full rounded-xl overflow-hidden shrink-0" : "w-full h-full"}`}>
-                          <img src={img.url} className={`w-full h-full object-cover img-zoom-hover ${viewMode === "masonry" ? "h-auto" : ""}`} loading="lazy" />
+                        <div className={`${viewMode === "list" ? "w-32 h-full rounded-md overflow-hidden shrink-0 border border-[#E5E7EB]" : "w-full h-full"}`}>
+                          <img src={img.url} alt="" className={`w-full h-full object-cover transition-transform duration-500 group-hover:scale-105 ${viewMode === "masonry" ? "h-auto" : ""}`} loading="lazy" />
                         </div>
 
-                        {/* Hover Overlay for Grid/Masonry */}
                         {viewMode !== "list" && (
-                          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-4">
-                            <span className="text-white font-bold text-sm tracking-wide truncate">{img.caption || img.title || "Untitled"}</span>
-                            <span className="text-white/60 text-[10px] uppercase tracking-widest mt-1">{new Date(img.created_at).toLocaleDateString()}</span>
+                          <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/60 to-transparent p-3 opacity-0 group-hover:opacity-100 transition-opacity">
+                             <span className="text-white font-bold text-xs truncate block">{img.caption || img.title || hostname(img.url)}</span>
                           </div>
                         )}
 
-                        {/* List view details */}
                         {viewMode === "list" && (
-                          <div className="flex-1 flex flex-col justify-center">
-                            <span className="font-bold text-lg">{img.caption || img.title || "Untitled Image"}</span>
-                            <span className="text-slate-400 text-xs font-bold uppercase tracking-widest mt-2">{img.folder} • {new Date(img.created_at).toLocaleDateString()}</span>
+                          <div className="flex-1 min-w-0">
+                            <span className="font-bold text-[#111827] text-base block truncate">{img.caption || img.title || "Untitled Image"}</span>
+                            <span className="text-[#9CA3AF] text-[10px] font-bold uppercase tracking-wider mt-1 block">{img.folder} • {new Date(img.created_at).toLocaleDateString()}</span>
                           </div>
                         )}
 
-                        {/* Type Icons */}
                         {img.is_story && (
-                          <div className="absolute top-4 right-4 w-8 h-8 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center text-white">
-                            <Film className="w-4 h-4" />
+                          <div className="absolute top-2 right-2 w-6 h-6 rounded-md bg-white/90 border border-[#E5E7EB] flex items-center justify-center text-[#2563EB]">
+                            <Film className="w-3 h-3" />
                           </div>
                         )}
                       </div>
@@ -412,150 +400,116 @@ export default function GalleryPage() {
         {lightboxIndex !== null && filteredImages[lightboxIndex] && (
           <motion.div
             initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[100] bg-black/95 backdrop-blur-3xl flex items-center justify-center"
+            className="fixed inset-0 z-[100] bg-white/95 backdrop-blur-xl flex items-center justify-center"
           >
-            <button className="absolute top-6 right-6 w-12 h-12 bg-white/10 hover:bg-white/20 rounded-full flex items-center justify-center text-white transition-colors z-50" onClick={() => setLightboxIndex(null)}>
+            <button className="absolute top-6 right-6 w-12 h-12 hover:bg-[#F1F5F9] rounded-md flex items-center justify-center text-[#111827] transition-colors z-50" onClick={() => setLightboxIndex(null)}>
               <X className="w-6 h-6" />
             </button>
 
-            {/* Nav arrows */}
-            <button className="absolute left-6 top-1/2 -translate-y-1/2 w-14 h-14 bg-white/5 hover:bg-white/20 rounded-full flex items-center justify-center text-white transition-colors z-50 disabled:opacity-20" disabled={lightboxIndex === 0} onClick={() => setLightboxIndex(prev => prev! - 1)}>
+            <button className="absolute left-6 top-1/2 -translate-y-1/2 w-12 h-12 hover:bg-[#F1F5F9] rounded-md flex items-center justify-center text-[#111827] transition-colors z-50 disabled:opacity-20" disabled={lightboxIndex === 0} onClick={() => setLightboxIndex(prev => prev! - 1)}>
               <ChevronLeft className="w-8 h-8" />
             </button>
-            <button className="absolute right-6 top-1/2 -translate-y-1/2 w-14 h-14 bg-white/5 hover:bg-white/20 rounded-full flex items-center justify-center text-white transition-colors z-50 disabled:opacity-20" disabled={lightboxIndex === filteredImages.length - 1} onClick={() => setLightboxIndex(prev => prev! + 1)}>
+            <button className="absolute right-6 top-1/2 -translate-y-1/2 w-12 h-12 hover:bg-[#F1F5F9] rounded-md flex items-center justify-center text-[#111827] transition-colors z-50 disabled:opacity-20" disabled={lightboxIndex === filteredImages.length - 1} onClick={() => setLightboxIndex(prev => prev! + 1)}>
               <ChevronRight className="w-8 h-8" />
             </button>
 
             <div className="w-full h-full max-w-7xl max-h-[85vh] p-4 md:p-12 flex flex-col md:flex-row gap-8 items-center justify-center relative">
-              {/* Image */}
-              <motion.div
-                key={`lb-img-${lightboxIndex}`}
-                initial={{ opacity: 0, scale: 0.9, filter: "blur(10px)" }}
-                animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
-                transition={{ duration: 0.4 }}
-                className="flex-1 w-full h-full flex items-center justify-center relative"
-              >
-                <img src={filteredImages[lightboxIndex].url} className="max-w-full max-h-full object-contain drop-shadow-2xl rounded-lg" />
-              </motion.div>
+              <div className="flex-1 w-full h-full flex items-center justify-center">
+                <img src={filteredImages[lightboxIndex].url} alt="" className="max-w-full max-h-full object-contain shadow-2xl rounded-md border border-[#E5E7EB]" />
+              </div>
 
-              {/* Info sidebar */}
-              <motion.div
-                initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.2 }}
-                className="w-full md:w-80 bg-white/5 backdrop-blur-md border border-white/10 rounded-[2rem] p-6 text-white shrink-0 flex flex-col hidden md:flex"
-              >
-                <h3 className="font-black text-xl mb-6 tracking-tight">Details</h3>
-                <div className="space-y-4 flex-1">
+              <div className="w-full md:w-80 bg-white border border-[#E5E7EB] rounded-md p-6 shadow-xl shrink-0 flex flex-col hidden md:flex">
+                <h3 className="font-bold text-lg text-[#111827] mb-6 tracking-tight border-b border-[#E5E7EB] pb-4">Artifact Metadata</h3>
+                <div className="space-y-6 flex-1">
                   <div>
-                    <Label className="text-[10px] text-white/50 uppercase tracking-widest">Caption</Label>
+                    <Label className="text-[10px] text-[#9CA3AF] font-bold uppercase tracking-widest">Caption</Label>
                     <Input
                       key={`caption-${filteredImages[lightboxIndex].id}`}
-                      className="bg-transparent border-white/20 text-white mt-1 h-12 focus:border-primary focus:ring-0"
+                      className="mt-1 h-12 font-semibold"
                       defaultValue={filteredImages[lightboxIndex].caption || ""}
                       onBlur={e => updateImage.mutate({ id: filteredImages[lightboxIndex].id, caption: e.target.value })}
                     />
                   </div>
                   <div>
-                    <Label className="text-[10px] text-white/50 uppercase tracking-widest">Folder Mapping</Label>
+                    <Label className="text-[10px] text-[#9CA3AF] font-bold uppercase tracking-widest">Group / Project</Label>
                     <Input
                       key={`folder-${filteredImages[lightboxIndex].id}`}
-                      className="bg-transparent border-white/20 text-white mt-1 h-12 focus:border-primary focus:ring-0"
+                      className="mt-1 h-12 font-semibold"
                       defaultValue={filteredImages[lightboxIndex].folder || ""}
                       onBlur={e => updateImage.mutate({ id: filteredImages[lightboxIndex].id, folder: e.target.value })}
                     />
                   </div>
-                  <div>
-                    <Label className="text-[10px] text-white/50 uppercase tracking-widest">Type</Label>
-                    <div className="flex gap-2 mt-2">
-                      <Button
-                        variant={filteredImages[lightboxIndex].is_story ? "default" : "outline"}
-                        className={`flex-1 h-10 text-xs ${!filteredImages[lightboxIndex].is_story ? "bg-transparent text-white border-white/20" : ""}`}
-                        onClick={() => updateImage.mutate({ id: filteredImages[lightboxIndex].id, is_story: !filteredImages[lightboxIndex].is_story })}
-                      >
-                        {filteredImages[lightboxIndex].is_story ? "Is Story" : "Make Story"}
-                      </Button>
-                    </div>
+                  <div className="pt-4 space-y-3">
+                    <Button
+                      variant={filteredImages[lightboxIndex].is_story ? "default" : "outline"}
+                      className="w-full h-11"
+                      onClick={() => updateImage.mutate({ id: filteredImages[lightboxIndex].id, is_story: !filteredImages[lightboxIndex].is_story })}
+                    >
+                      {filteredImages[lightboxIndex].is_story ? "Featured Story" : "Enable Story Mode"}
+                    </Button>
+                    <Button variant="ghost" className="w-full h-11 text-[#EF4444] hover:bg-red-50" onClick={() => setDeleteIds([filteredImages[lightboxIndex].id])}>
+                      <Trash2 className="w-4 h-4 mr-2" /> Delete Media
+                    </Button>
                   </div>
                 </div>
 
-                <div className="pt-6 border-t border-white/10 text-[10px] text-white/40 uppercase tracking-widest space-y-2">
-                  <p>Added: {new Date(filteredImages[lightboxIndex].created_at).toLocaleDateString()}</p>
-                  <p>ID: {filteredImages[lightboxIndex].id.slice(0, 8)}</p>
+                <div className="pt-6 border-t border-[#E5E7EB] text-[10px] text-[#9CA3AF] font-bold uppercase tracking-wider space-y-1">
+                  <p>Archived: {new Date(filteredImages[lightboxIndex].created_at).toLocaleDateString()}</p>
                 </div>
-
-                <Button variant="destructive" className="w-full mt-6 bg-red-500/20 text-red-400 hover:bg-red-500 hover:text-white" onClick={() => setDeleteIds([filteredImages[lightboxIndex].id])}>
-                  <Trash2 className="w-4 h-4 mr-2" /> Delete Media
-                </Button>
-              </motion.div>
+              </div>
             </div>
           </motion.div>
         )}
       </AnimatePresence>
 
-      {/* STORY EDITOR DIALOG */}
+      {/* STORY EDITOR */}
       <Dialog open={!!editingStoryImage} onOpenChange={o => !o && setEditingStoryImage(null)}>
-        <DialogContent className="max-w-4xl p-0 overflow-hidden bg-[#fbfbfb] border-none rounded-[2rem]">
+        <DialogContent className="max-w-4xl p-0 overflow-hidden bg-white border border-[#E5E7EB] rounded-md">
           {editingStoryImage && (
-            <div className="flex flex-col md:flex-row h-[70vh]">
-              <div className="w-full md:w-1/2 h-full bg-slate-100 flex items-center justify-center p-8 relative">
-                <img src={editingStoryImage.url} className="max-w-full max-h-full object-contain drop-shadow-xl" />
-                <div className="film-grain" />
+            <div className="flex flex-col md:flex-row min-h-[500px]">
+              <div className="w-full md:w-1/2 h-full bg-[#F8FAFC] flex items-center justify-center p-8 relative">
+                <img src={editingStoryImage.url} alt="" className="max-w-full max-h-full object-contain shadow-lg" />
               </div>
-              <div className="w-full md:w-1/2 p-8 md:p-12 flex flex-col bg-white">
-                <div className="flex items-center gap-3 mb-8 text-primary">
+              <div className="w-full md:w-1/2 p-10 flex flex-col">
+                <div className="flex items-center gap-3 mb-8 text-[#2563EB]">
                   <Feather className="w-5 h-5" />
-                  <span className="text-[10px] font-black uppercase tracking-[0.3em]">Story Studio</span>
+                  <span className="text-[10px] font-bold uppercase tracking-widest">Editorial Mode</span>
                 </div>
 
                 <input
                   key={`title-${editingStoryImage.id}`}
                   type="text"
-                  className="text-3xl font-black mb-4 focus:outline-none bg-transparent"
-                  placeholder="A Beautiful Memory..."
+                  className="text-3xl font-black mb-6 focus:outline-none bg-transparent text-[#111827] tracking-tight"
+                  placeholder="The moment's title..."
                   defaultValue={editingStoryImage.title || ""}
                   onBlur={e => updateImage.mutate({ id: editingStoryImage.id, title: e.target.value })}
                 />
 
                 <textarea
                   key={`story-${editingStoryImage.id}`}
-                  className="flex-1 resize-none focus:outline-none bg-transparent text-slate-600 font-serif text-lg leading-relaxed pt-2"
-                  placeholder="Every picture tells a story. Write yours here..."
+                  className="flex-1 resize-none focus:outline-none bg-transparent text-[#6B7280] font-serif text-lg leading-relaxed pt-2"
+                  placeholder="Narrative goes here... Use Merriweather font for elegant reflection."
                   defaultValue={editingStoryImage.story || ""}
                   onBlur={e => updateImage.mutate({ id: editingStoryImage.id, story: e.target.value })}
                 />
 
-                <div className="mt-8 pt-8 border-t border-slate-100 flex justify-between items-center">
-                  <Button variant="ghost" className="text-slate-400" onClick={() => setEditingStoryImage(null)}>Close</Button>
+                <div className="mt-10 pt-8 border-t border-[#E5E7EB] flex justify-between items-center gap-4">
+                  <Button variant="ghost" className="text-[#9CA3AF]" onClick={() => setEditingStoryImage(null)}>Close</Button>
                   <Button
-                    className="bg-black hover:bg-primary text-white rounded-xl gap-2 font-black uppercase tracking-widest text-[10px] h-12 px-6 shadow-xl"
+                    className="flex-1 bg-[#F97316] text-white hover:bg-[#EA580C] rounded-md font-bold h-12"
                     onClick={async () => {
                       const slug = editingStoryImage.slug || editingStoryImage.title?.toLowerCase().replace(/[^a-z0-9]+/g, '-') || "story";
-
                       const isPublishing = !editingStoryImage.published_at;
-
-                      // Set published state
                       await updateImage.mutateAsync({
                         id: editingStoryImage.id,
                         published_at: isPublishing ? new Date().toISOString() : null,
                         slug
                       });
-
-                      if (isPublishing) {
-                        const storyUrl = `${window.location.origin}/gallery/story/${editingStoryImage.id}`;
-                        navigator.clipboard.writeText(storyUrl);
-                        toast.success("Story Published!", { description: "Public link copied to clipboard." });
-                      } else {
-                        toast.success("Story Unpublished.");
-                      }
-
-                      // Close dialog
+                      if (isPublishing) toast.success("Story Published!");
                       setEditingStoryImage(null);
                     }}
                   >
-                    {editingStoryImage.published_at ? (
-                      <>Unpublish Story</>
-                    ) : (
-                      <><Share2 className="w-4 h-4" /> Publish Story</>
-                    )}
+                    {editingStoryImage.published_at ? "Unpublish Story" : "Publish Global Access"}
                   </Button>
                 </div>
               </div>
@@ -564,24 +518,24 @@ export default function GalleryPage() {
         </DialogContent>
       </Dialog>
 
-      {/* DELETE CONFIRMATION */}
+      {/* DELETE CONFIRM */}
       <Dialog open={!!deleteIds} onOpenChange={o => !o && setDeleteIds(null)}>
-        <DialogContent className="sm:max-w-md rounded-[2rem] border-slate-100 shadow-2xl">
+        <DialogContent className="sm:max-w-md bg-white border border-[#E5E7EB] rounded-md shadow-2xl">
           <DialogHeader className="text-center items-center pb-2">
-            <div className="w-16 h-16 rounded-[1.5rem] bg-red-50 flex items-center justify-center mb-4 mx-auto">
-              <AlertTriangle className="w-8 h-8 text-red-500" />
+            <div className="w-16 h-16 rounded-md bg-red-50 flex items-center justify-center mb-6">
+              <AlertTriangle className="w-7 h-7 text-[#EF4444]" />
             </div>
-            <DialogTitle className="text-xl font-black uppercase tracking-tight">
-              Delete Meda
+            <DialogTitle className="text-xl font-bold tracking-tight text-[#111827]">
+              Purge Media Artifact
             </DialogTitle>
-            <DialogDescription className="text-sm text-slate-500 font-medium max-w-xs mx-auto">
-              Are you sure you want to permanently delete {deleteIds?.length === 1 ? "this item" : `these ${deleteIds?.length} items`}? This action cannot be undone.
+            <DialogDescription className="text-sm text-[#6B7280] font-serif max-w-xs mx-auto mt-2">
+              Are you sure you want to permanently delete these items? This action cannot be undone.
             </DialogDescription>
           </DialogHeader>
-          <DialogFooter className="flex gap-3 sm:flex-row pt-4">
-            <Button variant="outline" className="flex-1 h-12 rounded-xl" onClick={() => setDeleteIds(null)}>Cancel</Button>
-            <Button className="flex-1 h-12 rounded-xl bg-red-500 hover:bg-red-600 text-white" onClick={confirmDelete}>
-              <Trash2 className="w-4 h-4 mr-2" /> Delete
+          <DialogFooter className="flex gap-3 pt-6 border-t border-[#E5E7EB] mt-4">
+            <Button variant="outline" className="flex-1" onClick={() => setDeleteIds(null)}>Cancel</Button>
+            <Button className="flex-1 bg-[#EF4444] text-white" onClick={confirmDelete}>
+              Confirm Delete
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -589,3 +543,12 @@ export default function GalleryPage() {
     </div>
   );
 }
+
+function hostname(url: string) {
+  try {
+    return new URL(url).hostname.replace("www.", "");
+  } catch {
+    return "visual artifact";
+  }
+}
+

@@ -13,6 +13,7 @@ import {
   Share2,
   Link2,
 } from "lucide-react";
+import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -65,48 +66,38 @@ export function LinkCard({
       <motion.div
         initial={{ opacity: 0, x: -10 }}
         animate={{ opacity: 1, x: 0 }}
-        exit={{ opacity: 0, x: 10 }}
-        className="group flex items-center gap-5 p-4 rounded-2xl bg-[#14151B] border border-white/5 hover:border-[#06B6D4]/20 transition-all duration-300"
+        className="group flex items-center gap-4 p-3 rounded-md bg-white border border-[#E5E7EB] hover:border-[#2563EB] transition-all duration-200"
       >
-        {/* Favicon */}
-        <div className="w-12 h-12 rounded-xl bg-slate-50 flex items-center justify-center flex-shrink-0 overflow-hidden border border-slate-100 transition-transform duration-500 group-hover:scale-105">
+        <div className="w-10 h-10 rounded bg-[#F8FAFC] flex items-center justify-center flex-shrink-0 border border-[#E5E7EB]">
           {link.favicon ? (
-            <Image src={link.favicon} alt="" width={24} height={24} className="rounded" unoptimized />
+            <Image src={link.favicon} alt="" width={20} height={20} className="rounded-sm" unoptimized />
           ) : (
-            <Link2 className="w-5 h-5 text-slate-400" />
+            <Link2 className="w-4 h-4 text-[#9CA3AF]" />
           )}
         </div>
 
-        {/* Info */}
         <div className="flex-1 min-w-0">
-          <h3 className="font-bold text-slate-100 text-base truncate group-hover:text-[#06B6D4] transition-colors decoration-2 underline-offset-4">{link.title || link.url}</h3>
-          <p className="text-[10px] text-slate-500 font-bold uppercase tracking-widest mt-0.5 transition-colors italic">{hostname}</p>
+          <h3 className="font-bold text-[#111827] text-sm truncate">{link.title || link.url}</h3>
+          <p className="text-[10px] text-[#6B7280] font-bold uppercase tracking-wider">{hostname}</p>
         </div>
 
-        {/* Tags */}
         <div className="hidden md:flex gap-1.5 flex-shrink-0">
-          {link.tags?.slice(0, 2).map((tag) => (
-            <Badge key={tag.id} variant="secondary" className="text-[9px] font-black uppercase tracking-widest bg-slate-100 text-slate-500 border-none">
+          {link.tags?.slice(0, 1).map((tag) => (
+            <Badge key={tag.id} variant="secondary" className="text-[9px] font-bold bg-[#F1F5F9] text-[#6B7280] border-none">
               {tag.name}
             </Badge>
           ))}
         </div>
 
-        {/* Actions */}
-        <div className="flex items-center gap-2 pr-2">
+        <div className="flex items-center gap-1">
           <Button
             variant="ghost"
-            size="icon"
-            className="h-9 w-9 hover:bg-red-50 text-slate-400 hover:text-red-500 rounded-lg transition-all"
+            size="icon-sm"
+            className={cn("text-[#9CA3AF] hover:text-[#EF4444]", link.is_favorite && "text-[#EF4444]")}
             onClick={(e) => { e.preventDefault(); onToggleFavorite?.(link.id, !!link.is_favorite); }}
           >
-            <Heart className={`w-4.5 h-4.5 transition-all ${link.is_favorite ? "fill-red-500 text-red-500 scale-105" : "text-slate-300"}`} />
+            <Heart className={cn("w-4 h-4", link.is_favorite && "fill-current")} />
           </Button>
-          <a href={link.url} target="_blank" rel="noopener noreferrer">
-            <Button variant="ghost" size="icon" className="h-9 w-9 hover:bg-slate-100 hover:text-black rounded-lg transition-all">
-              <ExternalLink className="w-4.5 h-4.5 text-slate-400" />
-            </Button>
-          </a>
           <ActionsMenu
             link={link}
             onEdit={onEdit}
@@ -119,96 +110,51 @@ export function LinkCard({
     );
   }
 
-  // Grid view (default)
   return (
     <motion.div
-      initial={{ opacity: 0, scale: 0.95, y: 10 }}
-      animate={{ opacity: 1, scale: 1, y: 0 }}
-      exit={{ opacity: 0, scale: 0.95, y: 10 }}
-      className="group relative rounded-[1.5rem] bg-card border-[1.5px] border-elegant hover:border-primary/20 overflow-hidden transition-all duration-500 hover:shadow-2xl hover:shadow-primary/5"
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="group bg-white border border-[#E5E7EB] rounded-md overflow-hidden hover:border-[#2563EB] hover:shadow-lg transition-all"
     >
-      {/* Preview Image */}
-      <div className="relative h-44 bg-[#1F2129] overflow-hidden">
+      <div className="relative h-40 bg-[#F1F5F9] border-b border-[#E5E7EB]">
         {link.image_url ? (
           <Image
             src={link.image_url}
             alt={link.title || ""}
             fill
-            className="object-cover transition-transform duration-1000 group-hover:scale-110"
+            className="object-cover transition-transform duration-500 group-hover:scale-105"
             unoptimized
           />
         ) : (
-          <div className="absolute inset-0 flex items-center justify-center opacity-10">
-            <Link2 className="w-24 h-24 text-slate-400" />
+          <div className="absolute inset-0 flex items-center justify-center opacity-20">
+            <Link2 className="w-16 h-16 text-[#6B7280]" />
           </div>
         )}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-
-        {/* Hover Favicon Badge */}
-        <div className="absolute top-4 left-4 w-10 h-10 rounded-xl bg-white/90 border border-slate-100 flex items-center justify-center backdrop-blur-md transition-all duration-300 group-hover:scale-110 shadow-sm">
-          {link.favicon ? (
-            <Image src={link.favicon} alt="" width={22} height={22} className="rounded" unoptimized />
-          ) : (
-            <Link2 className="w-4.5 h-4.5 text-slate-400" />
-          )}
-        </div>
       </div>
 
-      <div className="p-5 space-y-4">
-        {/* Header */}
-        <div className="flex items-start justify-between gap-3">
+      <div className="p-4">
+        <div className="flex items-start justify-between gap-3 mb-2">
           <div className="flex-1 min-w-0">
-            <h3 className="font-bold text-slate-100 text-base leading-tight line-clamp-2 transition-all tracking-tight group-hover:text-[#06B6D4]">
+            <h3 className="font-bold text-[#111827] text-base leading-snug line-clamp-2 hover:text-[#2563EB] transition-colors">
               {link.title || link.url}
             </h3>
-            <p className="text-[10px] text-slate-500 mt-2 font-black uppercase tracking-[0.2em] italic">{hostname}</p>
+            <p className="text-[10px] text-[#9CA3AF] font-bold uppercase tracking-widest mt-1">{hostname}</p>
           </div>
         </div>
 
-        {/* Description */}
-        {link.description && (
-          <p className="text-xs text-slate-500 line-clamp-2 leading-relaxed font-medium">
-            {link.description}
-          </p>
-        )}
-
-        {/* Tags */}
-        <div className="flex flex-wrap gap-1.5 pt-2">
-          {link.tags && link.tags.length > 0 ? (
-            <>
-              {link.tags.slice(0, 2).map((tag) => (
-                <Badge key={tag.id} variant="secondary" className="text-[9px] font-black uppercase tracking-widest bg-[#1F2129] text-slate-400 border border-white/5">
-                  {tag.name}
-                </Badge>
-              ))}
-              {link.tags.length > 2 && (
-                <Badge variant="secondary" className="text-[9px] font-black bg-slate-50/50 text-slate-400">
-                  +{link.tags.length - 2}
-                </Badge>
-              )}
-            </>
-          ) : (
-            <div className="h-5 w-1" /> // Spacer
-          )}
-        </div>
-
-        {/* Actions Bar */}
-        <div className="flex items-center justify-between pt-4 mt-2 border-t border-white/5">
-          <div className="flex items-center gap-1">
+        <div className="flex flex-wrap gap-1 mt-4 pt-4 border-t border-[#E5E7EB]">
+          <div className="flex flex-1 items-center gap-1">
             <Button
               variant="ghost"
-              size="icon"
-              className="h-9 w-9 hover:bg-[#1F2129] text-slate-500 hover:text-red-500 rounded-lg transition-all"
+              size="icon-xs"
+              className={cn("text-[#9CA3AF] hover:text-[#EF4444]", link.is_favorite && "text-[#EF4444]")}
               onClick={(e) => { e.preventDefault(); onToggleFavorite?.(link.id, !!link.is_favorite); }}
             >
-              <Heart
-                className={`w-4.5 h-4.5 transition-all duration-300 ${link.is_favorite ? "fill-red-500 text-red-500 scale-105" : "text-slate-500"
-                  }`}
-              />
+              <Heart className={cn("w-3.5 h-3.5", link.is_favorite && "fill-current")} />
             </Button>
             <a href={link.url} target="_blank" rel="noopener noreferrer">
-              <Button variant="ghost" size="icon" className="h-9 w-9 hover:bg-[#1F2129] hover:text-[#5E7BFF] rounded-lg transition-all">
-                <ExternalLink className="w-4.5 h-4.5 text-slate-500" />
+              <Button variant="ghost" size="icon-xs" className="text-[#9CA3AF] hover:text-[#2563EB]">
+                <ExternalLink className="w-3.5 h-3.5" />
               </Button>
             </a>
           </div>
@@ -225,7 +171,6 @@ export function LinkCard({
   );
 }
 
-// Actions dropdown menu
 function ActionsMenu({
   link,
   onEdit,
@@ -242,31 +187,32 @@ function ActionsMenu({
   const { t } = useTranslation();
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger className="h-8 w-8 flex items-center justify-center hover:bg-[#1F2129] rounded-lg transition-all cursor-pointer">
-        <MoreHorizontal className="w-4 h-4 text-slate-500" />
+      <DropdownMenuTrigger className="h-8 w-8 flex items-center justify-center hover:bg-[#F1F5F9] rounded-md text-[#6B7280] transition-colors">
+        <MoreHorizontal className="w-4 h-4" />
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="w-56 bg-[#1F2129] border border-white/5 p-1.5 shadow-[0_20px_50px_rgba(0,0,0,0.5)]">
-        <DropdownMenuItem onClick={() => onEdit?.(link)} className="cursor-pointer rounded-lg font-bold text-sm h-10 px-3 text-slate-100 focus:bg-[#06B6D4]/10">
-          <Pencil className="w-4 h-4 mr-3 text-[#06B6D4]" />
-          {t("Edit", "Edit")}
+      <DropdownMenuContent align="end" className="w-48 bg-white border border-[#E5E7EB] rounded-md shadow-xl p-1">
+        <DropdownMenuItem onClick={() => onEdit?.(link)} className="rounded-md font-bold text-xs h-9 px-2 text-[#111827] hover:bg-[#F1F5F9] cursor-pointer">
+          <Pencil className="w-3.5 h-3.5 mr-2 text-[#2563EB]" />
+          {t("Edit")}
         </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => onMoveToCollection?.(link)} className="cursor-pointer rounded-lg font-bold text-sm h-10 px-3">
-          <FolderPlus className="w-4 h-4 mr-3 text-primary opacity-70" />
-          {t("Add to Collection", "Add to Collection")}
+        <DropdownMenuItem onClick={() => onMoveToCollection?.(link)} className="rounded-md font-bold text-xs h-9 px-2 text-[#111827] hover:bg-[#F1F5F9] cursor-pointer">
+          <FolderPlus className="w-3.5 h-3.5 mr-2 opacity-60" />
+          {t("Move to Collection")}
         </DropdownMenuItem>
-        <DropdownMenuItem onClick={onShare} className="cursor-pointer rounded-lg font-bold text-sm h-10 px-3">
-          <Share2 className="w-4 h-4 mr-3 text-primary opacity-70" />
-          {t("Copy Link", "Copy Link")}
+        <DropdownMenuItem onClick={onShare} className="rounded-md font-bold text-xs h-9 px-2 text-[#111827] hover:bg-[#F1F5F9] cursor-pointer">
+          <Share2 className="w-3.5 h-3.5 mr-2 opacity-60" />
+          {t("Share")}
         </DropdownMenuItem>
-        <DropdownMenuSeparator className="bg-white/5" />
+        <DropdownMenuSeparator className="bg-[#E5E7EB]" />
         <DropdownMenuItem
           onClick={() => onDelete?.(link.id)}
-          className="cursor-pointer rounded-lg font-black text-sm h-10 px-3 text-red-500 focus:text-red-400 focus:bg-red-500/10"
+          className="rounded-md font-bold text-xs h-9 px-2 text-[#EF4444] hover:bg-red-50 cursor-pointer"
         >
-          <Trash2 className="w-4 h-4 mr-3" />
-          {t("Delete", "Delete")}
+          <Trash2 className="w-3.5 h-3.5 mr-2" />
+          {t("Delete")}
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   );
 }
+
