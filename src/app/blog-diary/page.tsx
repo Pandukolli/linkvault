@@ -10,6 +10,7 @@ import {
   Search, Clock, Calendar, Hash, BookOpen, Rss,
   Filter, Globe, ArrowRight, ChevronDown, Sparkles, Link2
 } from "lucide-react";
+import { Logo } from "@/components/logo";
 
 const CATEGORIES = ["All", "Personal Essay", "Technical Deep Dive", "Tutorial / How-to", "Story / Narrative", "Review", "Newsletter", "Journal"];
 
