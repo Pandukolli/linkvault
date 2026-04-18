@@ -92,7 +92,7 @@ export default function LandingPage() {
                 </Link>
                 <Link href="/signup" className="hidden sm:block">
                   <Button className="h-10 px-6 bg-accent text-accent-foreground hover:bg-accent/90 font-bold rounded-xl text-sm shadow-lg shadow-accent/20 transition-premium hover:-translate-y-0.5 active:scale-95">
-                     Get Started
+                    Get Started
                   </Button>
                 </Link>
               </>
@@ -100,7 +100,7 @@ export default function LandingPage() {
 
             {/* Mobile Menu */}
             <Sheet>
-              <SheetTrigger 
+              <SheetTrigger
                 render={
                   <button className="md:hidden p-2.5 rounded-xl bg-secondary border border-border text-muted-foreground hover:text-foreground transition-colors">
                     <Menu className="w-5 h-5" />
@@ -412,11 +412,11 @@ export default function LandingPage() {
                   </div>
                 </div>
                 {/* Decorative image grid - High contrast black boxes with white gaps */}
-                <div className="grid grid-cols-3 gap-3 p-8 lg:p-14 bg-white opacity-100 order-first lg:order-last border-b lg:border-l border-border/50">
+                <div className="grid grid-cols-3 gap-3 p-8 lg:p-14 bg-smoke/30 opacity-100 order-first lg:order-last border-b lg:border-l border-border/50">
                   {Array.from({ length: 9 }).map((_, i) => (
                     <div
                       key={i}
-                      className="rounded-xl bg-black aspect-square transition-all duration-500 hover:scale-[1.03] hover:shadow-2xl hover:shadow-black/20"
+                      className="rounded-xl bg-smoke/20 aspect-square transition-all duration-500 hover:scale-[1.03] hover:shadow-2xl hover:shadow-black/20"
                       style={{ animationDelay: `${i * 80}ms` }}
                     />
                   ))}

@@ -170,7 +170,11 @@ function Toolbar({ editor, onImageUpload }: { editor: Editor, onImageUpload: (fi
   };
 
   return (
-    <div className="flex flex-wrap items-center gap-0.5 p-2 border-b border-border bg-muted/30 opacity-50 hover:opacity-100 transition-opacity duration-300">
+    <div className="flex items-center gap-0.5 p-2 border-b border-border bg-muted/30 opacity-50 hover:opacity-100 transition-opacity duration-300 overflow-x-auto whitespace-nowrap scrollbar-hide flex-nowrap hide-scroll">
+      <style dangerouslySetInnerHTML={{__html: `
+        .hide-scroll::-webkit-scrollbar { display: none; }
+        .hide-scroll { -ms-overflow-style: none; scrollbar-width: none; }
+      `}} />
       {/* AI Assistant */}
       <DropdownMenu>
         <DropdownMenuTrigger className="focus:outline-none">

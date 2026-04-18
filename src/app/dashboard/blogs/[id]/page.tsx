@@ -189,9 +189,13 @@ export default function BlogEditorPage({ params }: { params: Promise<{ id: strin
     <div className="h-screen bg-[#0A0B0F] flex flex-col overflow-hidden">
 
       {/* Top Navbar */}
-      <div className="h-16 flex-shrink-0 bg-[#0A0B0F]/80 backdrop-blur-3xl border-b border-white/5 px-6 flex items-center justify-between z-50">
+      <div className="h-16 flex-shrink-0 bg-[#0A0B0F]/80 backdrop-blur-3xl border-b border-white/5 px-4 md:px-6 flex items-center justify-between z-50 overflow-x-auto whitespace-nowrap scrollbar-hide hide-scroll gap-4">
+        <style dangerouslySetInnerHTML={{__html: `
+          .hide-scroll::-webkit-scrollbar { display: none; }
+          .hide-scroll { -ms-overflow-style: none; scrollbar-width: none; }
+        `}} />
         {/* Left */}
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-2 md:gap-4 shrink-0">
           <button
             onClick={() => router.push("/dashboard/blogs")}
             className="flex items-center gap-2 px-3 h-9 rounded-xl text-white/30 hover:text-white hover:bg-white/5 transition-all border border-white/5 text-[10px] font-black uppercase tracking-widest"
@@ -240,7 +244,7 @@ export default function BlogEditorPage({ params }: { params: Promise<{ id: strin
         </div>
 
         {/* Right */}
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-3 shrink-0">
           {/* Preview toggle */}
           <button
             onClick={() => setShowPreview(!showPreview)}

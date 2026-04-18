@@ -237,14 +237,21 @@ export default function NotesPage() {
       title: finalTitle,
       is_daily: !!baseTitle,
       content: { type: "doc", content: [{ type: "paragraph" }] }
-    }, { onSuccess: d => setSelectedNote(d.id) });
+    }, { onSuccess: d => {
+        setSelectedNote(d.id);
+        if (window.innerWidth < 768) setSidebarCollapsed(true);
+    }});
   };
 
   const handleDailyNote = () => {
     const today = new Date().toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric" });
     const ex = notes.find(n => n.is_daily && n.title === today);
-    if (ex) setSelectedNote(ex.id);
-    else handleNewNote(today);
+    if (ex) {
+      setSelectedNote(ex.id);
+      if (window.innerWidth < 768) setSidebarCollapsed(true);
+    } else {
+      handleNewNote(today);
+    }
   };
 
   const handleDownloadPDF = () => {
@@ -306,7 +313,10 @@ export default function NotesPage() {
                 {filteredNotes.map(note => {
                   const nt = note.content as EnhancedContent;
                   return (
-                    <div key={note.id} className={`nb-list-item group ${selectedNote === note.id ? "active" : ""}`} onClick={() => setSelectedNote(note.id)}>
+                    <div key={note.id} className={`nb-list-item group ${selectedNote === note.id ? "active" : ""}`} onClick={() => {
+                      setSelectedNote(note.id);
+                      if (window.innerWidth < 768) setSidebarCollapsed(true);
+                    }}>
                       {selectedNote === note.id && <div className="nb-item-bar" />}
                       <div className="nb-item-title-row">
                         {nt?._icon && <span className="nb-item-icon-sm">{nt._icon}</span>}
@@ -376,13 +386,13 @@ export default function NotesPage() {
                   </div>
                 )}
                 <div className="nb-icon-box" onClick={() => setShowIconPicker(true)}>{noteIcon || <Feather className="w-8 h-8 opacity-20" />}</div>
-                <div className="nb-tags-bar no-print flex justify-between w-full">
+                <div className="nb-tags-bar no-print flex flex-col md:flex-row justify-between w-full gap-4 md:gap-0">
                   <div className="flex items-center gap-2 flex-wrap">
-                    <Tag className="w-3.5 h-3.5 text-muted-foreground" />
-                    {tags.map(t => <span key={t} className="nb-tag">#{t} <X className="w-2 h-2" onClick={() => removeTag(t)} /></span>)}
-                    <input type="text" className="nb-tag-input text-muted-foreground" placeholder="Add tag..." value={newTagInput} onChange={e => setNewTagInput(e.target.value)} onKeyDown={addTag} />
+                    <Tag className="w-3.5 h-3.5 text-muted-foreground shrink-0" />
+                    {tags.map(t => <span key={t} className="nb-tag">#{t} <X className="w-2 h-2 cursor-pointer opacity-50 hover:opacity-100" onClick={() => removeTag(t)} /></span>)}
+                    <input type="text" className="nb-tag-input text-muted-foreground min-w-[80px]" placeholder="Add tag..." value={newTagInput} onChange={e => setNewTagInput(e.target.value)} onKeyDown={addTag} />
                   </div>
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-2 overflow-x-auto pb-1 shrink-0 scrollbar-hide shrink-0 md:pb-0">
                     <WeatherWidget />
                     <div className="flex bg-muted rounded-full px-2 py-1 gap-1 border border-border">
                       {[{ m: "happy", e: "😊" }, { m: "good", e: "🙂" }, { m: "neutral", e: "😐" }, { m: "sad", e: "😔" }, { m: "awful", e: "😢" }].map(item => (
