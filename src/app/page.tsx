@@ -412,11 +412,11 @@ export default function LandingPage() {
                   </div>
                 </div>
                 {/* Decorative image grid - High contrast black boxes with white gaps */}
-                <div className="grid grid-cols-3 gap-3 p-8 lg:p-14 bg-smoke/30 opacity-100 order-first lg:order-last border-b lg:border-l border-border/50">
+                <div className="grid grid-cols-3 gap-3 p-8 lg:p-14 bg-smoke opacity-100 order-first lg:order-last border-b lg:border-l border-border/50">
                   {Array.from({ length: 9 }).map((_, i) => (
                     <div
                       key={i}
-                      className="rounded-xl bg-smoke/20 aspect-square transition-all duration-500 hover:scale-[1.03] hover:shadow-2xl hover:shadow-black/20"
+                      className="rounded-xl bg-black/20 aspect-square transition-all duration-500 hover:scale-[1.03] hover:shadow-2xl hover:shadow-black/20"
                       style={{ animationDelay: `${i * 80}ms` }}
                     />
                   ))}
