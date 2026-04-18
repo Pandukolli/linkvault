@@ -3,8 +3,12 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { createClient } from "@/lib/supabase/client";
 import { toast } from "sonner";
-import type { UserImage } from "@/lib/types";
+import type { GalleryImage } from "@/lib/types";
 
+/**
+ * Hook for managing global Gallery images.
+ * Restored to original 'user_images' table and 'user-images' bucket.
+ */
 export function useImages(folder?: string) {
   const supabase = createClient();
   const queryClient = useQueryClient();
@@ -13,8 +17,8 @@ export function useImages(folder?: string) {
     data: images = [],
     isLoading,
     error,
-  } = useQuery<UserImage[]>({
-    queryKey: ["images", folder],
+  } = useQuery<GalleryImage[]>({
+    queryKey: ["user-images", folder],
     queryFn: async () => {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) throw new Error("Not authenticated");
@@ -31,67 +35,63 @@ export function useImages(folder?: string) {
 
       const { data, error } = await query;
       if (error) throw error;
-      return data as UserImage[];
+      return data as GalleryImage[];
     },
   });
 
   const uploadImage = useMutation({
-    mutationFn: async ({ file, folder: imgFolder, caption }: { file: File; folder?: string; caption?: string }) => {
+    mutationFn: async ({ 
+      file, 
+      folder = "general",
+      name 
+    }: { 
+      file: File; 
+      folder?: string;
+      name?: string;
+    }) => {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) throw new Error("Not authenticated");
 
-      // Upload to Supabase Storage
-      const ext = file.name.split(".").pop();
-      const filePath = `${user.id}/${Date.now()}.${ext}`;
+      const fileExt = file.name.split(".").pop();
+      const fileName = `${Math.random()}.${fileExt}`;
+      const filePath = `${user.id}/${fileName}`;
 
+      // Upload to user-images bucket
       const { error: uploadError } = await supabase.storage
         .from("user-images")
-        .upload(filePath, file, { upsert: false });
+        .upload(filePath, file);
 
       if (uploadError) throw uploadError;
 
-      // Get public URL
-      const { data: urlData } = supabase.storage
+      const { data: { publicUrl } } = supabase.storage
         .from("user-images")
         .getPublicUrl(filePath);
 
-      // Get max order_index
-      const { data: maxData } = await supabase
-        .from("user_images")
-        .select("order_index")
-        .eq("user_id", user.id)
-        .order("order_index", { ascending: false })
-        .limit(1);
-
-      const nextOrder = (maxData?.[0]?.order_index ?? -1) + 1;
-
-      // Insert record
       const { data, error } = await supabase
         .from("user_images")
         .insert({
           user_id: user.id,
-          url: urlData.publicUrl,
-          folder: imgFolder || "general",
-          caption: caption || null,
-          order_index: nextOrder,
+          url: publicUrl,
+          title: name || file.name,
+          folder: folder,
         })
         .select()
         .single();
 
       if (error) throw error;
-      return data as UserImage;
+      return data as GalleryImage;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["images"] });
-      toast.success("Image uploaded");
+      queryClient.invalidateQueries({ queryKey: ["user-images"] });
+      toast.success("Image uploaded to Gallery");
     },
-    onError: () => {
-      toast.error("Failed to upload image");
+    onError: (err: any) => {
+      toast.error(err.message || "Failed to upload image");
     },
   });
 
   const updateImage = useMutation({
-    mutationFn: async ({ id, ...updates }: Partial<UserImage> & { id: string }) => {
+    mutationFn: async ({ id, ...updates }: Partial<GalleryImage> & { id: string }) => {
       const { data, error } = await supabase
         .from("user_images")
         .update(updates)
@@ -100,38 +100,16 @@ export function useImages(folder?: string) {
         .single();
 
       if (error) throw error;
-      return data as UserImage;
+      return data as GalleryImage;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["images"] });
+      queryClient.invalidateQueries({ queryKey: ["user-images"] });
+      toast.success("Memory updated");
     },
-    onError: () => {
-      toast.error("Failed to update image");
-    },
-  });
-
-  const reorderImages = useMutation({
-    mutationFn: async (orderedIds: string[]) => {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) throw new Error("Not authenticated");
-
-      // Update each image's order_index
-      const promises = orderedIds.map((id, index) =>
-        supabase
-          .from("user_images")
-          .update({ order_index: index })
-          .eq("id", id)
-          .eq("user_id", user.id)
-      );
-
-      await Promise.all(promises);
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["images"] });
-    },
-    onError: () => {
-      toast.error("Failed to reorder images");
-    },
+    onError: (err: any) => {
+      console.error("[useImages] Update error:", err);
+      toast.error(err.message || "Failed to edit memory");
+    }
   });
 
   const deleteImage = useMutation({
@@ -140,13 +118,21 @@ export function useImages(folder?: string) {
       if (error) throw error;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["images"] });
-      toast.success("Image deleted");
+      queryClient.invalidateQueries({ queryKey: ["user-images"] });
+      toast.success("Memory erased from Gallery");
     },
-    onError: () => {
-      toast.error("Failed to delete image");
-    },
+    onError: (err: any) => {
+      console.error("[useImages] Delete error:", err);
+      toast.error(err.message || "Failed to erase memory");
+    }
   });
 
-  return { images, isLoading, error, uploadImage, updateImage, reorderImages, deleteImage };
+  return { 
+    images, 
+    isLoading, 
+    error, 
+    uploadImage, 
+    updateImage, 
+    deleteImage 
+  };
 }

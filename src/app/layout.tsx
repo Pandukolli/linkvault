@@ -24,10 +24,10 @@ const spaceGrotesk = Space_Grotesk({
 });
 
 export const metadata: Metadata = {
-  title: "LinkVault — Professional Knowledge Platform",
+  title: "VaultOS — Unified Digital Intelligence Hub",
   description:
-    "A structured, secure, and professional hub for digital artifacts. Architected for clarity, clean hierarchy, and optimal reading experiences.",
-  keywords: ["knowledge base", "personal OS", "notes", "blogging", "AI", "bookmarks"],
+    "A powerful, secure, and professional operating system for your digital life. Manage links, notes, images, and documents with enterprise-grade clarity.",
+  keywords: ["vaultOS", "personal OS", "digital hub", "secure vault", "knowledge management"],
 };
 
 export default function RootLayout({
@@ -42,7 +42,12 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <body className="min-h-full flex flex-col font-sans bg-[#F8FAFC] text-[#111827]">
-        <ThemeProvider defaultTheme="light"强制LightMode={true}>
+        <ThemeProvider 
+          attribute="class" 
+          defaultTheme="light" 
+          enableSystem={false}
+          forcedTheme="light"
+        >
           <QueryProvider>
             <I18nProvider>
               <TransmissionProvider>

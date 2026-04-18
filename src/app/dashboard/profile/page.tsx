@@ -89,7 +89,7 @@ export default function ProfilePage() {
       toast.error(t("Name is required", "Name is required"));
       return;
     }
-    updateProfile.mutate({ full_name: fullName.trim(), bio: bio.trim() || null });
+    updateProfile.mutate({ full_name: fullName.trim(), bio: bio.trim() || undefined });
   };
 
   const initials = profile?.full_name

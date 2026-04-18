@@ -539,3 +539,269 @@
   .nb-paper { padding: 1rem; }
   .nb-tags-bar { padding: 0.5rem 1rem 0; }
 }
+
+/* ============================================================
+   NEW FEATURES — Memory Threads, Ink & Emotion,
+   Legacy Letters, Visual Poetry Mode
+   ============================================================ */
+
+/* ── MEMORY THREADS ─────────────────────────────────── */
+.nb-thread-root {
+  position: relative; display: inline-flex; align-items: center;
+}
+
+.nb-thread-toggle {
+  display: flex; align-items: center; gap: 5px;
+  height: 32px; padding: 0 12px; border-radius: 10px;
+  background: transparent; border: 1px solid transparent;
+  color: #94a3b8; font-size: 11px; font-weight: 700;
+  cursor: pointer; transition: all 0.18s;
+  letter-spacing: 0.04em; text-transform: uppercase;
+}
+.nb-thread-toggle:hover {
+  background: rgba(37,99,235,0.06); border-color: rgba(37,99,235,0.2);
+  color: #2563EB;
+}
+
+.nb-thread-count {
+  display: inline-flex; align-items: center; justify-content: center;
+  min-width: 16px; height: 16px; border-radius: 6px;
+  background: #2563EB; color: white;
+  font-size: 9px; font-weight: 800; padding: 0 4px;
+}
+
+.nb-thread-panel {
+  position: absolute; top: calc(100% + 8px); right: 0;
+  width: 300px; background: white;
+  border: 1px solid #E5E7EB; border-radius: 18px;
+  padding: 16px; z-index: 200;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.07), 0 4px 16px rgba(0,0,0,0.04);
+}
+
+.nb-thread-timeline {
+  display: flex; flex-direction: column; gap: 0;
+  margin-bottom: 12px;
+}
+
+.nb-thread-node {
+  display: flex; gap: 10px; position: relative;
+  padding-bottom: 12px; align-items: flex-start;
+}
+
+.nb-thread-line {
+  position: absolute; left: 7px; top: 18px; bottom: 0;
+  width: 2px; background: linear-gradient(to bottom, #BFDBFE, transparent);
+}
+
+.nb-thread-dot {
+  width: 16px; height: 16px; border-radius: 50%;
+  background: white; border: 2px solid #93C5FD;
+  flex-shrink: 0; margin-top: 3px; position: relative; z-index: 1;
+  box-shadow: 0 0 0 3px rgba(147,197,253,0.2);
+}
+
+.nb-thread-card {
+  flex: 1; background: #F8FAFC; border-radius: 10px;
+  padding: 8px 10px; position: relative;
+  border: 1px solid rgba(0,0,0,0.04);
+}
+
+.nb-thread-title {
+  display: block; font-size: 12px; font-weight: 700;
+  color: #1e293b; margin-bottom: 2px;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+
+.nb-thread-preview {
+  display: block; font-size: 11px; color: #64748b;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+
+.nb-thread-unlink {
+  position: absolute; top: 6px; right: 6px;
+  width: 18px; height: 18px; border-radius: 5px;
+  background: transparent; border: none; color: #CBD5E1;
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+  transition: all 0.15s;
+}
+.nb-thread-unlink:hover { background: #FEE2E2; color: #EF4444; }
+
+.nb-thread-picker {
+  display: flex; gap: 6px; align-items: center;
+  border-top: 1px solid #F1F5F9; padding-top: 10px; margin-top: 4px;
+}
+
+.nb-thread-select {
+  flex: 1; height: 32px; border-radius: 8px;
+  border: 1px solid #E5E7EB; background: #F8FAFC;
+  font-size: 12px; padding: 0 8px; color: #1e293b; outline: none;
+  cursor: pointer;
+}
+.nb-thread-select:focus { border-color: #2563EB; }
+
+.nb-thread-link-btn {
+  height: 32px; padding: 0 12px; border-radius: 8px;
+  background: #2563EB; color: white; font-size: 11px; font-weight: 700;
+  border: none; cursor: pointer; white-space: nowrap; transition: all 0.15s;
+}
+.nb-thread-link-btn:hover { background: #1D4ED8; }
+.nb-thread-link-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+/* ── INK & EMOTION TINT ─────────────────────────────── */
+/* Sits as an absolute overlay under the text — pointer-events: none so it doesn't block typing */
+.nb-ink-tint {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  /* The actual background is set inline per mood */
+  transition: background 1.5s ease;
+}
+
+/* ── LEGACY LETTERS ─────────────────────────────────── */
+.nb-letter-root { position: relative; display: inline-flex; align-items: center; }
+
+.nb-letter-btn {
+  display: flex; align-items: center; gap: 6px;
+  height: 32px; padding: 0 10px; border-radius: 10px;
+  background: transparent; border: 1px solid transparent;
+  color: #94a3b8; font-size: 11px; font-weight: 700;
+  cursor: pointer; transition: all 0.18s; letter-spacing: 0.04em;
+}
+.nb-letter-btn:hover { background: rgba(249,115,22,0.06); border-color: rgba(249,115,22,0.2); color: #F97316; }
+.nb-letter-btn.active { background: rgba(249,115,22,0.08); border-color: #FED7AA; color: #F97316; }
+
+.nb-letter-panel {
+  position: absolute; top: calc(100% + 8px); right: 0;
+  width: 240px; background: white;
+  border: 1px solid #FDE68A; border-radius: 18px;
+  padding: 16px; z-index: 200;
+  box-shadow: 0 20px 60px rgba(249,115,22,0.08), 0 4px 16px rgba(0,0,0,0.04);
+}
+
+/* Envelope illustration */
+.nb-envelope {
+  position: relative; margin: 0 auto 12px;
+  width: 70px; height: 50px;
+}
+.nb-envelope-flap {
+  position: absolute; top: 0; left: 0; right: 0;
+  height: 26px;
+  background: #FED7AA;
+  clip-path: polygon(0 0, 100% 0, 50% 100%);
+  border-radius: 4px 4px 0 0;
+  transform-origin: top center;
+  transition: transform 0.4s ease;
+}
+.nb-letter-btn.active:hover ~ .nb-letter-panel .nb-envelope-flap,
+.nb-envelope:hover .nb-envelope-flap {
+  transform: rotateX(-160deg);
+}
+.nb-envelope-body {
+  position: absolute; bottom: 0; left: 0; right: 0; height: 36px;
+  background: #FEF3C7; border: 2px solid #FDE68A; border-radius: 4px;
+  display: flex; align-items: center; justify-content: center; font-size: 20px;
+}
+
+.nb-letter-sealed { text-align: center; }
+.nb-letter-sealed-text { font-size: 12px; color: #92400E; font-weight: 600; margin-top: 4px; }
+.nb-letter-unlock-date { font-size: 14px; font-weight: 800; color: #B45309; margin-top: 2px; }
+.nb-letter-cancel-btn {
+  margin-top: 10px; background: none; border: 1px solid #FDE68A;
+  color: #92400E; font-size: 11px; font-weight: 700;
+  padding: 4px 12px; border-radius: 8px; cursor: pointer; transition: all 0.15s;
+}
+.nb-letter-cancel-btn:hover { background: #FEF3C7; }
+
+.nb-letter-unlocked { text-align: center; }
+
+.nb-letter-config { display: flex; flex-direction: column; gap: 10px; }
+.nb-letter-config-label { font-size: 12px; font-weight: 700; color: #92400E; }
+.nb-letter-date-row {
+  display: flex; align-items: center; gap: 8px;
+  background: #FEF3C7; border: 1px solid #FDE68A; border-radius: 10px; padding: 6px 10px;
+}
+.nb-letter-date-input {
+  background: transparent; border: none; outline: none;
+  font-size: 12px; color: #92400E; font-weight: 600; flex: 1; cursor: pointer;
+}
+
+/* Sealed overlay — appears over the editor content but inside nb-paper */
+.nb-sealed-overlay {
+  position: relative; z-index: 10;
+  width: 100%; min-height: 50vh;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  text-align: center; padding: 3rem 2rem;
+  background: linear-gradient(135deg, #FFF8ED 0%, #FEF3C7 50%, #FFF8ED 100%);
+  border: 2px dashed #FDE68A; border-radius: 20px; margin-top: 1rem;
+}
+
+.nb-sealed-envelope {
+  width: 120px; height: 90px; position: relative; margin-bottom: 24px;
+}
+
+.nb-se-flap {
+  position: absolute; top: 0; left: 0; right: 0; height: 46px;
+  background: linear-gradient(135deg, #FCD34D, #F59E0B);
+  clip-path: polygon(0 0, 100% 0, 50% 100%);
+  border-radius: 6px 6px 0 0; transform-origin: top center;
+}
+
+.nb-se-body {
+  position: absolute; bottom: 0; left: 0; right: 0; height: 65px;
+  background: linear-gradient(135deg, #FEF3C7, #FDE68A);
+  border: 2px solid #F59E0B; border-radius: 6px;
+  display: flex; align-items: center; justify-content: center;
+}
+
+.nb-se-seal {
+  font-size: 28px; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
+}
+
+.nb-sealed-title {
+  font-size: 22px; font-weight: 800; color: #92400E; letter-spacing: -0.01em; margin-bottom: 6px;
+}
+
+.nb-sealed-sub {
+  font-size: 14px; color: #B45309; margin-bottom: 4px;
+}
+
+.nb-sealed-date {
+  font-size: 12px; color: #D97706; font-weight: 600;
+}
+
+.nb-sealed-peek {
+  margin-top: 20px; background: none; border: 1px solid #FDE68A;
+  color: #92400E; font-size: 12px; font-weight: 700;
+  padding: 8px 20px; border-radius: 12px; cursor: pointer; transition: all 0.2s;
+}
+.nb-sealed-peek:hover { background: #FEF3C7; box-shadow: 0 4px 12px rgba(249,115,22,0.1); }
+
+/* ── VISUAL POETRY MODE ─────────────────────────────── */
+.nb-poetry-btn {
+  display: flex; align-items: center; gap: 6px;
+  height: 32px; padding: 0 10px; border-radius: 10px;
+  background: transparent; border: 1px solid transparent;
+  color: #94a3b8; font-size: 11px; font-weight: 700;
+  cursor: pointer; transition: all 0.18s; letter-spacing: 0.04em;
+}
+.nb-poetry-btn:hover {
+  background: rgba(124,58,237,0.06); border-color: rgba(124,58,237,0.2); color: #7C3AED;
+}
+.nb-poetry-btn.active {
+  background: rgba(124,58,237,0.08); border-color: #DDD6FE; color: #7C3AED;
+}
+
+/* When poetry mode active: title gets a large, serif, centred style */
+.nb-poetry-title {
+  font-family: 'Merriweather', 'Georgia', serif !important;
+  font-size: 48px !important;
+  font-weight: 900 !important;
+  letter-spacing: -0.02em !important;
+  text-align: center !important;
+  color: #2D1B69 !important;
+  font-style: italic !important;
+  line-height: 1.15 !important;
+  width: 100% !important;
+}
+

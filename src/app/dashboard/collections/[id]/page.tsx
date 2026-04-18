@@ -111,7 +111,7 @@ export default function CollectionDetailPage({
       {/* Links with Enhanced Spacing */}
       {collection.links && collection.links.length > 0 ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
-          {collection.links.map((link) => (
+          {collection.links.map((link: any) => (
             <LinkCard
               key={link.id}
               link={link}

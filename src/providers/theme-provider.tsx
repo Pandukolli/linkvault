@@ -1,9 +1,11 @@
 "use client";
 
-/**
- * Theme provider — Currently bypassing multi-theme logic to enforce the 
- * premium "Cream & Obsidian Minimalist" aesthetic permanently.
- */
-export function ThemeProvider({ children }: { children: React.ReactNode }) {
-  return <>{children}</>;
+import * as React from "react";
+import { ThemeProvider as NextThemesProvider } from "next-themes";
+
+export function ThemeProvider({
+  children,
+  ...props
+}: React.ComponentProps<typeof NextThemesProvider>) {
+  return <NextThemesProvider {...props}>{children}</NextThemesProvider>;
 }

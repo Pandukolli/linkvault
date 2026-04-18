@@ -77,9 +77,9 @@ export function ClipboardSyncController() {
             },
           },
         });
-      } catch (saveErr: unknown) {
-        const msg = saveErr instanceof Error ? saveErr.message : String(saveErr);
-        console.error("[ClipboardSyncController] Auto-save failed:", msg);
+      } catch (saveErr: any) {
+        const errorMsg = saveErr?.message || (typeof saveErr === 'object' ? JSON.stringify(saveErr) : String(saveErr));
+        console.error("[ClipboardSyncController] Auto-save failed:", errorMsg);
 
         // Fall back to dialog so user can save manually
         setClipData(data);

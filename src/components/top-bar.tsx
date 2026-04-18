@@ -21,9 +21,7 @@ const TABS = [
   { id: "notes", label: "Notes", href: "/dashboard/notes" },
   { id: "blogs", label: "Blogs", href: "/dashboard/blogs" },
   { id: "blog-diary", label: "Diary", href: "/blog-diary" },
-  { id: "resume", label: "Resumes", href: "/dashboard/resumes" },
   { id: "gallery", label: "Gallery", href: "/dashboard/gallery" },
-  { id: "project", label: "Projects", href: "/dashboard/projects" },
 ];
 
 interface TopBarProps {
@@ -42,25 +40,25 @@ export function TopBar({ onMenuClick, isTransparent = false }: TopBarProps) {
   return (
     <header
       className={cn(
-        "h-20 flex items-center justify-between px-6 md:px-10 sticky top-0 z-40 transition-all duration-300 w-full bg-white border-b border-[#E5E7EB]"
+        "h-20 flex items-center justify-between px-6 md:px-10 sticky top-0 z-40 transition-all duration-300 w-full bg-surface border-b border-border"
       )}
     >
       {/* Left: Logo & Sidebar Trigger */}
       <div className="flex items-center gap-6 w-1/4">
         <button 
           onClick={onMenuClick}
-          className="lg:hidden p-2 hover:bg-[#F1F5F9] rounded-md transition-colors"
+          className="lg:hidden p-2 hover:bg-secondary rounded-md transition-colors"
         >
-          <Menu className="w-5 h-5 text-[#6B7280]" />
+          <Menu className="w-5 h-5 text-muted-foreground" />
         </button>
         <Link href="/" className="hover:opacity-80 transition-opacity">
-          <Logo size={28} showText={false} className="text-[#2563EB]" />
+          <Logo size={28} showText={true} className="text-primary" />
         </Link>
       </div>
 
       {/* Center: Tabs */}
       <nav className="hidden lg:flex flex-1 justify-center">
-        <div className="flex items-center gap-2 p-1 bg-[#F1F5F9] border border-[#E5E7EB] rounded-md">
+        <div className="flex items-center gap-2 p-1 bg-secondary border border-border rounded-lg">
           {TABS.map((tab) => {
             const isActive =
               pathname === tab.href ||
@@ -76,8 +74,8 @@ export function TopBar({ onMenuClick, isTransparent = false }: TopBarProps) {
                 className={cn(
                   "px-4 py-1.5 rounded-md text-xs font-bold transition-all duration-200 whitespace-nowrap",
                   reallyActive
-                    ? "bg-[#2563EB] text-white shadow-sm"
-                    : "text-[#6B7280] hover:text-[#111827] hover:bg-white/50"
+                    ? "bg-primary text-primary-foreground shadow-sm"
+                    : "text-muted-foreground hover:text-foreground hover:bg-surface/50"
                 )}
               >
                 {t(tab.label, tab.label)}
@@ -97,8 +95,8 @@ export function TopBar({ onMenuClick, isTransparent = false }: TopBarProps) {
               className={cn(
                 "group relative flex items-center gap-2 px-3 h-9 rounded-md border transition-all outline-none",
                 isSyncActive 
-                  ? "bg-blue-50 border-blue-200 text-[#2563EB]" 
-                  : "bg-white border-[#E5E7EB] text-[#6B7280] hover:bg-[#F8FAFC]"
+                  ? "bg-primary/5 border-primary/20 text-primary" 
+                  : "bg-surface border-border text-muted-foreground hover:bg-secondary"
               )}
             >
               <Activity className={cn("w-3.5 h-3.5", isSyncActive ? "animate-pulse" : "opacity-50")} />
@@ -106,7 +104,7 @@ export function TopBar({ onMenuClick, isTransparent = false }: TopBarProps) {
                 {isSyncActive ? "Sync Active" : "Sync Off"}
               </span>
             </TooltipTrigger>
-            <TooltipContent side="bottom" className="bg-white border-[#E5E7EB] text-[#111827] text-xs font-semibold">
+            <TooltipContent side="bottom" className="bg-surface border-border text-foreground text-xs font-semibold">
               {isSyncActive ? "Auto-Save Enabled" : "Click to enable Auto-Save"}
             </TooltipContent>
           </Tooltip>
@@ -115,20 +113,20 @@ export function TopBar({ onMenuClick, isTransparent = false }: TopBarProps) {
             <Tooltip>
               <TooltipTrigger
                 onClick={triggerPaste}
-                className="flex items-center justify-center w-9 h-9 rounded-md bg-white border border-[#E5E7EB] text-[#6B7280] hover:border-[#2563EB] hover:text-[#2563EB] transition-all"
+                className="flex items-center justify-center w-9 h-9 rounded-md bg-surface border border-border text-muted-foreground hover:border-primary hover:text-primary transition-all"
               >
                 <ClipboardPaste className="w-4 h-4" />
               </TooltipTrigger>
-              <TooltipContent side="bottom" className="bg-white border-[#E5E7EB] text-[#111827] text-xs font-semibold">
+              <TooltipContent side="bottom" className="bg-surface border-border text-foreground text-xs font-semibold">
                 Paste Now
               </TooltipContent>
             </Tooltip>
           )}
         </TooltipProvider>
 
-        <div className="h-4 w-[1px] bg-[#E5E7EB] mx-1 hidden sm:block" />
+        <div className="h-4 w-[1px] bg-border mx-1 hidden sm:block" />
 
-        <p className="hidden xl:block text-[10px] font-bold text-[#6B7280] uppercase tracking-wider">
+        <p className="hidden xl:block text-[10px] font-bold text-muted-foreground uppercase tracking-wider">
           {firstName}
         </p>
         <UserMenu />

@@ -14,6 +14,7 @@ import { TextStyle } from "@tiptap/extension-text-style";
 import { Color } from "@tiptap/extension-color";
 import { Extension, Node, mergeAttributes } from "@tiptap/core";
 import { VoiceNoteRecorder } from "./voice-note-recorder";
+import { handleTransliterationKeyDown } from "./transliteration-extension";
 
 export const VoiceNoteExtension = Node.create({
   name: "voiceNote",
@@ -139,7 +140,8 @@ import {
   Trash2,
   Mic,
   PenTool,
-  StickyNote
+  StickyNote,
+  Languages
 } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 
@@ -197,6 +199,8 @@ interface NotesEditorProps {
   onFontChange?: (font: string) => void;
   isHandwriting?: boolean;
   onHandwritingToggle?: (checked: boolean) => void;
+  typingLanguage?: string;
+  onLanguageChange?: (lang: string) => void;
 }
 
 const STICKERS = [
@@ -252,6 +256,71 @@ function ToolBtn({
 
 function Sep() {
   return <div className="ntb-sep" />;
+}
+
+/* ─────────── Language Selector Dropdown ─────────── */
+const SUPPORTED_LANGUAGES = [
+  { value: "en", label: "English", flag: "🇺🇸", font: undefined },
+  { value: "hi", label: "Hindi", flag: "🇮🇳", font: "'Noto Sans Devanagari', sans-serif" },
+  { value: "te", label: "Telugu", flag: "🇮🇳", font: "'Noto Sans Telugu', sans-serif" },
+  { value: "ta", label: "Tamil", flag: "🇮🇳", font: "'Noto Sans Tamil', sans-serif" },
+];
+
+export function getScriptFont(lang: string) {
+  return SUPPORTED_LANGUAGES.find((l) => l.value === lang)?.font;
+}
+
+function LanguageSelector({
+  currentLang,
+  onSelect,
+}: {
+  currentLang: string;
+  onSelect: (lang: string) => void;
+}) {
+  const [open, setOpen] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    function handleClick(e: MouseEvent) {
+      if (ref.current && !ref.current.contains(e.target as any)) setOpen(false);
+    }
+    document.addEventListener("mousedown", handleClick);
+    return () => document.removeEventListener("mousedown", handleClick);
+  }, []);
+
+  const current = SUPPORTED_LANGUAGES.find((l) => l.value === currentLang) || SUPPORTED_LANGUAGES[0];
+
+  return (
+    <div className="ntb-dropdown" ref={ref}>
+      <button
+        className="ntb-dropdown-trigger font-dropdown !px-2"
+        onClick={() => setOpen(!open)}
+        title="Typing Language"
+      >
+        <span className="text-sm leading-none">{current.flag}</span>
+        <span className="ntb-dropdown-label hidden sm:inline-block w-6 font-bold uppercase">{current.value}</span>
+        <ChevronDown className={`w-3 h-3 transition-transform ${open ? "rotate-180" : ""}`} />
+      </button>
+      {open && (
+        <div className="ntb-dropdown-menu">
+          {SUPPORTED_LANGUAGES.map((lang) => (
+            <button
+              key={lang.value}
+              className={`ntb-dropdown-item ${currentLang === lang.value ? "active" : ""}`}
+              onClick={() => {
+                onSelect(lang.value);
+                setOpen(false);
+              }}
+            >
+              <span className="flex items-center gap-2">
+                <span>{lang.flag}</span> {lang.label}
+              </span>
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
+  );
 }
 
 /* ─────────── Font Selector Dropdown ─────────── */
@@ -445,6 +514,8 @@ function NotesToolbar({
   onHandwritingToggle,
   showVoice,
   onVoiceToggle,
+  typingLanguage,
+  onLanguageChange,
 }: {
   editor: Editor;
   pageColor: string;
@@ -455,6 +526,8 @@ function NotesToolbar({
   onHandwritingToggle?: (val: boolean) => void;
   showVoice: boolean;
   onVoiceToggle: () => void;
+  typingLanguage?: string;
+  onLanguageChange?: (lang: string) => void;
 }) {
   const addLink = useCallback(() => {
     const url = window.prompt("Enter URL (include https://):");
@@ -516,6 +589,10 @@ function NotesToolbar({
         <ToolBtn onClick={() => editor.chain().focus().redo().run()} title="Redo">
           <Redo className="w-3.5 h-3.5" />
         </ToolBtn>
+
+        <Sep />
+
+        <LanguageSelector currentLang={typingLanguage || "en"} onSelect={(l) => onLanguageChange?.(l)} />
 
         <Sep />
 
@@ -661,6 +738,8 @@ export function NotesEditor({
   onFontChange,
   isHandwriting = false,
   onHandwritingToggle,
+  typingLanguage = "en",
+  onLanguageChange,
 }: NotesEditorProps) {
   const isInternalUpdate = useRef(false);
   // Lifted from NotesToolbar so state persists through re-renders
@@ -702,12 +781,19 @@ export function NotesEditor({
       const w = getWordCount(editor);
       const c = getCharCount(editor);
       const readingTime = Math.ceil(w / 200); // 200 words per min avg
-      onUpdate?.(editor.getJSON() as Record<string, unknown>, { words: w, chars: c, readingTime });
+      onUpdate?.(
+        editor.getJSON() as Record<string, unknown>, 
+        { words: w, chars: c, readingTime }
+      );
     },
     editorProps: {
       attributes: {
         class: `nb-prosemirror ${showGridLines ? "nb-grid-lines" : ""} ${isHandwriting ? "nb-handwriting" : ""}`,
-        style: `font-family: ${fontFamily}`,
+        style: `font-family: ${getScriptFont(typingLanguage) || fontFamily}; line-height: ${typingLanguage !== 'en' ? '1.8' : '1.7'};`,
+        lang: typingLanguage,
+      },
+      handleKeyDown: (view, event) => {
+        return handleTransliterationKeyDown(view, event, typingLanguage);
       },
       handleDrop: (view, event) => {
         const files = event.dataTransfer?.files;
@@ -755,9 +841,11 @@ export function NotesEditor({
   useEffect(() => {
     if (editor) {
       const el = editor.view.dom as HTMLElement;
-      el.style.fontFamily = fontFamily;
+      el.style.fontFamily = getScriptFont(typingLanguage) || fontFamily;
+      el.style.lineHeight = typingLanguage !== 'en' ? '1.8' : '1.7';
+      el.lang = typingLanguage;
     }
-  }, [fontFamily, editor]);
+  }, [fontFamily, typingLanguage, editor]);
 
   // Click-to-type anywhere magic
   const handleDoubleClickEmptySpace = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
@@ -814,6 +902,8 @@ export function NotesEditor({
           onHandwritingToggle={onHandwritingToggle}
           showVoice={showVoice}
           onVoiceToggle={() => setShowVoice(v => !v)}
+          typingLanguage={typingLanguage}
+          onLanguageChange={onLanguageChange}
         />
       )}
       {editor && editor.isActive('image') && (

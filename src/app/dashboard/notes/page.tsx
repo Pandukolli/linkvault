@@ -13,6 +13,11 @@ import {
   Maximize2, FileText, X, Sparkles, BookMarked, Grid3X3,
   Feather, Download, Printer, Tag, History, Check, Save
 } from "lucide-react";
+import {
+  MemoryThread, InkEmotionOverlay, LegacyLetterBadge,
+  SealedOverlay, PoetryModeToggle,
+} from "@/components/notes-features";
+import type { EnhancedContentExt } from "@/components/notes-features";
 
 /* ─────── Helpers ─────── */
 function formatDate(d: string) { return new Date(d).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" }); }
@@ -83,6 +88,12 @@ interface EnhancedContent {
   _isHandwriting?: boolean;
   _mood?: string;
   _history?: any[];
+  // New feature fields (stored in same JSONB column)
+  _linkedNoteIds?: string[];
+  _isLegacyLetter?: boolean;
+  _unlockDate?: string;
+  _isPoetryMode?: boolean;
+  _typingLanguage?: string;
 }
 
 export default function NotesPage() {
@@ -106,6 +117,14 @@ export default function NotesPage() {
   const [newTagInput, setNewTagInput] = useState("");
   const [isHandwriting, setIsHandwriting] = useState(false);
   const [mood, setMood] = useState<string | null>(null);
+
+  // ── New Feature State ──
+  const [linkedNoteIds, setLinkedNoteIds] = useState<string[]>([]);
+  const [isLegacyLetter, setIsLegacyLetter] = useState(false);
+  const [unlockDate, setUnlockDate] = useState<string | null>(null);
+  const [isPoetryMode, setIsPoetryMode] = useState(false);
+  const [typingLanguage, setTypingLanguage] = useState("en");
+  const [peekSealed, setPeekSealed] = useState(false);
 
   const [showCoverPicker, setShowCoverPicker] = useState(false);
   const [showIconPicker, setShowIconPicker] = useState(false);
@@ -147,6 +166,13 @@ export default function NotesPage() {
       setTags(ext?._tags || []);
       setIsHandwriting(ext?._isHandwriting || false);
       setMood(ext?._mood || null);
+      // New features
+      setLinkedNoteIds(ext?._linkedNoteIds || []);
+      setIsLegacyLetter(ext?._isLegacyLetter || false);
+      setUnlockDate(ext?._unlockDate || null);
+      setIsPoetryMode(ext?._isPoetryMode || false);
+      setTypingLanguage(ext?._typingLanguage || "en");
+      setPeekSealed(false);
       setScrollProgress(0);
     }
   }, [activeNote?.id]);
@@ -164,12 +190,19 @@ export default function NotesPage() {
       _icon: extra?._icon !== undefined ? extra._icon : noteIcon || undefined,
       _isHandwriting: extra?._isHandwriting !== undefined ? extra._isHandwriting : isHandwriting,
       _mood: extra?._mood !== undefined ? extra._mood : mood || undefined,
+      // Persist new feature fields
+      _linkedNoteIds: extra?._linkedNoteIds !== undefined ? extra._linkedNoteIds : linkedNoteIds,
+      _isLegacyLetter: extra?._isLegacyLetter !== undefined ? extra._isLegacyLetter : isLegacyLetter,
+      _unlockDate: extra?._unlockDate !== undefined ? extra._unlockDate : unlockDate || undefined,
+      _isPoetryMode: extra?._isPoetryMode !== undefined ? extra._isPoetryMode : isPoetryMode,
+      _typingLanguage: extra?._typingLanguage !== undefined ? extra._typingLanguage : typingLanguage,
     };
     updateNote.mutate({ id: selectedNote, content: final }, {
       onSuccess: () => { setIsSaving(false); pendingContent.current = null; },
       onError: () => setIsSaving(false)
     });
-  }, [selectedNote, activeNote, tags, pageColor, fontFamily, coverImage, noteIcon, isHandwriting, mood, updateNote]);
+  }, [selectedNote, activeNote, tags, pageColor, fontFamily, coverImage, noteIcon, isHandwriting, mood,
+      linkedNoteIds, isLegacyLetter, unlockDate, isPoetryMode, typingLanguage, updateNote]);
 
   const handleContentUpdate = (content: any, s: any) => {
     pendingContent.current = content;
@@ -300,12 +333,30 @@ export default function NotesPage() {
             <div className="nb-active">
               <div className="nb-reading-progress" style={{ width: `${scrollProgress}%` }} />
               <div className="nb-topbar no-print">
-                <div className="nb-topbar-left"><span className="text-[10px] uppercase opacity-50">{isSaving ? "Saving..." : "Synced"}</span></div>
+                <div className="nb-topbar-left"><span className="text-[10px] uppercase opacity-50 font-bold tracking-widest">{isSaving ? "Syncing..." : "Vault Secure"}</span></div>
                 <div className="nb-topbar-right">
+                  {/* New feature toggles */}
+                  <PoetryModeToggle
+                    enabled={isPoetryMode}
+                    onToggle={v => { setIsPoetryMode(v); forceSaveNow(undefined, { _isPoetryMode: v }); }}
+                  />
+                  <LegacyLetterBadge
+                    isLetter={isLegacyLetter}
+                    unlockDate={unlockDate}
+                    onToggle={v => { setIsLegacyLetter(v); forceSaveNow(undefined, { _isLegacyLetter: v }); }}
+                    onSetDate={d => { setUnlockDate(d); forceSaveNow(undefined, { _unlockDate: d }); }}
+                    noteCreatedAt={activeNote.created_at}
+                  />
+                  <MemoryThread
+                    activeNoteId={activeNote.id}
+                    allNotes={notes}
+                    linkedIds={linkedNoteIds}
+                    onLink={ids => { setLinkedNoteIds(ids); forceSaveNow(undefined, { _linkedNoteIds: ids }); }}
+                  />
                   <button className="nb-top-btn" onClick={handleDownloadPDF} title="Download PDF"><Download className="w-4 h-4" /></button>
                   <button className="nb-top-btn" onClick={() => setShowCoverPicker(true)}><Grid3X3 className="w-4 h-4" /></button>
                   <button className="nb-top-btn" onClick={() => setIsFullscreen(!isFullscreen)}><Maximize2 className="w-4 h-4" /></button>
-                  <button className="nb-top-btn nb-top-del" onClick={() => deleteNote.mutate(activeNote.id)}><Trash2 className="w-4 h-4" /></button>
+                  <button className="nb-top-btn nb-top-del hover:text-destructive" onClick={() => deleteNote.mutate(activeNote.id)}><Trash2 className="w-4 h-4" /></button>
                 </div>
               </div>
               <div className="nb-paper no-scrollbar" onScroll={e => setScrollProgress((e.currentTarget.scrollTop / (e.currentTarget.scrollHeight - e.currentTarget.offsetHeight)) * 100)}>
@@ -321,21 +372,21 @@ export default function NotesPage() {
                   </div>
                 ) : (
                   <div className="h-20 group/cv">
-                    <button className="opacity-0 group-hover/cv:opacity-100 ml-12 mt-8 text-[11px] font-bold flex items-center gap-2" onClick={() => setShowCoverPicker(true)}><Sparkles className="w-3.5 h-3.5" /> Add Cover</button>
+                    <button className="opacity-0 group-hover/cv:opacity-100 ml-12 mt-8 text-[11px] font-bold flex items-center gap-2 text-muted-foreground hover:text-primary transition-all" onClick={() => setShowCoverPicker(true)}><Sparkles className="w-3.5 h-3.5" /> Add Cover</button>
                   </div>
                 )}
                 <div className="nb-icon-box" onClick={() => setShowIconPicker(true)}>{noteIcon || <Feather className="w-8 h-8 opacity-20" />}</div>
                 <div className="nb-tags-bar no-print flex justify-between w-full">
                   <div className="flex items-center gap-2 flex-wrap">
-                    <Tag className="w-3.5 h-3.5" />
+                    <Tag className="w-3.5 h-3.5 text-muted-foreground" />
                     {tags.map(t => <span key={t} className="nb-tag">#{t} <X className="w-2 h-2" onClick={() => removeTag(t)} /></span>)}
-                    <input type="text" className="nb-tag-input" placeholder="Add tag..." value={newTagInput} onChange={e => setNewTagInput(e.target.value)} onKeyDown={addTag} />
+                    <input type="text" className="nb-tag-input text-muted-foreground" placeholder="Add tag..." value={newTagInput} onChange={e => setNewTagInput(e.target.value)} onKeyDown={addTag} />
                   </div>
                   <div className="flex items-center gap-2">
                     <WeatherWidget />
-                    <div className="flex bg-black/5 rounded-full px-2 py-1 gap-1">
+                    <div className="flex bg-muted rounded-full px-2 py-1 gap-1 border border-border">
                       {[{ m: "happy", e: "😊" }, { m: "good", e: "🙂" }, { m: "neutral", e: "😐" }, { m: "sad", e: "😔" }, { m: "awful", e: "😢" }].map(item => (
-                        <button key={item.m} onClick={() => { setMood(item.m); forceSaveNow(undefined, { _mood: item.m }); }} className={`w-6 h-6 flex items-center justify-center rounded-full text-sm hover:scale-110 transition-all ${mood === item.m ? 'bg-white shadow scale-110' : 'opacity-40 hover:opacity-100'}`}>
+                        <button key={item.m} onClick={() => { setMood(item.m); forceSaveNow(undefined, { _mood: item.m }); }} className={`w-6 h-6 flex items-center justify-center rounded-full text-sm hover:scale-110 transition-all ${mood === item.m ? 'bg-surface shadow-sm scale-110' : 'opacity-40 hover:opacity-100'}`}>
                           {item.e}
                         </button>
                       ))}
@@ -343,26 +394,37 @@ export default function NotesPage() {
                   </div>
                 </div>
                 <div className="nb-title-zone" style={{ fontFamily }}>
-                  <input type="text" className="nb-title-input" value={localTitle} onChange={e => handleTitleUpdate(e.target.value)} placeholder="Title..." />
+                  <input type="text" className={`nb-title-input ${isPoetryMode ? "nb-poetry-title" : ""}`} value={localTitle} onChange={e => handleTitleUpdate(e.target.value)} placeholder="Artifact Title..." />
                 </div>
-                <NotesEditor
-                  key={activeNote.id}
-                  content={activeNote.content as any}
-                  onUpdate={handleContentUpdate}
-                  pageColor={pageColor}
-                  onPageColorChange={c => { setPageColor(c); forceSaveNow(undefined, { _pageColor: c }); }}
-                  fontFamily={fontFamily}
-                  onFontChange={f => { setFontFamily(f); forceSaveNow(undefined, { _fontFamily: f }); }}
-                  isHandwriting={isHandwriting}
-                  onHandwritingToggle={b => { setIsHandwriting(b); forceSaveNow(undefined, { _isHandwriting: b }); }}
-                />
+
+                {/* Ink & Emotion tint overlay */}
+                <InkEmotionOverlay mood={mood} />
+
+                {/* Legacy Letter sealed overlay */}
+                {isLegacyLetter && unlockDate && new Date(unlockDate) > new Date() && !peekSealed ? (
+                  <SealedOverlay unlockDate={unlockDate} onPreview={() => setPeekSealed(true)} />
+                ) : (
+                  <NotesEditor
+                    key={activeNote.id}
+                    content={activeNote.content as any}
+                    onUpdate={handleContentUpdate}
+                    pageColor={pageColor}
+                    onPageColorChange={c => { setPageColor(c); forceSaveNow(undefined, { _pageColor: c }); }}
+                    fontFamily={isPoetryMode ? "'Merriweather', serif" : fontFamily}
+                    onFontChange={f => { setFontFamily(f); forceSaveNow(undefined, { _fontFamily: f }); }}
+                    isHandwriting={isHandwriting}
+                    onHandwritingToggle={b => { setIsHandwriting(b); forceSaveNow(undefined, { _isHandwriting: b }); }}
+                    typingLanguage={typingLanguage}
+                    onLanguageChange={l => { setTypingLanguage(l); forceSaveNow(undefined, { _typingLanguage: l }); }}
+                  />
+                )}
               </div>
-              <div className="nb-book-footer no-print">
-                <div className="nb-footer-left"><span>{stats.words} words</span><span className="mx-2">·</span><span>{stats.chars} chars</span></div>
+              <div className="nb-book-footer no-print border-t border-border">
+                <div className="nb-footer-left text-muted-foreground font-bold text-[10px] uppercase tracking-widest"><span>{stats.words} words</span><span className="mx-2">·</span><span>{stats.chars} chars</span></div>
                 <div className="nb-footer-right flex items-center gap-4">
-                  <div className="flex bg-black/5 rounded p-0.5">
-                    <button onClick={() => currentPageIndex > 0 && setSelectedNote(dayNotes[currentPageIndex - 1].id)}><ChevronLeft className="w-4 h-4" /></button>
-                    <button onClick={() => {
+                  <div className="flex bg-muted rounded p-0.5 border border-border">
+                    <button className="hover:text-primary transition-colors" onClick={() => currentPageIndex > 0 && setSelectedNote(dayNotes[currentPageIndex - 1].id)}><ChevronLeft className="w-4 h-4" /></button>
+                    <button className="hover:text-primary transition-colors" onClick={() => {
                       if (currentPageIndex < dayNotes.length - 1) {
                         setSelectedNote(dayNotes[currentPageIndex + 1].id);
                       } else {
@@ -371,24 +433,27 @@ export default function NotesPage() {
                       }
                     }}><ChevronRight className="w-4 h-4" /></button>
                   </div>
-                  <span className="text-[10px] font-bold">PAGE {currentPageIndex + 1}</span>
+                  <span className="text-[10px] font-black tracking-widest text-muted-foreground">PAGE {currentPageIndex + 1}</span>
                 </div>
               </div>
             </div>
           ) : (
-            <div className="h-full flex flex-col items-center justify-center p-12 bg-transparent no-print">
-              <div className="text-center animate-fade-in-up" style={{ animationDuration: "0.6s" }}>
-                <h2 className="text-4xl text-[#111827] font-black tracking-tighter mb-4 select-none cursor-default">
-                  Notes
+            <div className="h-full flex flex-col items-center justify-center p-12 bg-transparent no-print animate-in fade-in slide-in-from-bottom-4 duration-500">
+              <div className="text-center">
+                <div className="w-20 h-20 mx-auto bg-muted rounded-3xl flex items-center justify-center mb-8 border border-border shadow-inner">
+                  <BookOpen className="w-10 h-10 text-muted-foreground opacity-40" />
+                </div>
+                <h2 className="text-4xl text-foreground font-black tracking-tighter mb-4 select-none cursor-default uppercase">
+                  Library
                 </h2>
-                <p className="text-[#64748b] text-sm font-medium tracking-wide mb-10 select-none cursor-default">
-                  Select a document from the sidebar, or begin a new one.
+                <p className="text-muted-foreground text-sm font-serif max-w-sm mx-auto mb-10 select-none cursor-default leading-relaxed">
+                  The vault doors are open, but no record is active. Select a document from your library or initialize a new blank page.
                 </p>
                 <button
-                  className="h-12 px-8 rounded-2xl bg-[#2563EB] text-white text-[11px] font-bold uppercase tracking-[0.2em] hover:-translate-y-1 hover:bg-[#1D4ED8] transition-all duration-300 shadow-xl shadow-blue-500/10"
+                  className="h-12 px-10 rounded-xl bg-primary text-primary-foreground text-[11px] font-bold uppercase tracking-[0.2em] hover:-translate-y-1 hover:bg-primary/90 transition-all duration-300 shadow-xl shadow-primary/20 active:scale-95"
                   onClick={() => handleNewNote()}
                 >
-                  Initialize Page
+                  Initialize Record
                 </button>
               </div>
             </div>

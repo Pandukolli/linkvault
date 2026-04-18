@@ -34,9 +34,7 @@ export function useNotebooks() {
 
   const createNotebook = useMutation({
     mutationFn: async (input: CreateNotebookInput) => {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
+      const { data: { user } } = await supabase.auth.getUser();
       if (!user) throw new Error("Not authenticated");
 
       const { data, error } = await supabase
@@ -52,29 +50,28 @@ export function useNotebooks() {
       if (error) throw error;
       return data as Notebook;
     },
-    onSuccess: () => {
+    onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ["notebooks"] });
-      toast.success("Notebook created");
+      toast.success(`Notebook "${data.name}" initialized`);
     },
-    onError: () => {
-      toast.error("Failed to create notebook");
+    onError: (err: any) => {
+      console.error("useNotebooks:createError", err);
+      toast.error(err.message || "Failed to initialize notebook");
     },
   });
 
   const deleteNotebook = useMutation({
     mutationFn: async (id: string) => {
-      const { error } = await supabase
-        .from("notebooks")
-        .delete()
-        .eq("id", id);
+      const { error } = await supabase.from("notebooks").delete().eq("id", id);
       if (error) throw error;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["notebooks"] });
-      toast.success("Notebook deleted");
+      toast.success("Notebook erased from archives");
     },
-    onError: () => {
-      toast.error("Failed to delete notebook");
+    onError: (err: any) => {
+      console.error("useNotebooks:deleteError", err);
+      toast.error(err.message || "Failed to erase notebook");
     },
   });
 

@@ -39,11 +39,8 @@ export default function BlogDiaryPage() {
 
       {/* Nav */}
       <nav className="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-xl border-b border-[#E5E7EB] h-16 flex items-center px-8 justify-between">
-        <Link href="/" className="flex items-center gap-3">
-          <div className="w-8 h-8 rounded-md bg-[#2563EB]/5 border border-[#2563EB]/10 flex items-center justify-center">
-            <Link2 className="w-4 h-4 text-[#2563EB]" />
-          </div>
-          <span className="text-sm font-black text-[#111827] uppercase tracking-tighter">LinkVault</span>
+        <Link href="/" className="flex items-center gap-3 hover:opacity-80 transition-opacity">
+          <Logo size={28} showText={true} />
         </Link>
         <Link
           href="/dashboard/blogs"
@@ -141,7 +138,7 @@ export default function BlogDiaryPage() {
             {filtered.map((blog, i) => {
               const meta = (blog as any).content?.meta || {};
               const coverImage = meta.coverImage || null;
-              const excerpt = meta.excerpt || blog.seo_description || "An editorial artifact from the LinkVault archive.";
+              const excerpt = meta.excerpt || blog.seo_description || "An editorial artifact from the VaultOS archive.";
               const authorName: string = meta.authorName || "Archivist";
 
               return (
