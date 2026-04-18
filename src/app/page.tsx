@@ -41,7 +41,7 @@ export default function LandingPage() {
 
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col font-sans overflow-x-hidden">
-      
+
       {/* ═══════════════════════════════════════════════════════════ */}
       {/* NAVIGATION                                                  */}
       {/* ═══════════════════════════════════════════════════════════ */}
@@ -305,7 +305,7 @@ export default function LandingPage() {
                     </div>
                     <span className="text-[9px] font-black uppercase tracking-[0.25em] text-primary">VAULTOS</span>
                   </div>
-                  <h3 className="text-2xl lg:text-3xl font-black text-foreground tracking-tight mb-4">Save Everything.<br/>Find Anything.</h3>
+                  <h3 className="text-2xl lg:text-3xl font-black text-foreground tracking-tight mb-4">Save Everything.<br />Find Anything.</h3>
                   <p className="text-sm text-muted-foreground font-serif leading-relaxed mb-8 max-w-md">
                     Paste a URL, and our engine captures the title, favicon, description, and open-graph image automatically. Organize with collections, search instantly, and never lose a bookmark again.
                   </p>
@@ -327,7 +327,7 @@ export default function LandingPage() {
                     </div>
                     <span className="text-[9px] font-black uppercase tracking-[0.25em] text-[#7C3AED]">NOTEBOOK</span>
                   </div>
-                  <h3 className="text-2xl lg:text-3xl font-black text-foreground tracking-tight mb-4">Write Without<br/>Boundaries.</h3>
+                  <h3 className="text-2xl lg:text-3xl font-black text-foreground tracking-tight mb-4">Write Without<br />Boundaries.</h3>
                   <p className="text-sm text-muted-foreground font-serif leading-relaxed mb-8 max-w-md">
                     A rich-text editor with cover images, mood tracking, voice recording, multilingual support, poetry mode, and legacy letters. Your private digital journal, beautifully designed.
                   </p>
@@ -351,7 +351,7 @@ export default function LandingPage() {
                     </div>
                     <span className="text-[9px] font-black uppercase tracking-[0.25em] text-accent">GALLERY</span>
                   </div>
-                  <h3 className="text-2xl lg:text-4xl font-black text-foreground tracking-tight mb-4">Visual Archive.<br/>Cinematic Stories.</h3>
+                  <h3 className="text-2xl lg:text-4xl font-black text-foreground tracking-tight mb-4">Visual Archive.<br />Cinematic Stories.</h3>
                   <p className="text-sm text-muted-foreground font-serif leading-relaxed mb-8 max-w-lg">
                     Upload and manage your images in project-based folders. Create cinematic photo stories with templates — polaroid, documentary, travel journal, and more. Lightbox viewer, bulk operations, and drag-and-drop.
                   </p>
@@ -361,12 +361,12 @@ export default function LandingPage() {
                     ))}
                   </div>
                 </div>
-                {/* Decorative image grid placeholder elements */}
-                <div className="hidden lg:grid grid-cols-3 gap-2 p-6 opacity-30 group-hover:opacity-50 transition-premium duration-700">
+                {/* Decorative image grid - High contrast black boxes with white gaps */}
+                <div className="grid grid-cols-3 gap-3 p-8 lg:p-14 bg-white opacity-100 order-first lg:order-last border-l border-border/50">
                   {Array.from({ length: 9 }).map((_, i) => (
                     <div
                       key={i}
-                      className="rounded-xl bg-secondary aspect-square border border-border/50"
+                      className="rounded-xl bg-black aspect-square transition-all duration-500 hover:scale-110 hover:shadow-2xl hover:shadow-black/20"
                       style={{ animationDelay: `${i * 80}ms` }}
                     />
                   ))}
@@ -386,7 +386,7 @@ export default function LandingPage() {
                     </div>
                     <span className="text-[9px] font-black uppercase tracking-[0.25em] text-success">EDITORIAL STUDIO</span>
                   </div>
-                  <h3 className="text-2xl lg:text-3xl font-black text-foreground tracking-tight mb-4">Write. Publish.<br/>Get Discovered.</h3>
+                  <h3 className="text-2xl lg:text-3xl font-black text-foreground tracking-tight mb-4">Write. Publish.<br />Get Discovered.</h3>
                   <p className="text-sm text-muted-foreground font-serif leading-relaxed mb-8 max-w-md">
                     A distraction-free editor with cover images, categories, reading time estimates, and SEO optimization. Publish to your personal Blog Diary feed with one click.
                   </p>
@@ -408,7 +408,7 @@ export default function LandingPage() {
                     </div>
                     <span className="text-[9px] font-black uppercase tracking-[0.25em] text-primary">ARCHIVES</span>
                   </div>
-                  <h3 className="text-2xl lg:text-3xl font-black text-foreground tracking-tight mb-4">Secure Document<br/>Transmission.</h3>
+                  <h3 className="text-2xl lg:text-3xl font-black text-foreground tracking-tight mb-4">Secure Document<br />Transmission.</h3>
                   <p className="text-sm text-muted-foreground font-serif leading-relaxed mb-8 max-w-md">
                     Upload and archive PDFs, spreadsheets, source code, and any file type. Type-aware icons, instant downloads, and drag-and-drop upload zones built for speed.
                   </p>
