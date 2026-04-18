@@ -17,7 +17,9 @@ import {
   Camera,
   Layers,
   Sparkles,
+  Menu,
 } from "lucide-react";
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { Logo } from "@/components/logo";
 
 export default function LandingPage() {
@@ -78,7 +80,7 @@ export default function LandingPage() {
             {isAuthenticated === null ? (
               <div className="w-28 h-10 bg-white/5 animate-pulse rounded-xl" />
             ) : isAuthenticated ? (
-              <Link href="/dashboard">
+              <Link href="/dashboard" className="hidden sm:block">
                 <Button className="h-10 px-6 bg-[#2563EB] text-white hover:bg-[#1D4ED8] font-bold rounded-xl text-sm shadow-lg shadow-blue-500/25 transition-all hover:-translate-y-0.5 active:scale-95">
                   Launch Vault <ArrowRight className="w-4 h-4 ml-2" />
                 </Button>
@@ -88,13 +90,61 @@ export default function LandingPage() {
                 <Link href="/login" className="text-sm font-bold text-muted-foreground hover:text-foreground transition-colors hidden sm:block">
                   Sign In
                 </Link>
-                <Link href="/signup">
+                <Link href="/signup" className="hidden sm:block">
                   <Button className="h-10 px-6 bg-accent text-accent-foreground hover:bg-accent/90 font-bold rounded-xl text-sm shadow-lg shadow-accent/20 transition-premium hover:-translate-y-0.5 active:scale-95">
-                    Get Started Free
+                     Get Started
                   </Button>
                 </Link>
               </>
             )}
+
+            {/* Mobile Menu */}
+            <Sheet>
+              <SheetTrigger 
+                render={
+                  <button className="md:hidden p-2.5 rounded-xl bg-secondary border border-border text-muted-foreground hover:text-foreground transition-colors">
+                    <Menu className="w-5 h-5" />
+                  </button>
+                }
+              />
+              <SheetContent side="right" className="w-[300px] p-0">
+                <SheetHeader className="p-6 border-b border-border">
+                  <SheetTitle className="text-xl font-black tracking-tighter">VAULTOS</SheetTitle>
+                </SheetHeader>
+                <div className="flex flex-col gap-2 p-6">
+                  {["Features", "Modules", "Workflow"].map((item) => (
+                    <Link
+                      key={item}
+                      href={`#${item.toLowerCase()}`}
+                      className="px-4 py-3 rounded-xl text-lg font-bold text-muted-foreground hover:text-foreground hover:bg-secondary transition-all"
+                    >
+                      {item}
+                    </Link>
+                  ))}
+                  <div className="h-px bg-border my-4" />
+                  {isAuthenticated ? (
+                    <Link href="/dashboard">
+                      <Button className="w-full h-12 bg-primary text-white font-bold rounded-xl">
+                        Launch Dashboard
+                      </Button>
+                    </Link>
+                  ) : (
+                    <div className="flex flex-col gap-3">
+                      <Link href="/login">
+                        <Button variant="outline" className="w-full h-12 font-bold rounded-xl">
+                          Sign In
+                        </Button>
+                      </Link>
+                      <Link href="/signup">
+                        <Button className="w-full h-12 bg-accent text-accent-foreground font-bold rounded-xl">
+                          Create Free Account
+                        </Button>
+                      </Link>
+                    </div>
+                  )}
+                </div>
+              </SheetContent>
+            </Sheet>
           </div>
         </div>
       </nav>
@@ -130,7 +180,7 @@ export default function LandingPage() {
 
           {/* Main headline */}
           <h1
-            className="text-[52px] sm:text-[72px] md:text-[88px] lg:text-[100px] font-black tracking-[-0.04em] leading-[0.95] mb-8"
+            className="text-[40px] leading-[1.1] sm:text-[64px] md:text-[88px] lg:text-[100px] font-black tracking-[-0.04em] md:leading-[0.95] mb-8"
             style={{ animation: "fadeInUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.1s both" }}
           >
             <span className="block text-foreground">Your Digital</span>
@@ -196,9 +246,9 @@ export default function LandingPage() {
       <section id="features" className="py-32 px-6 relative bg-surface">
         <div className="max-w-7xl mx-auto">
           {/* Section header */}
-          <div className="text-center mb-20">
+          <div className="text-center mb-12 md:mb-20">
             <p className="text-[10px] font-black uppercase tracking-[0.3em] text-primary mb-4">WHY VAULTOS</p>
-            <h2 className="text-[36px] md:text-[52px] font-black tracking-[-0.03em] leading-[1.05] text-foreground mb-6">
+            <h2 className="text-[32px] md:text-[52px] font-black tracking-[-0.03em] leading-[1.1] md:leading-[1.05] text-foreground mb-6">
               Built for clarity.<br />
               <span className="text-muted-foreground/30">Designed for power.</span>
             </h2>
@@ -282,9 +332,9 @@ export default function LandingPage() {
         </div>
 
         <div className="max-w-7xl mx-auto relative z-10">
-          <div className="text-center mb-20">
+          <div className="text-center mb-12 md:mb-20">
             <p className="text-[10px] font-black uppercase tracking-[0.3em] text-accent mb-4">COMMAND MODULES</p>
-            <h2 className="text-[36px] md:text-[52px] font-black tracking-[-0.03em] leading-[1.05] text-foreground mb-6">
+            <h2 className="text-[32px] md:text-[52px] font-black tracking-[-0.03em] leading-[1.1] md:leading-[1.05] text-foreground mb-6">
               Six engines.<br />
               <span className="text-muted-foreground/30">One vault.</span>
             </h2>
@@ -294,9 +344,9 @@ export default function LandingPage() {
           <div className="space-y-8">
 
             {/* ROW 1: Links + Notes */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8">
               {/* Links Module */}
-              <div className="group relative rounded-3xl overflow-hidden border border-border bg-surface p-10 lg:p-12 hover:border-primary/30 transition-premium shadow-sm hover:shadow-xl hover:shadow-primary/5">
+              <div className="group relative rounded-3xl overflow-hidden border border-border bg-surface p-6 sm:p-10 lg:p-12 hover:border-primary/30 transition-premium shadow-sm hover:shadow-xl hover:shadow-primary/5">
                 <div className="absolute top-0 right-0 w-48 h-48 bg-primary rounded-full blur-[120px] opacity-[0.03] group-hover:opacity-[0.06] transition-opacity" />
                 <div className="relative z-10">
                   <div className="flex items-center gap-3 mb-6">
@@ -318,7 +368,7 @@ export default function LandingPage() {
               </div>
 
               {/* Notes Module */}
-              <div className="group relative rounded-3xl overflow-hidden border border-border bg-surface p-10 lg:p-12 hover:border-[#7C3AED]/30 transition-premium shadow-sm hover:shadow-xl hover:shadow-primary/5">
+              <div className="group relative rounded-3xl overflow-hidden border border-border bg-surface p-6 sm:p-10 lg:p-12 hover:border-[#7C3AED]/30 transition-premium shadow-sm hover:shadow-xl hover:shadow-primary/5">
                 <div className="absolute top-0 right-0 w-48 h-48 bg-[#7C3AED] rounded-full blur-[120px] opacity-[0.03] group-hover:opacity-[0.06] transition-opacity" />
                 <div className="relative z-10">
                   <div className="flex items-center gap-3 mb-6">
@@ -344,7 +394,7 @@ export default function LandingPage() {
             <div className="group relative rounded-3xl overflow-hidden border border-border bg-surface hover:border-accent/30 transition-premium shadow-sm hover:shadow-xl hover:shadow-accent/5">
               <div className="absolute top-0 right-0 w-72 h-72 bg-accent rounded-full blur-[200px] opacity-[0.03] group-hover:opacity-[0.06] transition-opacity" />
               <div className="relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-0">
-                <div className="p-10 lg:p-14 flex flex-col justify-center">
+                <div className="p-6 sm:p-10 lg:p-14 flex flex-col justify-center">
                   <div className="flex items-center gap-3 mb-6">
                     <div className="w-10 h-10 rounded-xl bg-accent/10 text-accent flex items-center justify-center shadow-inner">
                       <Camera className="w-5 h-5" />
@@ -362,11 +412,11 @@ export default function LandingPage() {
                   </div>
                 </div>
                 {/* Decorative image grid - High contrast black boxes with white gaps */}
-                <div className="grid grid-cols-3 gap-3 p-8 lg:p-14 bg-white opacity-100 order-first lg:order-last border-l border-border/50">
+                <div className="grid grid-cols-3 gap-3 p-8 lg:p-14 bg-white opacity-100 order-first lg:order-last border-b lg:border-l border-border/50">
                   {Array.from({ length: 9 }).map((_, i) => (
                     <div
                       key={i}
-                      className="rounded-xl bg-black aspect-square transition-all duration-500 hover:scale-110 hover:shadow-2xl hover:shadow-black/20"
+                      className="rounded-xl bg-black aspect-square transition-all duration-500 hover:scale-[1.03] hover:shadow-2xl hover:shadow-black/20"
                       style={{ animationDelay: `${i * 80}ms` }}
                     />
                   ))}
@@ -377,7 +427,7 @@ export default function LandingPage() {
             {/* ROW 3: Blogs + Documents */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
               {/* Blogs Module */}
-              <div className="group relative rounded-3xl overflow-hidden border border-border bg-surface p-10 lg:p-12 hover:border-success/30 transition-premium shadow-sm hover:shadow-xl hover:shadow-success/5">
+              <div className="group relative rounded-3xl overflow-hidden border border-border bg-surface p-6 sm:p-10 lg:p-12 hover:border-success/30 transition-premium shadow-sm hover:shadow-xl hover:shadow-success/5">
                 <div className="absolute top-0 right-0 w-48 h-48 bg-success rounded-full blur-[120px] opacity-[0.03] group-hover:opacity-[0.06] transition-opacity" />
                 <div className="relative z-10">
                   <div className="flex items-center gap-3 mb-6">
@@ -399,7 +449,7 @@ export default function LandingPage() {
               </div>
 
               {/* Documents Module */}
-              <div className="group relative rounded-3xl overflow-hidden border border-border bg-surface p-10 lg:p-12 hover:border-primary/30 transition-premium shadow-sm hover:shadow-xl hover:shadow-primary/5">
+              <div className="group relative rounded-3xl overflow-hidden border border-border bg-surface p-6 sm:p-10 lg:p-12 hover:border-primary/30 transition-premium shadow-sm hover:shadow-xl hover:shadow-primary/5">
                 <div className="absolute top-0 right-0 w-48 h-48 bg-primary rounded-full blur-[120px] opacity-[0.03] group-hover:opacity-[0.06] transition-opacity" />
                 <div className="relative z-10">
                   <div className="flex items-center gap-3 mb-6">
@@ -431,9 +481,9 @@ export default function LandingPage() {
       <section id="workflow" className="py-32 px-6 relative bg-surface">
         <div className="h-px bg-gradient-to-r from-transparent via-border to-transparent mb-32" />
         <div className="max-w-5xl mx-auto">
-          <div className="text-center mb-24">
+          <div className="text-center mb-16 md:mb-24">
             <p className="text-[10px] font-black uppercase tracking-[0.3em] text-success mb-4">HOW IT WORKS</p>
-            <h2 className="text-[36px] md:text-[52px] font-black tracking-[-0.03em] leading-[1.05] text-foreground">
+            <h2 className="text-[32px] md:text-[52px] font-black tracking-[-0.03em] leading-[1.1] md:leading-[1.05] text-foreground">
               Three steps to<br />
               <span className="text-muted-foreground/30">digital sovereignty.</span>
             </h2>
@@ -525,18 +575,18 @@ export default function LandingPage() {
       {/* ═══════════════════════════════════════════════════════════ */}
       {/* FINAL CTA                                                   */}
       {/* ═══════════════════════════════════════════════════════════ */}
-      <section className="py-32 px-6 relative overflow-hidden bg-background">
+      <section className="py-24 md:py-32 px-6 relative overflow-hidden bg-background">
         <div className="absolute inset-0">
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] bg-primary rounded-full blur-[300px] opacity-[0.03]" />
           <div className="absolute bottom-0 right-1/4 w-[400px] h-[400px] bg-accent rounded-full blur-[200px] opacity-[0.03]" />
         </div>
 
         <div className="max-w-4xl mx-auto text-center relative z-10">
-          <div className="w-20 h-20 rounded-3xl bg-surface border border-border flex items-center justify-center mx-auto mb-10 shadow-sm transition-premium">
-            <Sparkles className="w-9 h-9 text-accent" />
+          <div className="w-16 h-16 md:w-20 md:h-20 rounded-2xl md:rounded-3xl bg-surface border border-border flex items-center justify-center mx-auto mb-10 shadow-sm transition-premium">
+            <Sparkles className="w-7 h-7 md:w-9 md:h-9 text-accent" />
           </div>
 
-          <h2 className="text-[40px] md:text-[64px] font-black tracking-[-0.03em] leading-[1.05] text-foreground mb-8">
+          <h2 className="text-[36px] md:text-[64px] font-black tracking-[-0.03em] leading-[1.1] md:leading-[1.05] text-foreground mb-8">
             Ready to take<br />
             <span className="text-accent">control?</span>
           </h2>
@@ -587,11 +637,10 @@ export default function LandingPage() {
             <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground/30 mb-6">Modules</h4>
             <div className="flex flex-col gap-4">
               {[
-                { label: "VaultOS", href: "/dashboard" },
-                { label: "Notebook", href: "/dashboard/notes" },
-                { label: "Editorial Studio", href: "/dashboard/blogs" },
+                { label: "Links", href: "/dashboard" },
+                { label: "NoteBook", href: "/dashboard/notes" },
+                { label: "Editorial Blog", href: "/dashboard/blogs" },
                 { label: "Gallery", href: "/dashboard/gallery" },
-                { label: "Archives", href: "/dashboard/documents" },
                 { label: "Collections", href: "/dashboard/collections" },
               ].map((l) => (
                 <Link key={l.label} href={l.href} className="text-sm font-semibold text-muted-foreground hover:text-foreground transition-premium">

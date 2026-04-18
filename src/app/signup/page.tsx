@@ -84,7 +84,7 @@ export default function SignupPage() {
           <p className="text-[#A3A8B8] text-sm font-medium mt-2">{t("Your personal knowledge operating system", "Your personal knowledge operating system")}</p>
         </div>
 
-        <div className="bg-[#1A1D27] rounded-[2.5rem] p-10 sm:p-12 border border-[#24283B] shadow-2xl relative overflow-hidden group">
+        <div className="bg-[#1A1D27] rounded-[2.5rem] p-8 sm:p-12 border border-[#24283B] shadow-2xl relative overflow-hidden group">
           <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#06B6D4]/20 to-transparent" />
 
           <div className="text-center mb-10">
